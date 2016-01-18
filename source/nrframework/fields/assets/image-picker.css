@@ -1,0 +1,66 @@
+ul.image_picker_selector {
+    overflow: auto;
+    list-style-image: none;
+    list-style-position: outside;
+    list-style-type: none;
+    padding: 0px;
+    margin: 0px;
+}
+ul.image_picker_selector ul {
+    overflow: auto;
+    list-style-image: none;
+    list-style-position: outside;
+    list-style-type: none;
+    padding: 0px;
+    margin: 0px;
+}
+ul.image_picker_selector li.group_title {
+    float: none;
+}
+ul.image_picker_selector li {
+    margin: 0px 12px 12px 0px;
+    cursor: pointer;
+    display:inline-block;
+    float:none;
+}
+ul.image_picker_selector li .thumbnail {
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    border: solid 2px #fff;
+    box-shadow: none;
+    padding: 2px;
+    display: inline-block;
+}
+ul.image_picker_selector li .thumbnail:hover {
+    border-color: #eee;
+}
+ul.image_picker_selector li .thumbnail img {
+    -webkit-user-drag: none;
+    margin: 0;
+    border:solid 1px #fff;
+    background-color:#fff;
+    box-shadow: 1px 1px 1px 2px rgba(0, 0, 0, 0.1);
+}
+ul.image_picker_selector li .thumbnail.selected {
+    border-color:#378137;
+}  
+ul.image_picker_selector li p {
+    margin: 0;
+    font-size: 12px;
+    line-height: 1em;
+    padding: 7px 9px;
+    display: inline-block;
+    outline: 0 none;
+} 
+ul.image_picker_selector li .thumbnail > * {
+    -webkit-transition: all 250ms ease;
+    -moz-transition: all 250ms ease;
+    -ms-transition: all 250ms ease;
+    -o-transition: all 250ms ease;
+    transition: all 250ms ease;  
+}
+
+.ipLabelsHor .thumbnail img {
+    display:inline;
+}

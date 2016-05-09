@@ -20,13 +20,16 @@ class nrFrameworkAssignmentsHelper {
 		$this->db = JFactory::getDBO();
 		$this->types = array(
 			'devices'        => 'Devices',
-			'urls'           => 'URls',
+			'urls'           => 'URLs',
+			'referrer'       => 'URLs.Referrer',
 			'lang'           => 'Languages',
 			'php'            => 'PHP',
 			'timeonsite'     => 'Users.TimeOnSite',
 			'usergroups'     => 'Users.GroupLevels',
 			'menu'           => 'Menu',
-			'datetime'       => 'DateTime.Date'
+			'datetime'       => 'DateTime.Date',
+			'acymailing'	 => 'AcyMailing',
+			'akeebasubs'	 => 'AkeebaSubs'
 		);
 	}
 

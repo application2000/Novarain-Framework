@@ -9,12 +9,15 @@
 
 defined('_JEXEC') or die;
 
+require_once __DIR__ . '/cache.php';
+
 class NRFrameworkFunctions {
 
     public static function isFeed()
     {
         return (
             JFactory::getDocument()->getType() == 'feed'
+            || JFactory::getDocument()->getType() == 'xml'
             || JFactory::getApplication()->input->getWord('format') == 'feed'
             || JFactory::getApplication()->input->getWord('type') == 'rss'
             || JFactory::getApplication()->input->getWord('type') == 'atom'
@@ -33,6 +36,113 @@ class NRFrameworkFunctions {
         return JFactory::getLanguage()->load($extension, $basePath);
     }
 
+
+    /**
+     *  Checks if extension is installed
+     *
+     *  @param   string  $extension  The extension element name
+     *  @param   string  $type       The extension's type 
+     *  @param   string  $folder     Plugin folder
+     *
+     *  @return  boolean             Returns true if extension is installed
+     */
+    public static function extensionInstalled($extension, $type = 'component', $folder = 'system')
+    {
+        jimport('joomla.filesystem.folder');
+        jimport('joomla.filesystem.file');
+
+        switch ($type)
+        {
+            case 'component':
+                if (JFile::exists(JPATH_ADMINISTRATOR . '/components/com_' . $extension . '/' . $extension . '.php')
+                    || JFile::exists(JPATH_ADMINISTRATOR . '/components/com_' . $extension . '/admin.' . $extension . '.php')
+                    || JFile::exists(JPATH_SITE . '/components/com_' . $extension . '/' . $extension . '.php')
+                )
+                {
+                    return true;
+                }
+                break;
+
+            case 'plugin':
+                return JFile::exists(JPATH_PLUGINS . '/' . $folder . '/' . $extension . '/' . $extension . '.php');
+
+            case 'module':
+                return (JFile::exists(JPATH_ADMINISTRATOR . '/modules/mod_' . $extension . '/' . $extension . '.php')
+                    || JFile::exists(JPATH_ADMINISTRATOR . '/modules/mod_' . $extension . '/mod_' . $extension . '.php')
+                    || JFile::exists(JPATH_SITE . '/modules/mod_' . $extension . '/' . $extension . '.php')
+                    || JFile::exists(JPATH_SITE . '/modules/mod_' . $extension . '/mod_' . $extension . '.php')
+                );
+
+            case 'library':
+                return JFolder::exists(JPATH_LIBRARIES . '/' . $extension);
+        }
+
+        return false;
+    }
+
+    /**
+     *  Returns the version number from the extension's xml file
+     *
+     *  @param   string  $extension  The extension element name
+     *
+     *  @return  string              Extension's version number
+     */
+    public static function getExtensionVersion($extension, $type = false)
+    {
+
+        $xml = self::getExtensionXMLFile($extension);
+
+        if (!$xml)
+        {
+            return false;
+        }
+
+        $xml = JApplicationHelper::parseXMLInstallFile($xml);
+
+        if (!$xml || !isset($xml['version']))
+        {
+            return '';
+        }
+
+        if ($type)
+        {
+            $extType = (self::extensionHasProInstalled($extension)) ? "Pro" : "Free";
+            return $xml["version"] . " " . $extType;
+        }
+
+        return $xml['version'];
+    }
+
+    public static function getExtensionXMLFile($extension, $basePath = JPATH_ADMINISTRATOR)
+    {
+        $alias = explode("_", $extension);
+        $alias = end($alias);
+
+        $filename = (strpos($extension, 'mod_') === 0) ? "mod_" . $alias : $alias;
+        $file = self::getExtensionPath($extension, $basePath) . "/" . $filename . ".xml";
+
+        if (JFile::exists($file))
+        {
+            return $file;
+        }
+        
+        return false;
+    }
+
+    public static function extensionHasProInstalled($extension)
+    {
+        // Path to extension's version file
+        $versionFile = self::getExtensionPath($extension) . "/version.php";
+        $NR_PRO = true;
+
+        // If version file does not exist we assume we have a PRO version installed
+        if (file_exists($versionFile))
+        {
+            require_once($versionFile);
+        }
+
+        return (bool) $NR_PRO;
+    }
 
     public static function getExtensionPath($extension = 'plg_system_nrframework', $basePath = JPATH_ADMINISTRATOR, $check_folder = '')
     {
@@ -93,7 +203,7 @@ class NRFrameworkFunctions {
         $query = $db->getQuery(true)
             ->select('*')
             ->from('#__modules')
-            ->where('id='.$db->q($id)); 
+            ->where('id='.$db->q($id));
 
         $db->setQuery($query);
 

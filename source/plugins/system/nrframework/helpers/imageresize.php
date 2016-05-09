@@ -208,15 +208,18 @@ class NRFrameworkImage {
      * Checks if the cache folder exists, and if not, it creates it     *
      */
     private function cacheFolder() {
-        if (!file_exists(JPATH_SITE.'/cache/images')) {
+
+        if (!JFolder::exists(JPATH_SITE.'/cache/images'))
+        {
             try {
-                mkdir(JPATH_SITE.'/cache/images', 0755); }
-            catch (Exception $e) {
+                JFolder::create(JPATH_SITE.'/cache/images'); 
+            }
+            catch (Exception $e) 
+            {
                 echo 'Caught exception: ', $e->getMessage(), "\n";
             }
         }
     }
-
 
     /**
      * @param $image

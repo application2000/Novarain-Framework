@@ -10,4 +10,6 @@
 defined('_JEXEC') or die;
 require_once __DIR__ . '/helpers/functions.php';
 
+JLog::addLogger(array('text_file' => 'novarain.php'), JLog::ALL, array('novarain'));
+
 ?>

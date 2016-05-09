@@ -1,5 +1,11 @@
 + Added   - Removed   ^ Changed   # Fixed
 
+2.1
+	+ Adds AcyMailing List assignment
+	+ Adds Akeeba Subscription Levels assignment
+	+ Adds Domain Referrer assignment
+	+ Adds extensionInstalled() method
+
 2.0.1
 	^ Changed GPL License Headers
 

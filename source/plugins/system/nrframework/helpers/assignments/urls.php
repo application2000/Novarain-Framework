@@ -23,6 +23,41 @@ class nrFrameworkAssignmentsURLs
     	$this->selection = $assignment->selection;
    	}
 
+   	/**
+   	 *  Validates the referrer agains the passed domain list
+   	 *
+   	 *  @return  bool
+   	 */
+   	function passReferrer()
+   	{
+
+   		// Check if we have valid selection list
+		$referrers = array_filter(array_unique(explode("\n", $this->selection)));
+
+		if (!is_array($referrers) || !count($referrers))
+		{
+			return false;
+		}
+
+		// Remove new line characters
+		foreach ($referrers as $key => $referrer) { 
+			$referrer = str_replace(array("\n", "\r"), "", $referrer); 
+			$referrers[$key] = $referrer; 
+		}
+
+		// Check if we have a valid referer
+		$referer = isset($_SERVER['HTTP_REFERER']) ? parse_url($_SERVER['HTTP_REFERER'], PHP_URL_HOST) : false;
+
+		if (!$referer)
+		{
+			return false;
+		}
+
+		$domainReferrer = str_ireplace("www.", "", $referer); 
+
+		return in_array($domainReferrer, $referrers);
+   	}
+
 	function passURLs()
 	{
 		$regex = isset($this->params->regex) ? $this->params->regex : 0;

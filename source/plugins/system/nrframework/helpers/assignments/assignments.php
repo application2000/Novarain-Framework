@@ -9,28 +9,39 @@
 
 defined('_JEXEC') or die;
 
+/**
+ *  Novarain Framework Assignments Helper Class
+ */
 class nrFrameworkAssignmentsHelper {
 	
 	var $db = null;
 	var $init = false;
 	var $types = array();
 
+	/**
+	 *  Class constructor
+	 */
 	public function __construct()
 	{
 		$this->db = JFactory::getDBO();
 		$this->types = array(
-			'devices'        => 'Devices',
-			'urls'           => 'URLs',
-			'referrer'       => 'URLs.Referrer',
-			'lang'           => 'Languages',
-			'php'            => 'PHP',
-			'timeonsite'     => 'Users.TimeOnSite',
-			'usergroups'     => 'Users.GroupLevels',
-			'menu'           => 'Menu',
-			'datetime'       => 'DateTime.Date',
-			'acymailing'	 => 'AcyMailing',
-			'akeebasubs'	 => 'AkeebaSubs'
+			'devices'          => 'Devices',
+			'urls'             => 'URLs',
+			'referrer'         => 'URLs.Referrer',
+			'lang'             => 'Languages',
+			'php'              => 'PHP',
+			'timeonsite'       => 'Users.TimeOnSite',
+			'usergroups'       => 'Users.GroupLevels',
+			'menu'             => 'Menu',
+			'datetime'         => 'DateTime.Date',
+			'acymailing'	   => 'AcyMailing',
+			'akeebasubs'	   => 'AkeebaSubs',
+			'contentpagetypes' => 'Content.PageTypes',
+			'contentcats'      => 'Content.Categories',
+			'contentarticles'  => 'Content.Articles'
 		);
+
+		$this->app = JFactory::getApplication();
 	}
 
 	function getItemAssignments($item) {
@@ -109,13 +120,13 @@ class nrFrameworkAssignmentsHelper {
 	function passAll($item, $match_method = 'and') {
 		
 		if (!$item) {
-			return 1;
+			return true;
 		}
 
 	    $assignments = $this->getItemAssignments($item);
 
-	    if (!is_array($assignments)) {
-	    	return 1;
+	    if (!is_array($assignments) || count($assignments) == 0) {
+	    	return true;
 	    }
 
 		jimport('joomla.filesystem.file');
@@ -126,7 +137,7 @@ class nrFrameworkAssignmentsHelper {
 		{
 
 			// Break if not passed and matching method is ALL
-			// Or if  passed and matching method is ANY
+			// Or if passed and matching method is ANY
 			if (
 				(!$pass && $match_method == 'and')
 				|| ($pass && $match_method == 'or')
@@ -198,13 +209,11 @@ class nrFrameworkAssignmentsHelper {
 		$this->initParamsByType($assignment, $type);
 
 		$main_type = $assignment->maintype;
-		$sub_type = $assignment->subtype;
-
-		$pass = false;
-
-		$file = __DIR__ . "/".strtolower($main_type) . '.php';
-		$class = 'nrFrameworkAssignments' . $main_type;
-		$method = 'pass' . $sub_type;
+		$sub_type  = $assignment->subtype;
+		$pass      = false;
+		$file      = __DIR__ . "/".strtolower($main_type) . '.php';
+		$class     = 'nrFrameworkAssignments' . $main_type;
+		$method    = 'pass' . $sub_type;
 
         if ((!class_exists($class)) && JFile::exists($file)) {
             require_once($file);

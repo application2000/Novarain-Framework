@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="Novarain Framework" default="deploy">
+
+	<!-- Import Build Files -->
+	<import file="${phing.dir}/../../buildfiles/build.xml" />
+	
+	<!-- Package Settings -->
+	<property name="pkg.hasfree" value="false" override="true" />
+
+	<!-- Package XML Manifest -->
+	<xmlproperty file="../source/plugins/system/nrframework/nrframework.xml"/>
+
+	<!-- Language Settings -->
+	<property name="transifex.project" value="novarain-framework" />
+	<property name="dir.langs" value="../source/plugins/system/nrframework/language" />
+	
+</project>

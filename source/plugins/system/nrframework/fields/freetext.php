@@ -50,7 +50,7 @@ class JFormFieldNR_Freetext extends NRFormField
 
         if (!$label)
         {
-            $html[] = '</div><div class="freetext"">';
+            $html[] = '</div><div class="freetext">';
         }
 
         if ($file)
@@ -60,7 +60,7 @@ class JFormFieldNR_Freetext extends NRFormField
 
         if ($text)
         {
-            $html[] = JText::_($text);      
+            $html[] = $this->prepareText($text);
         }
 
         return implode(" ", $html);

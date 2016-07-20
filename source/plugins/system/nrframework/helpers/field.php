@@ -18,6 +18,19 @@ class NRFormField extends JFormField
 		return false;
 	}
 
+	public function prepareText($string = '')
+	{
+		$string = trim($string);
+
+		if ($string == '')
+		{
+			return '';
+		}
+
+		// Normal language string
+		return JText::_($string);
+	}
+
 	public function get($val, $default = '')
 	{
 		return (isset($this->element[$val]) && (string) $this->element[$val] != '') ? (string) $this->element[$val] : $default;

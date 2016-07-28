@@ -208,6 +208,39 @@ class JFormFieldNRColor extends JFormField
 				});
         	');
 
+			$doc->addStyleDeclaration('
+				.nrcolor.rgb, .nrcolor.rgba {
+				    font-size: 13px;
+				    min-width: 185px;
+				    max-width: 185px;
+				}
+				.minicolors-swatches > li {
+				    left: auto !important;
+				    position: relative !important;
+				    top: auto !important;
+				}
+				.minicolors-swatches {
+				    box-sizing: border-box;
+				    width: 100%;
+				    background-color: #ffffff;
+				    box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
+				    display: flex;
+				    justify-content:space-around;
+				    display: -webkit-flex;
+				    -webkit-justify-content:space-around;
+				    left: 0;
+				    margin: 0;
+				    padding: 3px 5px 6px;
+				    position: absolute;
+				    top: 157px;
+				    border-radius: 5px;
+				}
+				.minicolors-grid .minicolors-picker {
+				    mix-blend-mode: difference;
+				    border:solid 2px #fff;
+				}
+			');
+
  			$run = true;
         }
 

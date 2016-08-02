@@ -175,8 +175,8 @@ class JFormFieldNRColor extends JFormField
         {
         	// On Joomla version < 3.6 the minicolors library is outdated. So we load the latest version from joomla.org
         	// This check should be removed after Joomla 4.0 is out.
-        	$doc->addStyleSheet('http://joomla.org/media/jui/css/jquery.minicolors.css');
-       		$doc->addScript('http://joomla.org/media/jui/js/jquery.minicolors.min.js', false, true);       	
+        	$doc->addStyleSheet('//joomla.org/media/jui/css/jquery.minicolors.css');
+       		$doc->addScript('//joomla.org/media/jui/js/jquery.minicolors.min.js', false, true);       	
         } else {
         	$doc->addStyleSheet(JURI::root(true).'/media/jui/css/jquery.minicolors.css?v=1');
         	$doc->addScript(JURI::root(true).'/media/jui/js/jquery.minicolors.min.js?v=1', false, true);  	

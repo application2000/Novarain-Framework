@@ -42,11 +42,11 @@ class JFormFieldNR_PRO extends NRFormField
      */
     protected function getInput()
     {   
-        $description = $this->get("description", "NR_ONLY_AVAILABLE_IN_PRO");
-        $url = $this->get("url");
-        $link = $this->get("link", "NR_UPGRADE_TO_PRO");
-
-        $html[] = '<span class="label label-important">' . $this->prepareText($description) . '</span>';
+        $text   = $this->get("text", "NR_ONLY_AVAILABLE_IN_PRO");
+        $url    = $this->get("url");
+        $link   = $this->get("link", "NR_UPGRADE_TO_PRO");
+        
+        $html[] = '<span class="label label-important">' . $this->prepareText($text) . '</span>';
 
         if (!empty($url))
         {

@@ -15,6 +15,7 @@ defined('_JEXEC') or die;
 class nrFrameworkAssignmentsHelper {
 	
 	var $db = null;
+	var $date;
 	var $init = false;
 	var $types = array();
 
@@ -24,6 +25,9 @@ class nrFrameworkAssignmentsHelper {
 	public function __construct()
 	{
 		$this->db = JFactory::getDBO();
+		$this->app = JFactory::getApplication();
+		$this->date = JFactory::getDate();
+
 		$this->types = array(
 			'devices'          => 'Devices',
 			'urls'             => 'URLs',
@@ -40,8 +44,6 @@ class nrFrameworkAssignmentsHelper {
 			'contentcats'      => 'Content.Categories',
 			'contentarticles'  => 'Content.Articles'
 		);
-
-		$this->app = JFactory::getApplication();
 	}
 
 	function getItemAssignments($item) {
@@ -73,6 +75,7 @@ class nrFrameworkAssignmentsHelper {
 			}
 
 			$types[$type] = (object) array(
+				'itemid' => (int) $item->id,
 				'assignment' => $this->getAssignmentState($params->{'assign_' . $id}),
 				'selection'  => array(),
 				'params'  => $AssignmentParams

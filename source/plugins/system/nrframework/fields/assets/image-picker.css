@@ -1,66 +1,52 @@
-ul.image_picker_selector {
-    overflow: auto;
-    list-style-image: none;
-    list-style-position: outside;
-    list-style-type: none;
-    padding: 0px;
-    margin: 0px;
-}
-ul.image_picker_selector ul {
-    overflow: auto;
-    list-style-image: none;
-    list-style-position: outside;
-    list-style-type: none;
-    padding: 0px;
-    margin: 0px;
-}
-ul.image_picker_selector li.group_title {
-    float: none;
-}
-ul.image_picker_selector li {
-    margin: 0px 12px 12px 0px;
-    cursor: pointer;
-    display:inline-block;
-    float:none;
-}
-ul.image_picker_selector li .thumbnail {
+ul.thumbnails.image_picker_selector {
+    list-style:none;
+    margin:0 -5px;
+    padding:0;
     -webkit-user-select: none;
     -moz-user-select: none;
     -ms-user-select: none;
-    border: solid 2px #fff;
+}
+.thumbnails.image_picker_selector li {
+    margin:5px;
+    cursor: pointer;
+}
+.image_picker_selector .thumbnail {
+    border: none;
+    border-radius: 0;
     box-shadow: none;
-    padding: 2px;
-    display: inline-block;
+    padding: 0px;
 }
-ul.image_picker_selector li .thumbnail:hover {
-    border-color: #eee;
+.image_picker_selector p {
+    font-size: 14px;
+    line-height: 1;
+    margin: 10px 0 0 0;
 }
-ul.image_picker_selector li .thumbnail img {
-    -webkit-user-drag: none;
-    margin: 0;
-    border:solid 1px #fff;
-    background-color:#fff;
-    box-shadow: 1px 1px 1px 2px rgba(0, 0, 0, 0.1);
-}
-ul.image_picker_selector li .thumbnail.selected {
-    border-color:#378137;
-}  
-ul.image_picker_selector li p {
-    margin: 0;
-    font-size: 12px;
-    line-height: 1em;
-    padding: 7px 9px;
-    display: inline-block;
-    outline: 0 none;
-} 
-ul.image_picker_selector li .thumbnail > * {
+.image_picker_selector img {
+    border: solid 2px #ddd;
     -webkit-transition: all 250ms ease;
     -moz-transition: all 250ms ease;
     -ms-transition: all 250ms ease;
     -o-transition: all 250ms ease;
     transition: all 250ms ease;  
+}  
+.image_picker_selector .selected {
+    cursor:default;
+}  
+.image_picker_selector .selected img {
+    border-color: #378137;
 }
-
-.ipLabelsHor .thumbnail img {
-    display:inline;
+.image_picker_selector .selected p {
+    color:#378137;
+} 
+.image_picker_selector p:before {
+    content: "\e227";
+    font-family: 'IcoMoon';
+    font-style: normal;
+    speak: none;
+    padding-right: 5px;
+    position:relative;
+    top:1px;
+}   
+.image_picker_selector .selected p:before {
+    content: "\e228";
 }

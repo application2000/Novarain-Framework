@@ -42,8 +42,7 @@ class nrFrameworkAssignmentsHelper {
 			'akeebasubs'	   => 'AkeebaSubs',
 			'contentpagetypes' => 'Content.PageTypes',
 			'contentcats'      => 'Content.Categories',
-			'contentarticles'  => 'Content.Articles',
-			'impressions'  	   => 'Impressions'
+			'contentarticles'  => 'Content.Articles'
 		);
 	}
 

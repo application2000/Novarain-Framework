@@ -15,7 +15,6 @@ class nrFrameworkAssignmentsDateTime extends nrFrameworkAssignmentsHelper
 	private $assignment;
 	private $params;
 	private $tz;
-	private $date;
 
 	function __construct($assignment) {
     	$this->assignment = $assignment;

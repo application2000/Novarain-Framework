@@ -13,11 +13,33 @@ class NRFormField extends JFormField
 {
 	public $type = 'Field';
 
+	/**
+	 *  Document object
+	 *
+	 *  @var  [type]
+	 */
+	public $doc;
+
+	/**
+	 *  Class constructor
+	 */
+	function __construct()
+	{
+		$this->doc = JFactory::getDocument();
+	}
+
 	protected function getInput()
 	{
 		return false;
 	}
 
+	/**
+	 *  Prepares string through JText
+	 *
+	 *  @param   string  $string
+	 *
+	 *  @return  string
+	 */
 	public function prepareText($string = '')
 	{
 		$string = trim($string);
@@ -27,7 +49,6 @@ class NRFormField extends JFormField
 			return '';
 		}
 
-		// Normal language string
 		return JText::_($string);
 	}
 

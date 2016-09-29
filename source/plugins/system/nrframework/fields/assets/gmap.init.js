@@ -6,11 +6,11 @@ jQuery(function($) {
 			var id = gmapInput.attr('id');
 			var mapID = id + '_map';
 			var coordinates = gmapInput.val();
+			var zoom = gmapInput.data('zoom');
 			if (coordinates.length) {
 				coordinates = coordinates.split(',');
 			} else {
-				// use the center of the earth for a broad view of the map
-				coordinates = [19.189444 , -31.113281];
+				coordinates = gmapInput.data('coordinates').split(',');
 			}
 			var gmap;
 			var marker;
@@ -23,7 +23,7 @@ jQuery(function($) {
 						lat: parseFloat(coordinates[0]),
 						lng: parseFloat(coordinates[1])
 					},
-					zoom: 2
+					zoom: zoom
 				});
 				if (coordinates.length) {
 					marker = new google.maps.Marker({
@@ -44,6 +44,20 @@ jQuery(function($) {
 					google.maps.event.trigger(gmap, 'resize');
 					gmap.setCenter(center);
 				});
+				$(document).on('blur', '#' + id, function(event) {
+					if (checkCoordinates(gmapInput.val())) {
+						newCoordinates = gmapInput.val().split(',');
+						newCoordinates = new google.maps.LatLng({
+							lat: parseFloat(newCoordinates[0]),
+							lng: parseFloat(newCoordinates[1])
+						});
+						placeMarkerAndPanTo(newCoordinates, gmap);
+						gmap.panTo(newCoordinates);
+					} else {
+						alert(Joomla.JText.strings.NR_WRONG_COORDINATES);
+						gmapInput.val(coordinates.join(','));
+					}
+				});
 			}
 
 			function placeMarkerAndPanTo(latLng, map) {
@@ -54,12 +68,16 @@ jQuery(function($) {
 					});
 				}
 				marker.setPosition(latLng);
-				gmap.panTo(latLng);
 				updateInput(latLng);
 			}
 
 			function updateInput(latLng) {
 				$("#" + id).val(latLng.lat() + "," + latLng.lng());
+			}
+
+			function checkCoordinates(latlng) {
+				var pattern = new RegExp(/^[-+]?([1-8]?\d(\.\d+)?|90(\.0+)?),\s*[-+]?(180(\.0+)?|((1[0-7]\d)|([1-9]?\d))(\.\d+)?)$/);
+				return pattern.test(latlng);
 			}
 		})(gmapInput);
 	});

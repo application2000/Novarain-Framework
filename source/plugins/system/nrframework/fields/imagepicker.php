@@ -27,7 +27,7 @@ class JFormFieldImagePicker extends JFormFieldList
 		$params = (array) $this->element->attributes();
 		$params = new JRegistry($params["@attributes"]);
 
-		$showlabels = $params->get("showlabels", "false");
+		$showlabels = $params->get("showlabels", "true");
 		$hideselect = $params->get("hideselect", "true");
 		
 		$assetsDir = JURI::root(true)."/plugins/system/nrframework/fields/assets/";

@@ -1,3 +1,15 @@
+/**
+ * @package         @pkg.name@
+ * @version         @pkg.version@ @vUf@
+ * 
+ * @author          Tassos Marinos <info@tassos.gr>
+ * @link            http://www.tassos.gr
+ * @copyright       Copyright © 2016 Tassos Marinos All Rights Reserved
+ * @license         GNU GPLv3 <http://www.gnu.org/licenses/gpl.html> or later
+ *
+ * @TODO This file should be moved to /media/plg_system_nrframework/css/fields/
+*/
+
 .nr-well .well-desc {
 	margin-bottom:25px;
 	color: #555;
@@ -13,4 +25,40 @@
     line-height: 1.5;
     opacity: 0.8;
     text-indent: -5px;
+}
+
+/* Field: nr_inline */
+.inline-control-group {
+    align-items: center;
+    display: flex;
+    flex-wrap: wrap;
+    margin: -5px;
+}
+.inline-control-group label, .inline-control-group input {
+	margin:0 !important;
+	padding:0;
+}
+.inline-control-group .controls {
+    margin-left: 0 !important;
+    line-height: 1;
+}
+.inline-control-group .control-label {
+    padding: 0 10px 0 0 !important;
+}
+.inline-control-group fieldset {
+	padding:0 !important;
+}
+.inline-control-group .control-group {
+    align-items: center;
+    display: flex;
+    margin: 5px !important;
+}
+
+/* Field: nr_inline - Timetable */
+.inline-control-group.timetable .control-group {
+	width: 100px;
+}
+.inline-control-group.timetable .control-group:nth-child(2) .control-label {
+    order: 1;
+    padding-left: 7px !important;
 }

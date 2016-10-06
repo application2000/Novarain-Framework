@@ -26,8 +26,29 @@ class NRFormField extends JFormField
 	function __construct()
 	{
 		$this->doc = JFactory::getDocument();
+		$this->doc->addStylesheet(JURI::root(true) . "/plugins/system/nrframework/assets/css/fields.css");
 	}
 
+	/**
+	 * Method to get the field label markup.
+	 *
+	 * @return  string  The field label markup.
+	 */
+	protected function getLabel()
+	{
+		if (empty($this->get("label")))
+		{
+			return "";
+		}
+
+		return parent::getLabel();
+	}
+
+	/**
+	 * Method to get the field input markup.
+	 *
+	 * @return  string  The field input markup.
+	 */
 	protected function getInput()
 	{
 		return false;

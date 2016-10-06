@@ -28,13 +28,18 @@ class JFormFieldNR_Time extends NRFormField
 	 */
 	public function getInput()
 	{
-
 		// Setup properties
-		$this->hint = $this->get('hint', '00:00');
+		$this->hint      = $this->get('hint', '00:00');
+		$this->class     = $this->get('class', "input-mini");
+		$this->placement = $this->get('placement', "top");
+		$this->align     = $this->get('align', "left");
+		$this->autoclose = $this->get('autoclose', "true");
+		$this->default   = $this->get('default', "now");
+		$this->donetext  = $this->get('donetext', "Done");
 
 		// Add styles and scripts to DOM
-		$this->doc->addStyleSheet(JURI::root(true).'/plugins/system/nrframework/fields/assets/jquery-clockpicker.min.css');
 		JHtml::_('jquery.framework');
+		$this->doc->addStyleSheet(JURI::root(true).'/plugins/system/nrframework/fields/assets/jquery-clockpicker.min.css');
 		$this->doc->addScript(JURI::root(true) . '/plugins/system/nrframework/fields/assets/jquery-clockpicker.min.js');
 		
 		static $run;
@@ -43,16 +48,12 @@ class JFormFieldNR_Time extends NRFormField
 		{
 			$this->doc->addScriptDeclaration('
 				jQuery(function($) {
-					$(".clockpicker").clockpicker({
-						default: \'now\',
-						placement: \'top\',
-						align: \'left\',
-						autoclose: true
-					});
+					$(".clockpicker").clockpicker();
 				});
         	');
 			$run = true;
 		}
 
-		return '<div class="input-group clockpicker"><input name="' . $this->name . '" type="text" class="form-control" value="' . $this->value . '"></div>'; }
+		return '<div class="input-group input-append clockpicker" data-donetext="'.$this->donetext.'" data-default="'.$this->default.'" data-placement="'.$this->placement.'" data-align="'.$this->align.'" data-autoclose="'.$this->autoclose.'"><input class="'.$this->class.'" placeholder="'.$this->hint.'" name="' . $this->name . '" type="text" class="form-control" value="' . $this->value . '"><span class="add-on"><span class="icon-clock">&nbsp;</span></span></div>';
+	}
 }

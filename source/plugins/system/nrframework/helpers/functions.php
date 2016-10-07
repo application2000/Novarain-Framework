@@ -97,7 +97,7 @@ class NRFrameworkFunctions {
             return false;
         }
 
-        $xml = JApplicationHelper::parseXMLInstallFile($xml);
+        $xml = JInstaller::parseXMLInstallFile($xml);
 
         if (!$xml || !isset($xml['version']))
         {

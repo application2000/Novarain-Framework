@@ -19,8 +19,8 @@ class NR_MailChimp
 	private $api_endpoint = 'https://<dc>.api.mailchimp.com/3.0';
 	private $request_successful = false;
 	private $last_error         = '';
-	private $last_response      = [];
-	private $last_request       = [];
+	private $last_response      = array();
+	private $last_request       = array();
 
 	/**
 	 * Create a new instance
@@ -39,7 +39,7 @@ class NR_MailChimp
 		list(, $data_center) = explode('-', $this->api_key);
 		$this->api_endpoint  = str_replace('<dc>', $data_center, $this->api_endpoint);
 
-		$this->last_response = ['headers' => null, 'body' => null];
+		$this->last_response = array('headers' => null, 'body' => null);
 	}
 
 	/**
@@ -106,7 +106,7 @@ class NR_MailChimp
 	 * @param   int $timeout Timeout limit for request in seconds
 	 * @return  array|false   Assoc array of API response, decoded from JSON
 	 */
-	public function delete($method, $args = [], $timeout = 10)
+	public function delete($method, $args = array(), $timeout = 10)
 	{
 		return $this->makeRequest('delete', $method, $args, $timeout);
 	}
@@ -118,7 +118,7 @@ class NR_MailChimp
 	 * @param   int $timeout Timeout limit for request in seconds
 	 * @return  array|false   Assoc array of API response, decoded from JSON
 	 */
-	public function get($method, $args = [], $timeout = 10)
+	public function get($method, $args = array(), $timeout = 10)
 	{
 		return $this->makeRequest('get', $method, $args, $timeout);
 	}
@@ -130,7 +130,7 @@ class NR_MailChimp
 	 * @param   int $timeout Timeout limit for request in seconds
 	 * @return  array|false   Assoc array of API response, decoded from JSON
 	 */
-	public function patch($method, $args = [], $timeout = 10)
+	public function patch($method, $args = array(), $timeout = 10)
 	{
 		return $this->makeRequest('patch', $method, $args, $timeout);
 	}
@@ -142,7 +142,7 @@ class NR_MailChimp
 	 * @param   int $timeout Timeout limit for request in seconds
 	 * @return  array|false   Assoc array of API response, decoded from JSON
 	 */
-	public function post($method, $args = [], $timeout = 10)
+	public function post($method, $args = array(), $timeout = 10)
 	{
 		return $this->makeRequest('post', $method, $args, $timeout);
 	}
@@ -154,7 +154,7 @@ class NR_MailChimp
 	 * @param   int $timeout Timeout limit for request in seconds
 	 * @return  array|false   Assoc array of API response, decoded from JSON
 	 */
-	public function put($method, $args = [], $timeout = 10)
+	public function put($method, $args = array(), $timeout = 10)
 	{
 		return $this->makeRequest('put', $method, $args, $timeout);
 	}
@@ -168,23 +168,23 @@ class NR_MailChimp
 	 * @return array|false Assoc array of decoded result
 	 * @throws \Exception
 	 */
-	private function makeRequest($http_verb, $method, $args = [], $timeout = 10)
+	private function makeRequest($http_verb, $method, $args = array(), $timeout = 10)
 	{
 
 		$url = $this->api_endpoint . '/' . $method;
 
 		$this->last_error         = '';
 		$this->request_successful = false;
-		$response                 = ['headers' => null, 'body' => null];
+		$response                 = array('headers' => null, 'body' => null);
 		$this->last_response      = $response;
 
-		$this->last_request = [
+		$this->last_request = array(
 			'method'  => $http_verb,
 			'path'    => $method,
 			'url'     => $url,
 			'body'    => '',
 			'timeout' => $timeout,
-		];
+		);
 
 		// Create the options.
 		$options = new JRegistry;

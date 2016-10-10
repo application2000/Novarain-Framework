@@ -38,10 +38,10 @@ class NR_MailChimp extends NR_Wrapper
 
 	public function setApiKey($api_key)
 	{
-		if (strpos($this->api_key, '-') === false ) {
-			throw new \Exception("Invalid MailChimp API key `{$api_key}` supplied.");
-		} else {
+		if ((!empty($api_key)) && (!strpos($api_key, '-') === false)) {
 			$this->api_key = $api_key;
+		} else {
+			throw new \Exception("Invalid MailChimp API key `{$api_key}` supplied.");
 		}
 	}
 }

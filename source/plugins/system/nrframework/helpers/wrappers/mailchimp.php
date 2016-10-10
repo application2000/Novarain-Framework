@@ -25,7 +25,7 @@ class NR_MailChimp extends NR_Wrapper
 	 */
 	public function __construct($api_key)
 	{
-		parent::__contruct();
+		parent::__construct();
 		$this->setApiKey($api_key);
 		$this->api_endpoint = 'https://<dc>.api.mailchimp.com/3.0';
 		list(, $data_center) = explode('-', $this->api_key);

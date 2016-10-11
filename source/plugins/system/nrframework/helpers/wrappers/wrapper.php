@@ -31,11 +31,19 @@ class NR_Wrapper
 		$this->options->set('timeout', $this->timeout);
 	}
 
+	/**
+	 * Setter method for the API Key
+	 * @param string $api_key 
+	 * @throws \Exception 
+	 */
 	public function setApiKey($api_key)
 	{
-		if (!empty($api_key)) {
+		if (!empty($api_key))
+		{
 			$this->api_key = $api_key;
-		} else {
+		}
+		else
+		{
 			throw new \Exception("Invalid API key `{$api_key}` supplied.");
 		}
 	}
@@ -143,7 +151,10 @@ class NR_Wrapper
 	private function makeRequest($http_verb, $method, $args = array())
 	{
 
-		$url = $this->api_endpoint . '/' . $method;
+		// check to see if the api_endpoint already has GET variables
+		$method = (strpos($this->api_endpoint, '?') === false) ?  '/' . $method : $method;
+
+		$url = $this->api_endpoint . $method;
 
 		$this->last_error         = '';
 		$this->request_successful = false;
@@ -168,8 +179,8 @@ class NR_Wrapper
 			break;
 
 		case 'get':
-			$query    = http_build_query($args, '', '&');
-			$response = $http->get($url . '?' . $query);
+			$query = http_build_query($args, '', '&');
+			$response = (strpos($url,'?') !== false) ? $http->get($url . '&' . $query) : $http->get($url . '?' . $query);
 			break;
 
 		case 'delete':

@@ -20,6 +20,7 @@ class NR_ActiveCampaign extends NR_Wrapper
 	/**
 	 * Create a new instance
 	 * @param string $api_key Your ActiveCampaign API key
+	 * @param string $url The personal endpoint URL
 	 * @throws \Exception
 	 */
 	public function __construct($api_key, $url)

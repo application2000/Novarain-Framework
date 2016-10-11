@@ -21,13 +21,14 @@ class NR_Wrapper
 	protected $last_error         = '';
 	protected $last_response      = array();
 	protected $last_request       = array();
-	protected $timeout            = 10;
+	protected $timeout            = 60;
 	protected $options;
 
 	public function __construct()
 	{
 		$this->options       = new JRegistry;
 		$this->last_response = array('headers' => null, 'body' => null);
+		$this->options->set('timeout', $this->timeout);
 	}
 
 	public function setApiKey($api_key)

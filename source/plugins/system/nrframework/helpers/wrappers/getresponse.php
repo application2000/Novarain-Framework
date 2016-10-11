@@ -31,8 +31,5 @@ class NR_GetResponse extends NR_Wrapper
 		$this->options->set('headers.Content-Type', 'application/json');
 		$this->options->set('headers.X-Auth-Token', 'api-key ' . $this->api_key);
 		$this->options->set('headers.Accept-Encoding', 'gzip,deflate');
-		$this->options->set('userAgent', 'PHP GetResponse Client for Joomla');
-		$this->options->set('timeout', $this->timeout);
-
 	}
 }

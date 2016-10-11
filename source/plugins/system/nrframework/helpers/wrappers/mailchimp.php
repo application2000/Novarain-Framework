@@ -33,7 +33,6 @@ class NR_MailChimp extends NR_Wrapper
 		$this->options->set('headers.Accept', 'application/vnd.api+json');
 		$this->options->set('headers.Content-Type', 'application/vnd.api+json');
 		$this->options->set('headers.Authorization', 'apikey ' . $this->api_key);
-		$this->options->set('timeout', $this->timeout);
 	}
 
 	public function setApiKey($api_key)

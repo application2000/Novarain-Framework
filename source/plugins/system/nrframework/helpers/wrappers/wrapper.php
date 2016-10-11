@@ -49,6 +49,23 @@ class NR_Wrapper
 	}
 
 	/**
+	 * Setter method for the API Endpoint
+	 * @param string $url The URL which is set in the account's developer settings
+	 * @throws \Exception 
+	 */
+	public function setApiEndpoint($url)
+	{
+		if (!empty($url))
+		{
+			$this->api_endpoint = $url;
+		}
+		else
+		{
+			throw new \Exception("Invalid API Endpoint URL `{$url}` supplied.");
+		}
+	}
+
+	/**
 	 * Was the last request successful?
 	 * @return bool  True for success, false for failure
 	 */

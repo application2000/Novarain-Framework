@@ -20,27 +20,27 @@ class NR_MailChimp extends NR_Wrapper
 
 	/**
 	 * Create a new instance
-	 * @param string $api_key Your MailChimp API key
+	 * @param string $key Your MailChimp API key
 	 * @throws \Exception
 	 */
-	public function __construct($api_key)
+	public function __construct($key)
 	{
 		parent::__construct();
-		$this->setApiKey($api_key);
-		$this->api_endpoint = 'https://<dc>.api.mailchimp.com/3.0';
-		list(, $data_center) = explode('-', $this->api_key);
-		$this->api_endpoint  = str_replace('<dc>', $data_center, $this->api_endpoint);
+		$this->setKey($key);
+		$this->endpoint = 'https://<dc>.api.mailchimp.com/3.0';
+		list(, $data_center) = explode('-', $this->key);
+		$this->endpoint  = str_replace('<dc>', $data_center, $this->endpoint);
 		$this->options->set('headers.Accept', 'application/vnd.api+json');
 		$this->options->set('headers.Content-Type', 'application/vnd.api+json');
-		$this->options->set('headers.Authorization', 'apikey ' . $this->api_key);
+		$this->options->set('headers.Authorization', 'apikey ' . $this->key);
 	}
 
-	public function setApiKey($api_key)
+	public function setKey($key)
 	{
-		if ((!empty($api_key)) && (!strpos($api_key, '-') === false)) {
-			$this->api_key = $api_key;
+		if ((!empty($key)) && (!strpos($key, '-') === false)) {
+			$this->key = $key;
 		} else {
-			throw new \Exception("Invalid MailChimp API key `{$api_key}` supplied.");
+			throw new \Exception("Invalid MailChimp key `{$key}` supplied.");
 		}
 	}
 }

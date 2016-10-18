@@ -19,33 +19,16 @@ class NR_HubSpot extends NR_Wrapper
 {
 	/**
 	 * Create a new instance
-	 * @param string $api_key Your HubSpot API key
+	 * @param string $key Your HubSpot API key
 	 * @throws \Exception
 	 */
-	public function __construct($api_key)
+	public function __construct($key)
 	{
 		parent::__construct();
-		$this->setApiKey($api_key);
-		$this->setApiEndpoint($url);
-		$this->options->set('headers.Accept', 'application/json; charset=utf-8');
-		$this->options->set('headers.Content-Type', 'application/json; charset=utf-8');
+		$this->setKey($key);
+		$this->setEndpoint('https://api.hubapi.com/contacts/v1');
+		$this->options->set('headers.Content-Type', 'application/x-www-form-urlencoded; charset=utf-8');
+		$this->options->set('headers.Authorization', 'Bearer ' . $this->key);
 	}
 
-	/**
-	 * Setter method for the API Endpoint
-	 * @param string $url The URL which is set in the account's developer settings
-	 * @throws \Exception
-	 */
-	public function setApiEndpoint($url)
-	{
-		if (!empty($url))
-		{
-			$query              = http_build_query(array('hapikey' => $this->api_key));
-			$this->api_endpoint = $url . '/?' . $query;
-		}
-		else
-		{
-			throw new \Exception("Invalid HubSpot URL `{$url}` supplied.");
-		}
-	}
 }

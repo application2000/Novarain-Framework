@@ -15,8 +15,8 @@ defined('_JEXEC') or die;
 
 class NR_Wrapper
 {
-	protected $api_key;
-	protected $api_endpoint;
+	protected $key;
+	protected $endpoint;
 	protected $request_successful = false;
 	protected $last_error         = '';
 	protected $last_response      = array();
@@ -29,39 +29,41 @@ class NR_Wrapper
 		$this->options       = new JRegistry;
 		$this->last_response = array('headers' => null, 'body' => null);
 		$this->options->set('timeout', $this->timeout);
+		$this->options->set('headers.Accept', 'application/json');
+		$this->options->set('headers.Content-Type', 'application/json');
 	}
 
 	/**
-	 * Setter method for the API Key
-	 * @param string $api_key 
+	 * Setter method for the API Key or Access Token
+	 * @param string $key 
 	 * @throws \Exception 
 	 */
-	public function setApiKey($api_key)
+	public function setKey($key)
 	{
-		if (!empty($api_key))
+		if (!empty($key))
 		{
-			$this->api_key = $api_key;
+			$this->key = $key;
 		}
 		else
 		{
-			throw new \Exception("Invalid API key `{$api_key}` supplied.");
+			throw new \Exception("Invalid Key `{$key}` supplied.");
 		}
 	}
 
 	/**
-	 * Setter method for the API Endpoint
+	 * Setter method for the endpoint
 	 * @param string $url The URL which is set in the account's developer settings
 	 * @throws \Exception 
 	 */
-	public function setApiEndpoint($url)
+	public function setEndpoint($url)
 	{
 		if (!empty($url))
 		{
-			$this->api_endpoint = $url;
+			$this->endpoint = $url;
 		}
 		else
 		{
-			throw new \Exception("Invalid API Endpoint URL `{$url}` supplied.");
+			throw new \Exception("Invalid Endpoint URL `{$url}` supplied.");
 		}
 	}
 
@@ -168,10 +170,10 @@ class NR_Wrapper
 	private function makeRequest($http_verb, $method, $args = array())
 	{
 
-		// check to see if the api_endpoint already has GET variables
-		$method = (strpos($this->api_endpoint, '?') === false) ?  '/' . $method : $method;
+		// check to see if the endpoint already has GET variables
+		$method = (strpos($this->endpoint, '?') === false) ?  '/' . $method : $method;
 
-		$url = $this->api_endpoint . $method;
+		$url = $this->endpoint . $method;
 
 		$this->last_error         = '';
 		$this->request_successful = false;

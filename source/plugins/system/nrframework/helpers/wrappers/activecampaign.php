@@ -19,31 +19,30 @@ class NR_ActiveCampaign extends NR_Wrapper
 {
 	/**
 	 * Create a new instance
-	 * @param string $api_key Your ActiveCampaign API key
+	 * @param string $key Your ActiveCampaign key
 	 * @param string $url The personal endpoint URL
 	 * @throws \Exception
 	 */
-	public function __construct($api_key, $url)
+	public function __construct($key, $url)
 	{
 		parent::__construct();
-		$this->setApiKey($api_key);
-		$this->setApiEndpoint($url);
-		$this->options->set('headers.Accept', 'application/json; charset=utf-8');
+		$this->setKey($key);
+		$this->setEndpoint($url);
 		$this->options->set('headers.Content-Type', 'application/x-www-form-urlencoded');
 		$this->options->set('follow_location', true);
 	}
 
 	/**
-	 * Setter method for the API Endpoint
+	 * Setter method for the endpoint
 	 * @param string $url The URL which is set in the account's developer settings
 	 * @throws \Exception 
 	 */
-	public function setApiEndpoint($url)
+	public function setEndpoint($url)
 	{
 		if (!empty($url))
 		{
-			$query              = http_build_query(array('api_key' => $this->api_key, 'api_output' => 'json'));
-			$this->api_endpoint = $url . '/admin/api.php?' . $query;
+			$query              = http_build_query(array('api_key' => $this->key, 'api_output' => 'json'));
+			$this->endpoint = $url . '/admin/api.php?' . $query;
 		}
 		else
 		{

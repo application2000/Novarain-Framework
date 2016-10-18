@@ -20,16 +20,16 @@ class NR_GetResponse extends NR_Wrapper
 
 	/**
 	 * Create a new instance
-	 * @param string $api_key Your GetResponse API key
+	 * @param string $key Your GetResponse API key
 	 * @throws \Exception
 	 */
-	public function __construct($api_key)
+	public function __construct($key)
 	{
 		parent::__construct();
-		$this->setApiKey($api_key);
-		$this->api_endpoint = 'https://api.getresponse.com/v3';
+		$this->setKey($key);
+		$this->endpoint = 'https://api.getresponse.com/v3';
 		$this->options->set('headers.Content-Type', 'application/json');
-		$this->options->set('headers.X-Auth-Token', 'api-key ' . $this->api_key);
+		$this->options->set('headers.X-Auth-Token', 'api-key ' . $this->key);
 		$this->options->set('headers.Accept-Encoding', 'gzip,deflate');
 	}
 }

@@ -27,7 +27,7 @@ class NR_iContact extends NR_Wrapper
 	public function __construct($appId, $url, $username, $password)
 	{
 		parent::__construct();
-		$this->setApiEndpoint($url);
+		$this->setEndpoint($url);
 		$this->options->set('headers.Accept', 'application/json; charset=utf-8');
 		$this->options->set('headers.Content-Type', 'application/json; charset=utf-8');
 		$this->options->set('header.API-Version','2.2');

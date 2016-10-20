@@ -51,16 +51,26 @@ class NRFrameworkFunctions {
         jimport('joomla.filesystem.folder');
         jimport('joomla.filesystem.file');
 
+        $db = JFactory::getDbo();
+
         switch ($type)
         {
             case 'component':
-                if (JFile::exists(JPATH_ADMINISTRATOR . '/components/com_' . $extension . '/' . $extension . '.php')
-                    || JFile::exists(JPATH_ADMINISTRATOR . '/components/com_' . $extension . '/admin.' . $extension . '.php')
-                    || JFile::exists(JPATH_SITE . '/components/com_' . $extension . '/' . $extension . '.php')
-                )
+
+                $result = $db->setQuery(
+                    $db->getQuery(true)
+                        ->select('COUNT(' . $db->quoteName('extension_id') . ')')
+                        ->from($db->quoteName('#__extensions'))
+                        ->where($db->quoteName('element') . ' = ' . $db->quote('com_'.$extension))
+                        ->where($db->quoteName('type') . ' = ' . $db->quote('component'))
+                        ->where($db->quoteName('enabled') . ' = 1')
+                )->loadResult();
+
+                if ($result)
                 {
                     return true;
                 }
+
                 break;
 
             case 'plugin':

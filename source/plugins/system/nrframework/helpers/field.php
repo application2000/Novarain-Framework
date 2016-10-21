@@ -44,9 +44,7 @@ class NRFormField extends JFormField
 	 */
 	protected function getLabel()
 	{
-
 		$label = $this->get("label");
-
 		if (empty($label))
 		{
 			return "";

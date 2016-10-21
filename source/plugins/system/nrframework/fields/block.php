@@ -42,6 +42,13 @@ class JFormFieldNR_Block extends NRFormField
         $showclose   = $this->get('showclose', 0);
         $start       = $this->get('start', 0);
         $end         = $this->get('end', 0);
+        $info        = $this->get("html", null);
+
+        if ($info)
+        {
+            $info = str_replace("{{", "<", $info);
+            $info = str_replace("}}", ">", $info);       
+        }
 
         $html = array();
 
@@ -63,7 +70,7 @@ class JFormFieldNR_Block extends NRFormField
             }
             if ($description)
             {
-                $html[] = '<div class="well-desc">' . $this->prepareText($description) . '</div>';
+                $html[] = '<div class="well-desc">' . $this->prepareText($description) . $info . '</div>';
             }
             $html[] = '<div><div>';
         }

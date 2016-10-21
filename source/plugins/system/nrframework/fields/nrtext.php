@@ -10,8 +10,6 @@
 // No direct access to this file
 defined('_JEXEC') or die;
 
-require_once dirname(__DIR__) . '/helpers/field.php';
-
 class JFormFieldNRText extends JFormFieldText
 {
     /**
@@ -19,7 +17,7 @@ class JFormFieldNRText extends JFormFieldText
      *
      *  @return  string  
      */
-    protected function getInput()
+    function getInput()
     {   
 
         $addon = (string) $this->element['addon'];

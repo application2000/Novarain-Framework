@@ -16,9 +16,16 @@ class NRFormField extends JFormField
 	/**
 	 *  Document object
 	 *
-	 *  @var  [type]
+	 *  @var  object
 	 */
 	public $doc;
+
+	/**
+	 *  Database object
+	 *
+	 *  @var  object
+	 */
+	public $db;
 
 	/**
 	 *  Class constructor
@@ -27,6 +34,7 @@ class NRFormField extends JFormField
 	{
 		$this->doc = JFactory::getDocument();
 		$this->doc->addStylesheet(JURI::root(true) . "/plugins/system/nrframework/assets/css/fields.css");
+		$this->db = JFactory::getDbo();
 	}
 
 	/**

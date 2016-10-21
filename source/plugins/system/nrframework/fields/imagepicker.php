@@ -23,7 +23,6 @@ class JFormFieldImagePicker extends JFormFieldList
 
 	protected function getInput()
 	{	
-
 		$params = (array) $this->element->attributes();
 		$params = new JRegistry($params["@attributes"]);
 
@@ -31,6 +30,7 @@ class JFormFieldImagePicker extends JFormFieldList
 		$hideselect = $params->get("hideselect", "true");
 		
 		$assetsDir = JURI::root(true)."/plugins/system/nrframework/fields/assets/";
+
 		$doc = JFactory::getDocument();
         $doc->addScript($assetsDir.'image-picker.min.js');
         $doc->addStyleSheet($assetsDir.'image-picker.css');
@@ -62,6 +62,4 @@ class JFormFieldImagePicker extends JFormFieldList
 
 		return $input;
 	}
-
-
 }

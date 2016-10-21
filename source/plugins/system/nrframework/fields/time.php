@@ -51,6 +51,14 @@ class JFormFieldNR_Time extends NRFormField
 					$(".clockpicker").clockpicker();
 				});
         	');
+
+			// Fuck you template.css
+			$this->doc->addStyleDeclaration('
+				.clockpicker-align-left.popover > .arrow {
+				    left: 25px;
+				}
+			');
+
 			$run = true;
 		}
 

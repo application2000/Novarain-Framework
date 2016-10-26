@@ -20,6 +20,7 @@ class NR_MailChimp extends NR_Wrapper
 
 	/**
 	 * Create a new instance
+	 * 
 	 * @param string $key Your MailChimp API key
 	 * @throws \Exception
 	 */
@@ -33,6 +34,26 @@ class NR_MailChimp extends NR_Wrapper
 		$this->options->set('headers.Accept', 'application/vnd.api+json');
 		$this->options->set('headers.Content-Type', 'application/vnd.api+json');
 		$this->options->set('headers.Authorization', 'apikey ' . $this->key);
+	}
+
+	/**
+	 * Get the last error returned by either the network transport, or by the API.
+	 * If something didn't work, this should contain the string describing the problem.
+	 * 
+	 * @return  array|false  describing the error
+	 */
+	public function getLastError()
+	{
+		
+		$response = json_decode($this->last_response['body'], true);
+
+		if (isset($response["errors"]))
+		{
+			$error = $response["errors"][0];
+			$this->last_error .= " - " . $error["field"] . ": " . $error["message"];
+		}
+
+		return $this->last_error;
 	}
 
 	public function setKey($key)

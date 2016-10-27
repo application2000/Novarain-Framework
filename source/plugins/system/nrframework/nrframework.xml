@@ -2,7 +2,7 @@
 <extension version="3.4" type="plugin" group="system" method="upgrade">
 	<name>plg_system_nrframework</name>
 	<description>PLG_SYSTEM_NRFRAMEWORK_DESC</description>
-	<version>2.1.23</version>
+	<version>2.1.24</version>
 	<creationDate>August 2016</creationDate>
 	<author>Tassos Marinos</author>
 	<copyright>Copyright © 2016 Tassos Marinos All Rights Reserved</copyright>
@@ -12,7 +12,6 @@
 	<scriptfile>script.install.php</scriptfile>
 	<files>
 		<filename plugin="nrframework">nrframework.php</filename>
-		<filename>helper.php</filename>
 		<filename>script.install.helper.php</filename>
 		<folder>fields</folder>
 		<folder>helpers</folder>

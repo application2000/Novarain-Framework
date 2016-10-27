@@ -8,20 +8,38 @@
 */
 
 defined( '_JEXEC' ) or die( 'Restricted access' );
-define('NR_FRAMEWORK_PATH', JPATH_PLUGINS . '/system/nrframework/');
+
+jimport('joomla.filesystem.file');
+jimport('joomla.filesystem.folder');
+
+require_once __DIR__ . '/helpers/functions.php';
 
 class plgSystemNRFramework extends JPlugin
 {
 
+	/**
+	 *  Auto load plugin language 
+	 *
+	 *  @var  boolean
+	 */
 	protected $autoloadLanguage = true;
+	
+	/**
+	 *  The Joomla Application object
+	 *
+	 *  @var  object
+	 */
 	protected $app;
-	protected $db;
 
-    public function onAfterRoute()
-    {
-        require_once NR_FRAMEWORK_PATH . 'helper.php';
-    }
-
+    /**
+     *  Update UpdateSites after the user has entered a Download Key
+     *
+     *  @param   string  $context  The component context
+     *  @param   string  $table    
+     *  @param   boolean $isNew    
+     *
+     *  @return  void
+     */
 	public function onExtensionAfterSave($context, $table, $isNew)
 	{
 		// Run only on Novarain Framework edit form
@@ -68,9 +86,7 @@ class plgSystemNRFramework extends JPlugin
 			return;
 		}
 
-		JFactory::getApplication()->enqueueMessage(
-			'To be able to update the Pro version of this extension via the Joomla updater, you will need enter your Download Key in the settings of the <a href="'.JURI::base().'index.php?option=com_plugins&view=plugins&filter_search=novarain">Novarain Framework System Plugin</a>'
-		);
+		$this->app->enqueueMessage('To be able to update the Pro version of this extension via the Joomla updater, you will need enter your Download Key in the settings of the <a href="'.JURI::base().'index.php?option=com_plugins&view=plugins&filter_search=novarain">Novarain Framework System Plugin</a>');
 
 		return false;
 	}

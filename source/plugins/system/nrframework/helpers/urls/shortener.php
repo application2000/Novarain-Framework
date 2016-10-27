@@ -57,16 +57,15 @@ class NRURLShortener {
     }
 
     /**
-     *  Throws and logs the error message
+     *  Throws an exception
      *
      *  @param   string  $msg  
      *
-     *  @return  boolean        Interrupts the procedure
+     *  @return  void
      */
     protected function throwError($msg)
     {
-        $error = JText::sprintf('NR_URL_SHORTENING_FAILED', $this->url, $this->service->name, $msg);
-        JLog::add($error, JLog::ERROR, 'novarain');
+        throw new Exception(JText::sprintf('NR_URL_SHORTENING_FAILED', $this->url, $this->service->name, $msg));
     }
 
     /**

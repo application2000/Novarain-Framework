@@ -42,8 +42,8 @@ class JFormFieldNR_Gmap extends NRFormField
 		JHtml::_('jquery.framework');
 		Jtext::script('NR_WRONG_COORDINATES');
 
-		$this->doc->addScript('//maps.googleapis.com/maps/api/js?key=AIzaSyDsY82z3zz1V81XLG0AnL_TbSXGxJ4n1cw','text/javascript', false, true);
-		$this->doc->addScript(JURI::root(true) . '/plugins/system/nrframework/fields/assets/gmap.init.js','text/javascript',true,true);
+		$this->doc->addScript('//maps.googleapis.com/maps/api/js?key=AIzaSyDsY82z3zz1V81XLG0AnL_TbSXGxJ4n1cw');
+		$this->doc->addScript(JURI::root(true) . '/plugins/system/nrframework/fields/assets/gmap.init.js');
 
 		// Add styles to DOM
 		$style = '#' . $this->id . '_map { '

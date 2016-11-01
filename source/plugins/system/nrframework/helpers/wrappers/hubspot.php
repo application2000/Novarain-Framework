@@ -30,5 +30,13 @@ class NR_HubSpot extends NR_Wrapper
 		$this->options->set('headers.Content-Type', 'application/x-www-form-urlencoded; charset=utf-8');
 		$this->options->set('headers.Authorization', 'Bearer ' . $this->key);
 	}
+	/**
+	 * Encode the data and attach it to the request
+	 * @param   array $data Assoc array of data to attach
+	 */
+	protected function attachRequestPayload($data)
+	{
+		$this->last_request['body'] = http_build_query($data);
+	}
 
 }

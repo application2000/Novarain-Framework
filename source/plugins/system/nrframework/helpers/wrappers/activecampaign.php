@@ -49,4 +49,13 @@ class NR_ActiveCampaign extends NR_Wrapper
 			throw new \Exception("Invalid ActiveCampaign URL `{$url}` supplied.");
 		}
 	}
+
+	/**
+	 * Encode the data and attach it to the request
+	 * @param   array $data Assoc array of data to attach
+	 */
+	protected function attachRequestPayload($data)
+	{
+		$this->last_request['body'] = http_build_query($data);
+	}
 }

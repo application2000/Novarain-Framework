@@ -242,7 +242,7 @@ class NR_Wrapper
 	 * Encode the data and attach it to the request
 	 * @param   array $data Assoc array of data to attach
 	 */
-	private function attachRequestPayload($data)
+	protected function attachRequestPayload($data)
 	{
 		$encoded                    = json_encode($data);
 		$this->last_request['body'] = $encoded;

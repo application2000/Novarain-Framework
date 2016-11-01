@@ -112,5 +112,4 @@ class NR_ActiveCampaign extends NR_Wrapper
 	{
 		$this->last_request['body'] = http_build_query($data);
 	}
-
 }

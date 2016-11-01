@@ -37,30 +37,70 @@ class NR_MailChimp extends NR_Wrapper
 	}
 
 	/**
-	 * Get the last error returned by either the network transport, or by the API.
-	 * If something didn't work, this should contain the string describing the problem.
-	 * 
-	 * @return  array|false  describing the error
+	 *  Subscribe user to MailChimp
+	 *
+	 *  API References:
+	 *  https://developer.mailchimp.com/documentation/mailchimp/reference/lists/members/#edit-put_lists_list_id_members_subscriber_hash
+	 *  https://developer.mailchimp.com/documentation/mailchimp/reference/lists/members/#create-post_lists_list_id_members
+	 *
+	 *  @param   string   $email         	  User's email address
+	 *  @param   string   $list          	  The MailChimp list unique ID
+	 *  @param   array    $merge_fields  	  Merge Fields
+	 *  @param   boolean  $update_existing	  Update existing user
+	 *
+	 *  @return  void
+	 */
+	public function subscribe($email, $list, $merge_fields = array(), $update_existing = true)
+	{
+		$data = array(
+			"email_address" => $email,
+			"status" 		=> "subscribed",
+			"merge_fields"	=> $merge_fields
+		);
+
+		if ($update_existing)
+		{
+			$subscriberHash = md5(strtolower($email));
+			$this->put('lists/' . $list . '/members/' . $subscriberHash, $data);
+			return true;
+		}
+
+		$this->post('lists/' . $list . '/members', $data);
+	}
+
+	/**
+	 *  Get the last error returned by either the network transport, or by the API.
+	 *
+	 *  @return  string
 	 */
 	public function getLastError()
 	{
-		
-		$response = json_decode($this->last_response['body'], true);
+		$body = $this->last_response['body'];
 
-		if (isset($response["errors"]))
+		if (isset($body["errors"]))
 		{
-			$error = $response["errors"][0];
-			$this->last_error .= " - " . $error["field"] . ": " . $error["message"];
+			$error = $body["errors"][0];
+			return $error["field"] . ": " . $error["message"];
 		}
 
-		return $this->last_error;
+		if (isset($body["detail"]))
+		{
+			return $body["detail"];
+		}
 	}
 
+	/**
+	 *  Set the API Key
+	 *
+	 *  @param  string
+	 */
 	public function setKey($key)
 	{
-		if ((!empty($key)) && (!strpos($key, '-') === false)) {
+		if ((!empty($key)) && (!strpos($key, '-') === false))
+		{
 			$this->key = $key;
-		} else {
+		} else
+		{
 			throw new \Exception("Invalid MailChimp key `{$key}` supplied.");
 		}
 	}

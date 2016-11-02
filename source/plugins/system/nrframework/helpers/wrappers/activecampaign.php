@@ -33,20 +33,83 @@ class NR_ActiveCampaign extends NR_Wrapper
 	}
 
 	/**
-	 * Setter method for the endpoint
-	 * @param string $url The URL which is set in the account's developer settings
-	 * @throws \Exception 
+	 *  Subscribe user to Active Campaign List
+	 *
+	 *  http://www.activecampaign.com/api/example.php?call=contact_add
+	 *
+	 *  TODO: Custom Fields, Update existing contact
+	 *
+	 *  @param   string   $email   	     The name of the Contact
+	 *  @param   string   $name          Email of the Contact
+	 *  @param   object   $list          List ID
+	 *  @param   object   $customfields	 Custom Fields
+	 *
+	 *  @return  void
+	 */
+	public function subscribe($email, $name, $list, $customfields = null)
+	{
+		$name = explode(" ", $name, 2);
+
+		$data = array(
+			"api_action" 		   => "contact_add",
+			"email" 			   => $email,
+			"first_name"		   => isset($name[0]) ? $name[0] : null,
+			"last_name"			   => isset($name[1]) ? $name[1] : null,
+			"p[".$list."]" 		   => $list,
+			"status[1]"			   => 1,
+			"instantresponders[1]" => 1,
+			"ip4" 				   => $_SERVER['REMOTE_ADDR']
+		);
+
+		$this->post('', $data);
+	}
+
+	/**
+	 * Check if the response was successful or a failure. If it failed, store the error.
+	 * 
+	 * @return bool     If the request was successful
+	 */
+	protected function determineSuccess()
+	{
+		$serviceStatus = $this->findHTTPStatus();
+
+		// Find Active Campaign true application status
+		$body = $this->last_response['body'];
+		$applicationStatus = (bool) isset($body['result_code']) ? $body['result_code'] : false;
+
+		if (($serviceStatus >= 200 && $serviceStatus <= 299) && $applicationStatus)
+		{
+			return ($this->request_successful = true);
+		}
+
+		// Request Failed - Set the last error
+		$this->last_error = isset($body["result_message"]) ? $body["result_message"] : "";
+	}
+
+	/**
+	 *  Setter method for the endpoint
+	 *
+	 *  @param  string  $url  The URL which is set in the account's developer settings
 	 */
 	public function setEndpoint($url)
 	{
 		if (!empty($url))
 		{
-			$query              = http_build_query(array('api_key' => $this->key, 'api_output' => 'json'));
+			$query = http_build_query(array('api_key' => $this->key, 'api_output' => 'json'));
 			$this->endpoint = $url . '/admin/api.php?' . $query;
 		}
 		else
 		{
 			throw new \Exception("Invalid ActiveCampaign URL `{$url}` supplied.");
 		}
+	}
+
+	/**
+	 * Encode the data and attach it to the request
+	 * @param   array $data Assoc array of data to attach
+	 */
+	protected function attachRequestPayload($data)
+	{
+		$this->last_request['body'] = http_build_query($data);
 	}
 }

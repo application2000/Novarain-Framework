@@ -169,7 +169,6 @@ class NR_Wrapper
 	 */
 	private function makeRequest($http_verb, $method, $args = array())
 	{
-
 		// check to see if the endpoint already has GET variables
 		$method = (strpos($this->endpoint, '?') === false) ?  '/' . $method : $method;
 
@@ -177,10 +176,8 @@ class NR_Wrapper
 
 		$this->last_error         = '';
 		$this->request_successful = false;
-		$response                 = array('headers' => null, 'body' => null);
-		$this->last_response      = $response;
-
-		$this->last_request = array(
+		$this->last_response      = array();
+		$this->last_request       = array(
 			'method'  => $http_verb,
 			'path'    => $method,
 			'url'     => $url,
@@ -192,99 +189,66 @@ class NR_Wrapper
 
 		switch ($http_verb)
 		{
-		case 'post':
-			$this->attachRequestPayload($args);
-			$response = $http->post($url, $this->last_request['body']);
-			break;
+			case 'post':
+				$this->attachRequestPayload($args);
+				$response = $http->post($url, $this->last_request['body']);
+				break;
 
-		case 'get':
-			$query = http_build_query($args, '', '&');
-			$response = (strpos($url,'?') !== false) ? $http->get($url . '&' . $query) : $http->get($url . '?' . $query);
-			break;
+			case 'get':
+				$query = http_build_query($args, '', '&');
+				$response = (strpos($url,'?') !== false) ? $http->get($url . '&' . $query) : $http->get($url . '?' . $query);
+				break;
 
-		case 'delete':
-			$response = $http->delete($url);
-			break;
+			case 'delete':
+				$response = $http->delete($url);
+				break;
 
-		case 'patch':
-			$this->attachRequestPayload($args);
-			$response = $http->patch($url, $this->last_request['body']);
-			break;
+			case 'patch':
+				$this->attachRequestPayload($args);
+				$response = $http->patch($url, $this->last_request['body']);
+				break;
 
-		case 'put':
-			$this->attachRequestPayload($args);
-			$response = $http->put($url, $this->last_request['body']);
-			break;
+			case 'put':
+				$this->attachRequestPayload($args);
+				$response = $http->put($url, $this->last_request['body']);
+				break;
 		}
 
-		$responseData['body']    = $response->body;
-		$responseData['headers'] = $response->headers;
-		$responseData['code']    = $response->code;
-
-		if (isset($responseData['headers']['request_header']))
+		// Convert body JSON to array
+		if (isset($response->body) && !empty($response->body))
 		{
-			$this->last_request['headers'] = $responseData['headers']['request_header'];
+			$response->body = json_decode($response->body, true);
 		}
 
-		if ($responseData['body'] === false)
-		{
-			$this->last_error = "Fatal Error Code:" . $response->code;
-		}
+		// Format response object to array
+		$this->last_response = (array) $response;
 
-		$formattedResponse = $this->formatResponse($responseData);
+		$this->determineSuccess();
 
-		$this->determineSuccess($responseData, $formattedResponse);
-
-		return $formattedResponse;
+		return $this->last_response["body"];
 	}
 
 	/**
 	 * Encode the data and attach it to the request
 	 * @param   array $data Assoc array of data to attach
 	 */
-	private function attachRequestPayload($data)
+	protected function attachRequestPayload($data)
 	{
-		$encoded                    = json_encode($data);
-		$this->last_request['body'] = $encoded;
-	}
-
-	/**
-	 * Decode the response and format any error messages for debugging
-	 * @param array $response The response from the JHTTP request
-	 * @return array|false    The JSON decoded into an array
-	 */
-	private function formatResponse($response)
-	{
-		$this->last_response = $response;
-
-		if (!empty($response['body']))
-		{
-			return json_decode($response['body'], true);
-		}
-
-		return false;
+		$this->last_request['body'] = json_encode($data);
 	}
 
 	/**
 	 * Check if the response was successful or a failure. If it failed, store the error.
-	 * @param array $response The response from the JHTTP request
-	 * @param array|false $formattedResponse The response body payload from the JHTTP request
+	 * 
 	 * @return bool     If the request was successful
 	 */
-	private function determineSuccess($response, $formattedResponse)
+	protected function determineSuccess()
 	{
-		$status = $this->findHTTPStatus($response, $formattedResponse);
+		$status = $this->findHTTPStatus();
 
 		if ($status >= 200 && $status <= 299)
 		{
-			$this->request_successful = true;
-			return true;
-		}
-
-		if (isset($formattedResponse['detail']))
-		{
-			$this->last_error = sprintf('%d: %s', $formattedResponse['status'], $formattedResponse['detail']);
-			return false;
+			return ($this->request_successful = true);
 		}
 
 		$this->last_error = 'Unknown error, call getLastResponse() to find out what happened.';
@@ -293,15 +257,14 @@ class NR_Wrapper
 
 	/**
 	 * Find the HTTP status code from the headers or API response body
-	 * @param array $response The response from the JHTTP request
-	 * @param array|false $formattedResponse The response body payload from the JHTTP request
+	 * 
 	 * @return int  HTTP status code
 	 */
-	private function findHTTPStatus($response, $formattedResponse)
+	protected function findHTTPStatus()
 	{
-		if (!empty($response['code']) && isset($response['code']))
+		if (!empty($this->last_response['code']) && isset($this->last_response['code']))
 		{
-			return (int) $response['code'];
+			return (int) $this->last_response['code'];
 		}
 
 		return 418;

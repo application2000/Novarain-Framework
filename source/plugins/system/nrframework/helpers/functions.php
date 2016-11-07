@@ -155,6 +155,13 @@ class NRFrameworkFunctions
      */
     public static function getExtensionVersion($extension, $type = false)
     {
+        $hash  = MD5($extension . "_" . ($type ? "1" : "0"));
+        $cache = NRCache::read($hash);
+
+        if ($cache)
+        {
+            return $cache;
+        }
 
         $xml = self::getExtensionXMLFile($extension);
 
@@ -175,6 +182,8 @@ class NRFrameworkFunctions
             $extType = (self::extensionHasProInstalled($extension)) ? "Pro" : "Free";
             return $xml["version"] . " " . $extType;
         }
+
+        NRCache::set($hash, $xml['version']);
 
         return $xml['version'];
     }

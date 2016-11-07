@@ -155,6 +155,13 @@ class NRFrameworkFunctions
      */
     public static function getExtensionVersion($extension, $type = false)
     {
+        $hash  = MD5($extension . "_" . ($type ? "1" : "0"));
+        $cache = NRCache::read($hash);
+
+        if ($cache)
+        {
+            return $cache;
+        }
 
         $xml = self::getExtensionXMLFile($extension);
 
@@ -170,13 +177,15 @@ class NRFrameworkFunctions
             return '';
         }
 
+        $version = $xml['version'];
+
         if ($type)
         {
             $extType = (self::extensionHasProInstalled($extension)) ? "Pro" : "Free";
-            return $xml["version"] . " " . $extType;
+            $version = $xml["version"] . " " . $extType;
         }
 
-        return $xml['version'];
+        return NRCache::set($hash, $version);
     }
 
     public static function getExtensionXMLFile($extension, $basePath = JPATH_ADMINISTRATOR)

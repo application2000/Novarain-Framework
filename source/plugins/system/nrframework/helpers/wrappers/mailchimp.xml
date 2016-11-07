@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<form>
+    <fieldset name="service">
+        <field name="api" type="text"
+            label="API Key"
+            description="API Key"
+            class="input-xlarge"
+        />
+        <field name="list" type="text"
+            label="COM_CONVERTFORMS_LIST_ID"
+            description="COM_CONVERTFORMS_LIST_ID_DESC"
+            class="input-xlarge"
+        />
+        <field name="doubleoptin" type="radio"
+            label="COM_CONVERTFORMS_DISABLE_DOUBLE_OPTIN"
+            description="COM_CONVERTFORMS_DISABLE_DOUBLE_OPTIN_DESC"
+            class="btn-group"
+            default="1">
+            <option value="0">JNO</option>
+            <option value="1">JYES</option>
+        </field>
+        <field name="updateexisting" type="radio"
+            label="COM_CONVERTFORMS_UPDATE_EXISTING_USER"
+            description="COM_CONVERTFORMS_UPDATE_EXISTING_USER_DESC"
+            class="btn-group"
+            default="1">
+            <option value="0">JNO</option>
+            <option value="1">JYES</option>
+        </field>
+    </fieldset>
+</form>

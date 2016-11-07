@@ -65,6 +65,37 @@ class NR_ActiveCampaign extends NR_Wrapper
 	}
 
 	/**
+	 *  Returns all available lists
+	 *
+	 *  @return  array
+	 */
+	public function getLists($fulldata = false)
+	{
+		$data = $this->get("/lists");
+		$lists = array();
+
+		if (!isset($data["lists"]))
+		{
+			return $lists;
+		}
+
+		if ($fulldata)
+		{
+			return $data;
+		}
+
+		foreach ($data["lists"] as $key => $list)
+		{
+			$lists[] = array(
+				"id"   => $list["id"],
+				"name" => $list["name"]
+			);
+		}
+
+		return $lists;
+	}
+
+	/**
 	 * Check if the response was successful or a failure. If it failed, store the error.
 	 * 
 	 * @return bool     If the request was successful

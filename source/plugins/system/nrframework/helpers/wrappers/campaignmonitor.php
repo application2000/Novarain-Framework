@@ -17,6 +17,7 @@ require_once __DIR__ . '/wrapper.php';
 
 class NR_CampaignMonitor extends NR_Wrapper
 {
+
 	/**
 	 * Create a new instance
 	 * @param string $key Your CampaignMonitor Access Token
@@ -29,4 +30,10 @@ class NR_CampaignMonitor extends NR_Wrapper
 		$this->setEndpoint('https://api.createsend.com/api/v3.1');
 		$this->options->set('headers.Authorization', 'Bearer ' . $this->key);
 	}
+
+	private function getAuthorizeURL($client_id, $redirect, $scope, $state)
+	{
+		return "https://api.createsend.com/oauth?type=web_server&client_id=" . $client_id . "&redirect_uri=" . $redirect . "&scope=" . $scope . "&state=" . $state;
+	}
+
 }

@@ -11,12 +11,16 @@ defined('_JEXEC') or die;
 require_once dirname(__DIR__) . '/helpers/field.php';
 require_once dirname(__DIR__) . '/helpers/html.php';
 
+/**
+ *  GroupLevel Field
+ */
 class JFormFieldNRGroupLevel extends NRFormField
 {
 	/**
 	 * Output the HTML for the field
 	 * Example of usage: <field name="field_name" type="nrgrouplevel" label="NR_SELECTION" show_all="0" size="300" use_names="0"/>
-	 * @return string The HTML for the groupfield
+	 * 
+	 * @return string 	The HTML for the groupfield
 	 */
 	protected function getInput()
 	{
@@ -40,9 +44,11 @@ class JFormFieldNRGroupLevel extends NRFormField
 
 	/**
 	 * A helper to get the list of user groups.
-	 * Login from administrator\components\com_config\model\field\filters.php@getUserGroups
-	 * @param boolen $useNames Whether to use the names or the IDs
-	 * @return	array
+	 * Logic from administrator\components\com_config\model\field\filters.php@getUserGroups
+	 * 
+	 * @param   boolen 	$useNames 	Whether to use the names or the IDs
+	 * 
+	 * @return	object
 	 */
 	protected function getUserGroups($useNames = false)
 	{

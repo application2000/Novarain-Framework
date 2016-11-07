@@ -11,8 +11,64 @@ defined('_JEXEC') or die;
 
 require_once __DIR__ . '/cache.php';
 
-class NRFrameworkFunctions {
+class NRFrameworkFunctions
+{
 
+    /**
+     *  Adds a script to the document
+     *
+     *  @param  string  $name  The filename
+     */
+    public static function addScriptLocal($filename)
+    {
+        self::addMediaLocal($filename);
+    }
+
+    /**
+     *  Adds a stylesheet to the document
+     *
+     *  @param  string  $name  The filename
+     */
+    public static function addStyleSheetLocal($filename)
+    {
+        self::addMediaLocal($filename, "stylesheet");
+    }
+
+    /**
+     *  Adds a script or a stylesheet to the document
+     *
+     *  @param  string  $filename  The filename
+     *  @param  string  $type      The media type (script, stylesheet)
+     */
+    public static function addMediaLocal($filename, $type = "script")
+    {
+        $mediaPath = JURI::root(true) . "/media/plg_system_nrframework/";
+        $version   = self::getVersion();
+
+        if ($type == "script")
+        {
+            JFactory::getDocument()->addScript($mediaPath . "/js/" . $filename . "?v=" . $version);
+            return;
+        }
+
+        JFactory::getDocument()->addStylesheet($mediaPath . "/css/" . $filename . "?v=" . $version);
+    }
+
+    /**
+     *  Get the Framework version
+     *
+     *  @return  string  The framework version
+     */
+    public static function getVersion()
+    {
+        return self::getExtensionVersion("plg_system_nrframework");
+    }
+
+    /**
+     *  Checks if document is a feed document (xml, rss, atom)
+     *
+     *  @return  boolean
+     */
     public static function isFeed()
     {
         return (

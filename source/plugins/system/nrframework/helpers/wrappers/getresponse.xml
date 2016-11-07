@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<form>
+    <fieldset name="service">
+        <field name="api" type="text"
+            label="COM_CONVERTFORMS_API_KEY"
+            description="COM_CONVERTFORMS_API_KEY_DESC"
+            class="input-xlarge"
+        />
+        <field name="list" type="text"
+            label="Campaign ID"
+            description="Campaign ID"
+        />  
+    </fieldset>
+</form>

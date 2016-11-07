@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<form>
+    <fieldset name="service">
+        <field name="btnauth" type="nroauth"
+            service="campaignmonitor"
+            label="Campaign Monitor"
+            description="Campaign Monitor"
+        />
+        <field name="accesstoken" type="text"
+            label="Access Token"
+            description="Access Token"
+            class="input-xlarge">
+        </field>
+        <field name="refreshtoken" type="text"
+            label="Refresh Token"
+            description="Refresh Token"
+            class="input-xlarge">
+        </field>
+    </fieldset>
+</form>

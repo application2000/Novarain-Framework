@@ -17,7 +17,6 @@ require_once __DIR__ . '/wrapper.php';
 
 class NR_MailChimp extends NR_Wrapper
 {
-
 	/**
 	 * Create a new instance
 	 * 
@@ -66,6 +65,37 @@ class NR_MailChimp extends NR_Wrapper
 		}
 
 		$this->post('lists/' . $list . '/members', $data);
+	}
+
+	/**
+	 *  Returns all available MailChimp lists
+	 *
+	 *  @return  array
+	 */
+	public function getLists($fulldata = false)
+	{
+		$data = $this->get("/lists");
+		$lists = array();
+
+		if (!isset($data["lists"]))
+		{
+			return $lists;
+		}
+
+		if ($fulldata)
+		{
+			return $data;
+		}
+
+		foreach ($data["lists"] as $key => $list)
+		{
+			$lists[] = array(
+				"id"   => $list["id"],
+				"name" => $list["name"]
+			);
+		}
+
+		return $lists;
 	}
 
 	/**

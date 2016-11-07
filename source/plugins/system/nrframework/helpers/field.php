@@ -28,11 +28,19 @@ class NRFormField extends JFormField
 	public $db;
 
 	/**
+	 *  Application Object
+	 *
+	 *  @var  object
+	 */
+	protected $app;
+
+	/**
 	 *  Class constructor
 	 */
 	function __construct()
 	{
 		$this->doc = JFactory::getDocument();
+		$this->app = JFactory::getApplication();
 		$this->doc->addStylesheet(JURI::root(true) . "/plugins/system/nrframework/assets/css/fields.css");
 		$this->db = JFactory::getDbo();
 	}
@@ -82,9 +90,16 @@ class NRFormField extends JFormField
 		return JText::_($string);
 	}
 
+	/**
+	 *  Method to get field parameters
+	 *
+	 *  @param   string  $val      Field parameter
+	 *  @param   string  $default  The default value
+	 *
+	 *  @return  string
+	 */
 	public function get($val, $default = '')
 	{
 		return (isset($this->element[$val]) && (string) $this->element[$val] != '') ? (string) $this->element[$val] : $default;
 	}
-
 }

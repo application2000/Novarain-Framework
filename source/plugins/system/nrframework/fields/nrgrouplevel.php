@@ -20,13 +20,10 @@ class JFormFieldNRGroupLevel extends NRFormField
 	 */
 	protected function getInput()
 	{
-		$this->params = $this->element->attributes();
-
-		$size    = $this->get('size', 300);
+		$size      = $this->get('size', 300);
 		$show_all  = $this->get('show_all');
 		$use_names = $this->get('use_names');
-
-		$options = $this->getUserGroups($use_names);
+		$options   = $this->getUserGroups($use_names);
 
 		if ($show_all)
 		{
@@ -34,6 +31,7 @@ class JFormFieldNRGroupLevel extends NRFormField
 			$option->value   = -1;
 			$option->text    = '- ' . JText::_('JALL') . ' -';
 			$option->disable = '';
+			
 			array_unshift($options, $option);
 		}
 
@@ -51,18 +49,18 @@ class JFormFieldNRGroupLevel extends NRFormField
 		$value = $useNames ? 'a.title' : 'a.id';
 
 		// Get a database object.
-		$db = JFactory::getDbo();
+		$db = $this->db;
 
 		// Get the user groups from the database.
-		$query = $db->getQuery(true);
-		$query->select($value . ' AS value, a.title AS text, COUNT(DISTINCT b.id) AS level');
-		$query->from('#__usergroups AS a');
-		$query->join('LEFT', '#__usergroups AS b on a.lft > b.lft AND a.rgt < b.rgt');
-		$query->group('a.id');
-		$query->order('a.lft ASC');
-		$db->setQuery($query);
-		$options = $db->loadObjectList();
+		$query = $db->getQuery(true)
+			->select($value . ' AS value, a.title AS text, COUNT(DISTINCT b.id) AS level')
+			->from('#__usergroups AS a')
+			->join('LEFT', '#__usergroups AS b on a.lft > b.lft AND a.rgt < b.rgt')
+			->group('a.id')
+			->order('a.lft ASC');
 
-		return $options;
+		$db->setQuery($query);
+
+		return $db->loadObjectList();
 	}
 }

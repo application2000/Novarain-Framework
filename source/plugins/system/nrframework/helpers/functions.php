@@ -47,11 +47,11 @@ class NRFrameworkFunctions
 
         if ($type == "script")
         {
-            JFactory::getDocument()->addScript($mediaPath . "/js/" . $filename . "?v=" . $version);
+            JFactory::getDocument()->addScript($mediaPath . "js/" . $filename . "?v=" . $version);
             return;
         }
 
-        JFactory::getDocument()->addStylesheet($mediaPath . "/css/" . $filename . "?v=" . $version);
+        JFactory::getDocument()->addStylesheet($mediaPath . "css/" . $filename . "?v=" . $version);
     }
 
     /**

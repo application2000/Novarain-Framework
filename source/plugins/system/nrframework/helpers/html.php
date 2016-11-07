@@ -67,8 +67,8 @@ class NRHTML
 			return '<fieldset class="radio"><label for="' . $id . '">' . JText::_('NR_ITEM_IDS') . ':</label>' . $input . '</fieldset>';
 		}
 
-		JFactory::getDocument()->addScript(JURI::root(true) . '/plugins/system/nrframework/fields/assets/treeselect.js');
-		JFactory::getDocument()->addStyleSheet(JURI::root(true) . '/plugins/system/nrframework/fields/assets/treeselect.css');
+		NRFrameworkFunctions::addScriptLocal("treeselect.js");
+		NRFrameworkFunctions::addStyleSheetLocal("treeselect.css");
 
 		$html = array();
 

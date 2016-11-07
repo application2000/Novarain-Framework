@@ -32,7 +32,7 @@ class JFormFieldNRMenuItems extends NRFormField
 	public function getMenuItems()
 	{
 		NRFrameworkFunctions::loadLanguage('com_menus', JPATH_ADMINISTRATOR);
-		$db    = JFactory::getDbo();
+		$db    = $this->db;
 		$query = $db->getQuery(true)
 			->select('a.id AS value, a.title AS text, a.alias, a.level, a.menutype, a.type, a.template_style_id, a.checked_out, a.language')
 			->from('#__menu AS a')

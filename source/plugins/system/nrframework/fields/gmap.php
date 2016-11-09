@@ -43,7 +43,7 @@ class JFormFieldNR_Gmap extends NRFormField
 		Jtext::script('NR_WRONG_COORDINATES');
 
 		$this->doc->addScript('//maps.googleapis.com/maps/api/js?key=AIzaSyDsY82z3zz1V81XLG0AnL_TbSXGxJ4n1cw');
-		$this->doc->addScript(JURI::root(true) . '/plugins/system/nrframework/fields/assets/gmap.init.js');
+		NRFrameworkFunctions::addScriptLocal("field.gmap.js");
 
 		// Add styles to DOM
 		$style = '#' . $this->id . '_map { '

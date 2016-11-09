@@ -29,11 +29,9 @@ class JFormFieldNRFonts extends JFormFieldGroupedList
 			return;
 		}
 
-		$fonts = new NRFonts();
-
 		$groups = array();
 
-		foreach ($fonts->getFontGroups() as $name => $fontGroup)
+		foreach (NRFonts::getFontGroups() as $name => $fontGroup)
 		{
 			// Initialize the group if necessary.
 			if (!isset($groups[$name]))

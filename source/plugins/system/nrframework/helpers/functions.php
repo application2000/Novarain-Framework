@@ -13,7 +13,6 @@ require_once __DIR__ . '/cache.php';
 
 class NRFrameworkFunctions
 {
-
     /**
      *  Adds a script to the document
      *

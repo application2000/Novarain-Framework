@@ -9,6 +9,9 @@
 
 defined( '_JEXEC' ) or die( 'Restricted access' );
 
+/**
+ *  Fonts Class
+ */
 class NRFonts
 {
 
@@ -17,7 +20,7 @@ class NRFonts
 	 *
 	 *  @var  array
 	 */
-	private $classic = array(
+	private static $classic = array(
 		"Arial",
 		"Arial Black",
 		"Georgia",
@@ -42,7 +45,7 @@ class NRFonts
 	 *
 	 *  @var  array
 	 */
-	private $google = array(
+	private static $google = array(
 		"Roboto",
 		"Open Sans",
 		"Slabo 27px",
@@ -69,11 +72,11 @@ class NRFonts
 	 *
 	 *  @return  array
 	 */
-	public function getFontGroups()
+	public static function getFontGroups()
 	{
 		return array(
-			"Google Fonts" => $this->getFontGroup("google"),
-			"Classic" => $this->getFontGroup("classic")
+			"Google Fonts" => self::getFontGroup("google"),
+			"Classic" => self::getFontGroup("classic")
 		);
 	}
 
@@ -84,9 +87,9 @@ class NRFonts
 	 *
 	 *  @return  array         
 	 */
-	public function getFontGroup($name)
+	public static function getFontGroup($name)
 	{
-		$fonts = $this->$name;
+		$fonts = self::$$name;
 		sort($fonts);
 		return $fonts;
 	}
@@ -98,7 +101,7 @@ class NRFonts
 	 *
 	 *  @return  void
 	 */
-	public function loadFont($names)
+	public static function loadFont($names)
 	{
 		if (!$names)
 		{
@@ -107,13 +110,13 @@ class NRFonts
 
 		if (!is_array($names))
 		{
-			$names[] = $names;
+			$names = array($names);
 		}
 
 		foreach ($names as $key => $value)
 		{
 			// If font is a Google Font then load it into the document
-	        if (in_array($value, $this->google))
+	        if (in_array($value, self::$google))
 	        {
 	            JFactory::getDocument()->addStylesheet("//fonts.googleapis.com/css?family=".urlencode($value));
 	        }

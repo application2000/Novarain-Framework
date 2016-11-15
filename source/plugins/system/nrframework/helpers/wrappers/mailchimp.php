@@ -46,14 +46,15 @@ class NR_MailChimp extends NR_Wrapper
 	 *  @param   string   $list          	  The MailChimp list unique ID
 	 *  @param   array    $merge_fields  	  Merge Fields
 	 *  @param   boolean  $update_existing	  Update existing user
+	 *  @param   boolean  $double_optin  	  Send MailChimp confirmation email?
 	 *
 	 *  @return  void
 	 */
-	public function subscribe($email, $list, $merge_fields = array(), $update_existing = true)
+	public function subscribe($email, $list, $merge_fields = array(), $update_existing = true, $double_optin = false)
 	{
 		$data = array(
 			"email_address" => $email,
-			"status" 		=> "subscribed",
+			"status" 		=> $double_optin ? "pending" : "subscribed",
 			"merge_fields"	=> $merge_fields
 		);
 
@@ -61,10 +62,12 @@ class NR_MailChimp extends NR_Wrapper
 		{
 			$subscriberHash = md5(strtolower($email));
 			$this->put('lists/' . $list . '/members/' . $subscriberHash, $data);
-			return true;
+		} else 
+		{
+			$this->post('lists/' . $list . '/members', $data);
 		}
 
-		$this->post('lists/' . $list . '/members', $data);
+		return true;
 	}
 
 	/**

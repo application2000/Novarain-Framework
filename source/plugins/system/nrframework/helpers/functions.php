@@ -14,43 +14,40 @@ require_once __DIR__ . '/cache.php';
 class NRFrameworkFunctions
 {
     /**
-     *  Adds a script to the document
-     *
-     *  @param  string  $name  The filename
-     */
-    public static function addScriptLocal($filename)
-    {
-        self::addMediaLocal($filename);
-    }
-
-    /**
-     *  Adds a stylesheet to the document
-     *
-     *  @param  string  $name  The filename
-     */
-    public static function addStyleSheetLocal($filename)
-    {
-        self::addMediaLocal($filename, "stylesheet");
-    }
-
-    /**
      *  Adds a script or a stylesheet to the document
      *
-     *  @param  string  $filename  The filename
-     *  @param  string  $type      The media type (script, stylesheet)
+     *  @param  Mixed    $files           The files to be to added to the document
+     *  @param  boolean  $appendVersion   Adds file versioning based on extension's version
+     *
+     *  @return void
      */
-    public static function addMediaLocal($filename, $type = "script")
+    public static function addMedia($files, $extension = "plg_system_nrframework", $appendVersion = true)
     {
-        $mediaPath = JURI::root(true) . "/media/plg_system_nrframework/";
-        $version   = self::getVersion();
+        $doc       = JFactory::getDocument();
+        $version   = self::getExtensionVersion($extension);
+        $mediaPath = JURI::root(true) . "/media/" . $extension;
 
-        if ($type == "script")
+        if (!is_array($files))
         {
-            JFactory::getDocument()->addScript($mediaPath . "js/" . $filename . "?v=" . $version);
-            return;
+            $files = array($files);
         }
 
-        JFactory::getDocument()->addStylesheet($mediaPath . "css/" . $filename . "?v=" . $version);
+        foreach ($files as $key => $file)
+        {
+            $fileExt  = JFile::getExt($file);
+            $filename = $mediaPath . "/" . $fileExt . "/" . $file;
+            $filename = ($appendVersion) ? $filename . "?v=" . $version : $filename;
+
+            if ($fileExt == "js")
+            {
+                $doc->addScript($filename);
+            }
+
+            if ($fileExt == "css")
+            {
+                $doc->addStylesheet($filename);
+            }
+        }
     }
 
     /**
@@ -91,6 +88,24 @@ class NRFrameworkFunctions
         return JFactory::getLanguage()->load($extension, $basePath);
     }
 
+    /**
+     *  Returns extension ID
+     *
+     *  @param   string  $extension  Extension name
+     *
+     *  @return  integer
+     */
+    public static function getExtensionID($extension)
+    {
+        $db = JFactory::getDBO();
+        
+        return $db->setQuery(
+            $db->getQuery(true)
+                ->select($db->quoteName('extension_id'))
+                ->from($db->quoteName('#__extensions'))
+                ->where($db->quoteName('element') . ' = ' . $db->quote($extension))
+        )->loadResult();
+    }
 
     /**
      *  Checks if extension is installed
@@ -356,6 +371,8 @@ class NRFrameworkFunctions
     {
         return JFactory::getDate()->format("Y-m-d H:i:s");
     }
+
+
 
 }
 

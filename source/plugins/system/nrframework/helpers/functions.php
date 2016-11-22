@@ -14,6 +14,26 @@ require_once __DIR__ . '/cache.php';
 class NRFrameworkFunctions
 {
     /**
+     *  Returns user's Download Key
+     *
+     *  @return  string
+     */
+    public static function getDownloadKey()
+    {
+        $file = JPATH_SITE . '/plugins/system/nrframework/helpers/updatesites.php';
+
+        if (!JFile::exists($file))
+        {
+            return;
+        }
+
+        require_once $file;
+
+        $class = new NRUpdateSites();
+        return $class->getDownloadKey();
+    }
+
+    /**
      *  Adds a script or a stylesheet to the document
      *
      *  @param  Mixed    $files           The files to be to added to the document
@@ -95,16 +115,23 @@ class NRFrameworkFunctions
      *
      *  @return  integer
      */
-    public static function getExtensionID($extension)
+    public static function getExtensionID($extension, $folder = null)
     {
         $db = JFactory::getDBO();
-        
-        return $db->setQuery(
-            $db->getQuery(true)
-                ->select($db->quoteName('extension_id'))
-                ->from($db->quoteName('#__extensions'))
-                ->where($db->quoteName('element') . ' = ' . $db->quote($extension))
-        )->loadResult();
+
+        $query = $db->getQuery(true)
+            ->select($db->quoteName('extension_id'))
+            ->from($db->quoteName('#__extensions'))
+            ->where($db->quoteName('element') . ' = ' . $db->quote($extension));
+
+        if ($folder)
+        {
+            $query->where($db->quoteName('folder') . ' = ' . $db->quote($folder));
+        }
+
+        $db->setQuery($query);
+
+        return $db->loadResult();
     }
 
     /**

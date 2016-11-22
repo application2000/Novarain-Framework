@@ -10,6 +10,8 @@
 // No direct access to this file
 defined('_JEXEC') or die;
 
+JFormHelper::loadFieldClass('text');
+
 class JFormFieldNRText extends JFormFieldText
 {
     /**
@@ -36,9 +38,10 @@ class JFormFieldNRText extends JFormFieldText
         $url    = $this->element['url'];
         $text   = $this->element['urltext'];
         $target = $this->element['urltarget'] ? $this->element['urltarget'] : "_blank";
+        $class  = $this->element['urlclass'] ? $this->element['urlclass'] : "";
 
         if ($url && $text) {
-            $html[] = '<a style="margin-left:10px;" href="' . $url . '" target="' . $target . '">' . JText::_($text) . '</a>';
+            $html[] = '<a class="' . $class . '" style="margin-left:10px;" href="' . $url . '" target="' . $target . '">' . JText::_($text) . '</a>';
         }
 
         return implode(" ", $html);

@@ -17,6 +17,7 @@ class JFormFieldNR_Countries extends JFormFieldList
 
 	// 'AF' => "Afghanistan", ...
 	protected $countries = array(
+		''   => "Select a Country",
 		'AF' => "Afghanistan",
 		'AX' => "Aland Islands",
 		'AL' => "Albania",
@@ -263,13 +264,14 @@ class JFormFieldNR_Countries extends JFormFieldList
 		'ZW' => "Zimbabwe",
 	);
 
-	protected function getOptions() 
+	protected function getOptions()
 	{
-		 $options = array();
-		 foreach ($this->countries as $key => $value) {
-            $options[] = JHTML::_('select.option', $key, $value);
-        }
+		$options = array();
+		foreach ($this->countries as $key => $value)
+		{
+			$options[] = JHTML::_('select.option', $key, $value);
+		}
 
-        return array_merge(parent::getOptions(), $options);
+		return array_merge(parent::getOptions(), $options);
 	}
 }

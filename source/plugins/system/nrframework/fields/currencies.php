@@ -12,11 +12,9 @@ JFormHelper::loadFieldClass('list');
 
 class JFormFieldNR_Currencies extends JFormFieldList
 {
-
 	protected $type = 'nr_currencies';
 
 	protected $currencies = array(
-		""    => "Select a Currency",
 		"AED" => "United Arab Emirates Dirham",
 		"AFN" => "Afghan Afghani",
 		"ALL" => "Albanian Lek",
@@ -194,9 +192,13 @@ class JFormFieldNR_Currencies extends JFormFieldList
 	protected function getOptions()
 	{
 		$options = array();
+		$options[] = JHTML::_('select.option', "", "- " . JText::_("NR_SELECT_CURRENCY"). " -");
+
+		asort($this->currencies);
+
 		foreach ($this->currencies as $key => $value)
 		{
-			$options[] = JHTML::_('select.option', $key, $value);
+			$options[] = JHTML::_('select.option', $key, $key . " (" . $value . ")");
 		}
 
 		return array_merge(parent::getOptions(), $options);

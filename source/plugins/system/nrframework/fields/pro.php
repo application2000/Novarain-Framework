@@ -21,20 +21,6 @@ class JFormFieldNR_PRO extends NRFormField
      */
     public $type = 'pro';
 
-    protected function getLabel()
-    {
-        $label = $this->get("label", false);
-
-        if ($label)
-        {
-            return parent::getLabel();
-        } 
-        else 
-        {
-            return "";
-        }
-    }
-
     /**
      *  Method to render the input field
      *
@@ -42,18 +28,6 @@ class JFormFieldNR_PRO extends NRFormField
      */
     protected function getInput()
     {   
-        $text   = $this->get("text", "NR_ONLY_AVAILABLE_IN_PRO");
-        $url    = $this->get("url");
-        $link   = $this->get("link", "NR_UPGRADE_TO_PRO");
-        
-        $html[] = '<span class="label label-important">' . $this->prepareText($text) . '</span>';
-
-        if (!empty($url))
-        {
-            $html[] = '<a href="'.$url.'" target="_blank">'. $this->prepareText($link) .'</a>';
-        }
-
-        return implode(" ", $html);
+        return '<a class="btn btn-danger" href="' . $this->get("url") . '" target="_blank"><span class="icon-lock"></span> '. $this->prepareText($this->get("link", "NR_UPGRADE_TO_PRO")) .'</a>';
     }
-
 }

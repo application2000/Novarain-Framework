@@ -27,6 +27,9 @@ class JFormFieldNRURL extends NRFormField
         $class  = $this->get("class");
         $icon   = $this->get("icon", null);
 
+        $url = str_replace("{{base}}", JURI::base(), $url);
+        $url = str_replace("{{root}}", JURI::root(), $url);
+
         $html[] = '<a class="' . $class . '" href="' . $url . '" target="' . $target . '">';
 
         if ($icon)

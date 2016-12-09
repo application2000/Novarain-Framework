@@ -43,6 +43,8 @@ class NRFormField extends JFormField
 		$this->app = JFactory::getApplication();
 		$this->doc->addStylesheet(JURI::root(true) . "/plugins/system/nrframework/assets/css/fields.css");
 		$this->db = JFactory::getDbo();
+
+		parent::__construct();
 	}
 
 	/**

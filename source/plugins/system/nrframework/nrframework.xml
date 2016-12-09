@@ -17,6 +17,7 @@
 		<folder>helpers</folder>
 		<folder>language</folder>
 		<folder>assets</folder>
+		<folder>layouts</folder>
 	</files>
 	<config>
 		<fields name="params" addfieldpath="/plugins/system/nrframework/fields">

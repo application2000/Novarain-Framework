@@ -12,6 +12,10 @@ defined('_JEXEC') or die;
 
 require_once dirname(__DIR__) . '/helpers/field.php';
 
+###### Note ######
+# This field is deprecated. Use NR_Well instead
+###### Note ######
+
 class JFormFieldNR_Block extends NRFormField
 {
     /**
@@ -32,8 +36,7 @@ class JFormFieldNR_Block extends NRFormField
      *  @return  string  
      */
     protected function getInput()
-    {   
-
+    {
         JFactory::getDocument()->addStylesheet(JURI::root(true) . "/plugins/system/nrframework/assets/css/fields.css");
 
         $title       = $this->get('label');

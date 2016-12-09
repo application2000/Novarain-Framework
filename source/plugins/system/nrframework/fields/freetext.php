@@ -21,21 +21,6 @@ class JFormFieldNR_Freetext extends NRFormField
      */
     public $type = 'freetext';
 
-    protected function getLabel()
-    {
-
-        $label = $this->get("label", false);
-
-        if ($label)
-        {
-            return parent::getLabel();
-        } 
-        else 
-        {
-            return "";
-        }
-    }
-
     /**
      *  Method to render the input field
      *
@@ -43,7 +28,6 @@ class JFormFieldNR_Freetext extends NRFormField
      */
     protected function getInput()
     {   
-
         $file  = $this->get("file", false);
         $text  = $this->get("text", false);
         $label = $this->get("label", false);
@@ -77,7 +61,6 @@ class JFormFieldNR_Freetext extends NRFormField
      */
     private function renderContent($file, $path, $displayData = null) 
     {
-
         $layout = new JLayoutFile($file, JPATH_SITE . $path, array('debug' => 0));
         return $layout->render($displayData);
     }

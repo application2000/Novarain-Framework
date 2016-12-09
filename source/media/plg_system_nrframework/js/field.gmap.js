@@ -37,7 +37,7 @@ jQuery(function($) {
 		});
 
 		// set a click listener for the Settings tab in order for the google map to re-render correctly
-		$(document).on('click', 'a[href="#attrib-settings"]', function(event) {
+		$(document).on('click', 'a[href="#attrib-brand"]', function(event) {
 			refreshMap();
 		});
 

@@ -44,7 +44,7 @@ class NR_MailChimp extends NR_Wrapper
 	 *
 	 *  @param   string   $email         	  User's email address
 	 *  @param   string   $list          	  The MailChimp list unique ID
-	 *  @param   array    $merge_fields  	  Merge Fields
+	 *  @param   Object   $merge_fields  	  Merge Fields
 	 *  @param   boolean  $update_existing	  Update existing user
 	 *  @param   boolean  $double_optin  	  Send MailChimp confirmation email?
 	 *
@@ -54,9 +54,13 @@ class NR_MailChimp extends NR_Wrapper
 	{
 		$data = array(
 			"email_address" => $email,
-			"status" 		=> $double_optin ? "pending" : "subscribed",
-			"merge_fields"	=> $merge_fields
+			"status" 		=> $double_optin ? "pending" : "subscribed"
 		);
+
+		if (is_array($merge_fields) && count($merge_fields))
+		{
+			$data["merge_fields"] = $merge_fields;
+		}
 
 		if ($update_existing)
 		{

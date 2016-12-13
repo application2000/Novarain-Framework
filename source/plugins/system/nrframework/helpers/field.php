@@ -104,4 +104,54 @@ class NRFormField extends JFormField
 	{
 		return (isset($this->element[$val]) && (string) $this->element[$val] != '') ? (string) $this->element[$val] : $default;
 	}
+
+	public function getOptionsByList($list, $extras = array(), $levelOffset = 0)
+	{
+		$options = array();
+		foreach ($list as $item)
+		{
+			$options[] = $this->getOptionByListItem($item, $extras, $levelOffset);
+		}
+
+		return $options;
+	}
+
+	public function getOptionByListItem($item, $extras = array(), $levelOffset = 0)
+	{
+		$name = trim($item->name);
+
+		foreach ($extras as $key => $extra)
+		{
+			if (empty($item->{$extra}))
+			{
+				continue;
+			}
+
+			if ($extra == 'language' && $item->{$extra} == '*')
+			{
+				continue;
+			}
+
+			if (in_array($extra, array('id', 'alias')) && $item->{$extra} == $item->name)
+			{
+				continue;
+			}
+
+			$name .= ' [' . $item->{$extra} . ']';
+		}
+		
+		require_once __DIR__ . '/text.php';
+
+		$name = NRText::prepareSelectItem($name, isset($item->published) ? $item->published : 1);
+
+		$option = JHtml::_('select.option', $item->id, $name, 'value', 'text', 0);
+
+		if (isset($item->level))
+		{
+			$option->level = $item->level + $levelOffset;
+		}
+
+		return $option;
+	}
+
 }

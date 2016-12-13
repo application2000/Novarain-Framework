@@ -28,6 +28,6 @@ class JFormFieldNR_PRO extends NRFormField
      */
     protected function getInput()
     {   
-        return '<a class="btn btn-danger" href="' . $this->get("url") . '" target="_blank"><span class="icon-lock"></span> '. $this->prepareText($this->get("link", "NR_UPGRADE_TO_PRO")) .'</a>';
+        return '<a style="float:none;" class="btn btn-danger ' . $this->get("class") . '" href="' . $this->get("url") . '" target="_blank"><span class="icon-lock"></span> '. $this->prepareText($this->get("link", "NR_UPGRADE_TO_PRO")) .'</a>';
     }
 }

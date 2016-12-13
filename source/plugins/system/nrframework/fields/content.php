@@ -1,14 +1,21 @@
-<?php
+<?php 
+
+/**
+ * @author          Tassos Marinos <info@tassos.gr>
+ * @link            http://www.tassos.gr
+ * @copyright       Copyright © 2015 Tassos Marinos All Rights Reserved
+ * @license         GNU GPLv3 <http://www.gnu.org/licenses/gpl.html> or later
+*/
 
 defined('_JEXEC') or die;
 
 require_once dirname(__DIR__) . '/helpers/groupfield.php';
 
-class JFormFieldContentCategory extends JFormFieldList
+class JFormFieldNR_Content extends NRFormGroupField
 {
 	public $type = 'Content';
 
-	function getCategories()
+	public function getCategories()
 	{
 		$query = $this->db->getQuery(true)
 			->select('COUNT(c.id)')
@@ -19,12 +26,6 @@ class JFormFieldContentCategory extends JFormFieldList
 		$this->db->setQuery($query);
 		$total = $this->db->loadResult();
 
-		if ($total > $this->max_list_count)
-		{
-			return -1;
-		}
-
-		// assemble items to the array
 		$options = array();
 		if ($this->get('show_ignore'))
 		{
@@ -32,7 +33,7 @@ class JFormFieldContentCategory extends JFormFieldList
 			{
 				$this->value = array('-1');
 			}
-			$options[] = JHtml::_('select.option', '-1', '- ' . JText::_('RL_IGNORE') . ' -', 'value', 'text', 0);
+			$options[] = JHtml::_('select.option', '-1', '- ' . JText::_('NR_IGNORE') . ' -', 'value', 'text', 0);
 			$options[] = JHtml::_('select.option', '-', '&nbsp;', 'value', 'text', 1);
 		}
 
@@ -48,7 +49,7 @@ class JFormFieldContentCategory extends JFormFieldList
 		return $options;
 	}
 
-	function getItems()
+	public function getItems()
 	{
 		$query = $this->db->getQuery(true)
 			->select('COUNT(i.id)')
@@ -56,11 +57,6 @@ class JFormFieldContentCategory extends JFormFieldList
 			->where('i.access > -1');
 		$this->db->setQuery($query);
 		$total = $this->db->loadResult();
-
-		if ($total > $this->max_list_count)
-		{
-			return -1;
-		}
 
 		$query->clear('select')
 			->select('i.id, i.title as name, i.language, c.title as cat, i.access as published')

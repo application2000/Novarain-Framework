@@ -16,7 +16,6 @@ require_once __DIR__ . '/helpers/functions.php';
 
 class plgSystemNRFramework extends JPlugin
 {
-
 	/**
 	 *  Auto load plugin language 
 	 *
@@ -30,6 +29,25 @@ class plgSystemNRFramework extends JPlugin
 	 *  @var  object
 	 */
 	protected $app;
+
+ 	/**
+     *  Plugin constructor
+     *
+     *  @param  mixed   &$subject
+     *  @param  array   $config
+     */
+    public function __construct(&$subject, $config = array())
+    {
+        // Declare extension logger
+        JLog::addLogger(
+            array('text_file' => 'plg_system_nrframework.php'),
+            JLog::ALL, 
+            array('nrframework')
+        );
+
+        // execute parent constructor
+        parent::__construct($subject, $config);
+    }
 
     /**
      *  Update UpdateSites after the user has entered a Download Key

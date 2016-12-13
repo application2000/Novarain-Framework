@@ -214,6 +214,12 @@ class NR_Wrapper
 				break;
 		}
 
+        // Log debug message
+        if (JDEBUG)
+        {
+        	JLog::add(print_r($response, true), JLog::DEBUG, 'nrframework');
+        }
+
 		// Convert body JSON to array
 		if (isset($response->body) && !empty($response->body))
 		{

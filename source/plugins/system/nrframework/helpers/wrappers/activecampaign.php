@@ -42,11 +42,12 @@ class NR_ActiveCampaign extends NR_Wrapper
 	 *  @param   string   $email   	     The name of the Contact
 	 *  @param   string   $name          Email of the Contact
 	 *  @param   object   $list          List ID
+	 *  @param   object   $tags	 		 Tags for this contact (comma-separated). Example: "tag1, tag2, etc"
 	 *  @param   object   $customfields	 Custom Fields
 	 *
 	 *  @return  void
 	 */
-	public function subscribe($email, $name, $list, $customfields = null)
+	public function subscribe($email, $name, $list, $tags = "", $customfields = null)
 	{
 		$name = explode(" ", $name, 2);
 
@@ -56,6 +57,7 @@ class NR_ActiveCampaign extends NR_Wrapper
 			"first_name"		   => isset($name[0]) ? $name[0] : null,
 			"last_name"			   => isset($name[1]) ? $name[1] : null,
 			"p[".$list."]" 		   => $list,
+			"tags"				   => $tags,
 			"status[1]"			   => 1,
 			"instantresponders[1]" => 1,
 			"ip4" 				   => $_SERVER['REMOTE_ADDR']

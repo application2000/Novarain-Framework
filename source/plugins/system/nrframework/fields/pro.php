@@ -9,7 +9,7 @@
 
 // No direct access to this file
 defined('_JEXEC') or die;
-
+JHtml::_('bootstrap.popover');
 require_once dirname(__DIR__) . '/helpers/field.php';
 
 class JFormFieldNR_PRO extends NRFormField
@@ -28,6 +28,6 @@ class JFormFieldNR_PRO extends NRFormField
      */
     protected function getInput()
     {   
-        return '<a style="float:none;" class="btn btn-danger ' . $this->get("class") . '" href="' . $this->get("url") . '" target="_blank"><span class="icon-lock"></span> '. $this->prepareText($this->get("link", "NR_UPGRADE_TO_PRO")) .'</a>';
+        return '<a style="float:none;" class="btn btn-danger ' . $this->get("class") . '" href="' . $this->get("url") . '" target="_blank"><span class="icon-lock"></span> '. $this->prepareText($this->get("link", "NR_UPGRADE_TO_PRO_TO_UNLOCK")) .'</a>';
     }
 }

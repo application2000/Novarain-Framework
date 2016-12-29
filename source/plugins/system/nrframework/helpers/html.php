@@ -21,7 +21,7 @@ class NRHTML
 	 * Construct the HTML for the input field in a tree
 	 * Logic from administrator\components\com_modules\views\module\tmpl\edit_assignment.php
 	 */
-	static function treeselect(&$options, $name, $value, $id, $size = 300)
+	public static function treeselect(&$options, $name, $value, $id, $size = 300, $simple = 0)
 	{
 		NRFrameworkFunctions::loadLanguage('com_menus', JPATH_ADMINISTRATOR);
 		NRFrameworkFunctions::loadLanguage('com_modules', JPATH_ADMINISTRATOR);
@@ -65,6 +65,15 @@ class NRHTML
 			}
 
 			return '<fieldset class="radio"><label for="' . $id . '">' . JText::_('NR_ITEM_IDS') . ':</label>' . $input . '</fieldset>';
+		}
+
+		if ($simple)
+		{
+			$attr = 'style="width: ' . $size . 'px" multiple="multiple"';
+
+			$html = JHtml::_('select.genericlist', $options, $name, trim($attr), 'value', 'text', $value, $id);
+
+			return $html;
 		}
 
 		NRFrameworkFunctions::addMedia(array(
@@ -202,5 +211,10 @@ class NRHTML
 
 		$html = implode('', $html);
 		return $html;
+	}
+
+	public static function treeselectSimple(&$options, $name, $value, $id, $size = 300)
+	{
+		return self::treeselect($options, $name, $value, $id, $size, 1);
 	}
 }

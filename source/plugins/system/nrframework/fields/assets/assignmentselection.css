@@ -1,5 +1,7 @@
-.well-assign {
+.well.well-assign {
     color:inherit !important;
+    padding: 15px 19px;
+    margin-bottom: 15px;
 }
 .well-assign fieldset {
     padding-top:0 !important;
@@ -8,7 +10,7 @@
     margin-bottom: 0 !important;
 }
 .well-assign > div:not(.assignmentselection) {
-    margin-top: 20px !important;
+    margin-top: 15px !important;
 }
 .well-assign > div:not(.assignmentselection) > .control-group:last-child {
     margin-bottom: 0px !important;
@@ -31,4 +33,8 @@
 }
 .well-assign .btn {
     min-width: 60px !important;
+}
+
+.well-assign-group .well-assign:last-child {
+    margin-bottom:0;
 }

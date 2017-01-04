@@ -9,28 +9,17 @@
 
 defined('_JEXEC') or die;
 
-class nrFrameworkAssignmentsURLs 
+require_once dirname(__DIR__) . '/assignment.php';
+
+class nrFrameworkAssignmentsURLs extends NRAssignment 
 {
-
-	private $assignment;
-	private $params;
-	private $selection;
-
-	function __construct($assignment) {
-    	$this->assignment = $assignment;
-    	$this->params = new stdClass();
-		$this->params->regex = isset($assignment->params->assign_urls_param_regex) ? $assignment->params->assign_urls_param_regex : 1;
-    	$this->selection = $assignment->selection;
-   	}
-
    	/**
-   	 *  Validates the referrer agains the passed domain list
+   	 *  Pass Check Domain Referrer
    	 *
    	 *  @return  bool
    	 */
    	function passReferrer()
    	{
-
    		// Check if we have valid selection list
 		$referrers = array_filter(array_unique(explode("\n", $this->selection)));
 
@@ -40,7 +29,8 @@ class nrFrameworkAssignmentsURLs
 		}
 
 		// Remove new line characters
-		foreach ($referrers as $key => $referrer) { 
+		foreach ($referrers as $key => $referrer)
+		{ 
 			$referrer = str_replace(array("\n", "\r"), "", $referrer); 
 			$referrers[$key] = $referrer; 
 		}
@@ -58,9 +48,14 @@ class nrFrameworkAssignmentsURLs
 		return in_array($domainReferrer, $referrers);
    	}
 
+   	/**
+   	 *  Pass Check URLs
+   	 *
+   	 *  @return  bool
+   	 */
 	function passURLs()
 	{
-		$regex = isset($this->params->regex) ? $this->params->regex : 0;
+		$regex = isset($this->params->assign_urls_param_regex) ? $this->params->assign_urls_param_regex : true;
 
 		if (!is_array($this->selection))
 		{
@@ -96,7 +91,6 @@ class nrFrameworkAssignmentsURLs
 
 				if ($regex)
 				{
-
 					$url_part = str_replace(array('#', '&amp;'), array('\#', '(&amp;|&)'), $s);
 					$s = '#' . $url_part . '#si';
 					if (@preg_match($s . 'u', $url) || @preg_match($s, $url))

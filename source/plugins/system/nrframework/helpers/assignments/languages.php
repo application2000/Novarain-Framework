@@ -9,15 +9,15 @@
 
 defined('_JEXEC') or die;
 
-class nrFrameworkAssignmentsLanguages extends nrFrameworkAssignmentsHelper
+require_once dirname(__DIR__) . '/assignment.php';
+
+class nrFrameworkAssignmentsLanguages extends NRAssignment
 {
-
-	private $selection;
-
-	function __construct($assignment) {
-    	$this->selection = $assignment->selection;
-   	}
-
+	/**
+	 *  Pass check language
+	 *
+	 *  @return  bool
+	 */
 	function passLanguages()
 	{
 		return $this->passSimple(JFactory::getLanguage()->getTag(), $this->selection); 

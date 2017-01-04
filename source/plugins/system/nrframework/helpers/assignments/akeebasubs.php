@@ -9,15 +9,15 @@
 
 defined('_JEXEC') or die;
 
-class nrFrameworkAssignmentsAkeebaSubs extends nrFrameworkAssignmentsHelper
+require_once dirname(__DIR__) . '/assignment.php';
+
+class nrFrameworkAssignmentsAkeebaSubs extends NRAssignment
 {
-
-	private $selection;
-
-	function __construct($assignment) {
-    	$this->selection = $assignment->selection;
-   	}
-
+	/**
+	 *  Checks if user has access to certain subscription levels
+	 *
+	 *  @return  bool
+	 */
 	function passAkeebaSubs()
 	{
     	return $this->passSimple($this->getLevels(), $this->selection);
@@ -26,14 +26,13 @@ class nrFrameworkAssignmentsAkeebaSubs extends nrFrameworkAssignmentsHelper
 	/**
 	 *  Returns all user's active subscriptions
 	 *
-	 *  @param   int  $userid  User's id
+	 *  @param   int     $userid  User's id
 	 *
-	 *  @return  array         Akeeba Subscriptions
+	 *  @return  array   Akeeba Subscriptions
 	 */
 	private function getLevels()
 	{
-
-		if (JFactory::getUser()->guest)
+		if (!$user = $this->user->id)
 		{
 			return false;
 		}
@@ -49,7 +48,7 @@ class nrFrameworkAssignmentsAkeebaSubs extends nrFrameworkAssignmentsHelper
 		$subscriptionsModel = $container->factory->model('Subscriptions')->tmpInstance();
 
 		$items = $subscriptionsModel
-			->user_id(JFactory::getUser()->id)
+			->user_id($user)
 			->enabled(1)
 			->get();
 
@@ -60,7 +59,8 @@ class nrFrameworkAssignmentsAkeebaSubs extends nrFrameworkAssignmentsHelper
 
 		$levels = array();
 
-		foreach ($items as $subscription) {
+		foreach ($items as $subscription)
+		{
 			$levels[] = $subscription->akeebasubs_level_id;
 		}
 

@@ -9,15 +9,15 @@
 
 defined('_JEXEC') or die;
 
-class nrFrameworkAssignmentsConvertForms extends nrFrameworkAssignmentsHelper
+require_once dirname(__DIR__) . '/assignment.php';
+
+class nrFrameworkAssignmentsConvertForms extends NRAssignment
 {
-
-	private $selection;
-
-	function __construct($assignment) {
-    	$this->selection = $assignment->selection;
-   	}
-
+	/**
+	 *  Checks if user has subscribed to certain Convert Forms campaigns
+	 *
+	 *  @return  bool
+	 */
 	function passConvertForms()
 	{
     	return $this->passSimple($this->getCampaigns(), $this->selection);

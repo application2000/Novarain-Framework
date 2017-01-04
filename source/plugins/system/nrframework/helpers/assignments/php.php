@@ -9,17 +9,17 @@
 
 defined('_JEXEC') or die;
 
-class nrFrameworkAssignmentsPHP 
+require_once dirname(__DIR__) . '/assignment.php';
+
+class nrFrameworkAssignmentsPHP extends NRAssignment 
 {
-	private $selection;
-
-	function __construct($assignment) {
-    	$this->selection = $assignment->selection;
-   	}
-
+	/**
+	 *  Pass check Custom PHP
+	 *
+	 *  @return  bool
+	 */
 	function passPHP()
 	{
-
 		if (!is_array($this->selection))
 		{
 			$this->selection = array($this->selection);
@@ -41,36 +41,44 @@ class nrFrameworkAssignmentsPHP
 
 			if (!isset($Itemid))
 			{
-				$Itemid = JFactory::getApplication()->input->getInt('Itemid', 0);
+				$Itemid = $this->request->Itemid;
 			}
+
 			if (!isset($mainframe))
 			{
-				$mainframe = JFactory::getApplication();
+				$mainframe = $this->app;
 			}
+
 			if (!isset($app))
 			{
-				$app = JFactory::getApplication();
+				$app = $this->app;
 			}
+
 			if (!isset($document))
 			{
-				$document = JFactory::getDocument();
+				$document = $this->doc;
 			}
+
 			if (!isset($doc))
 			{
-				$doc = JFactory::getDocument();
+				$doc = $this->doc;
 			}
+
 			if (!isset($database))
 			{
-				$database = JFactory::getDBO();
+				$database = $this->db;
 			}
+
 			if (!isset($db))
 			{
-				$db = JFactory::getDBO();
+				$db = $this->db;
 			}
+
 			if (!isset($user))
 			{
-				$user = JFactory::getUser();
+				$user = $this->user;
 			}
+
 			$php .= ';return true;';
 
 			$temp_PHP_func = create_function('&$Itemid, &$mainframe, &$app, &$document, &$doc, &$database, &$db, &$user', $php);

@@ -9,25 +9,24 @@
 
 defined('_JEXEC') or die;
 
-class nrFrameworkAssignmentsMenu extends nrFrameworkAssignmentsHelper 
+require_once dirname(__DIR__) . '/assignment.php';
+
+class nrFrameworkAssignmentsMenu extends NRAssignment 
 {
-
-	private $selection;
-	private $includeNoItemID;
-
-	function __construct($assignment) {
-    	$this->selection = $assignment->selection;
-    	$this->includeNoItemID = isset($assignment->params->assign_menu_param_noitem) ? $assignment->params->assign_menu_param_noitem : false;
-   	}
-
+	/**
+	 *  Pass check for menu items
+	 *
+	 *  @return  bool
+	 */
 	function passMenu()
 	{
-        $menuActive = JFactory::getApplication()->getMenu()->getActive();
+    	$includeNoItemID = isset($this->params->assign_menu_param_noitem) ? $this->params->assign_menu_param_noitem : false;
 
-        if (!$menuActive || empty($this->selection)) {
-        	return $this->pass($this->includeNoItemID);
+	    if (!$this->request->Itemid)
+        {
+        	return $includeNoItemID;
         }
 
-		return $this->passSimple($menuActive->id, $this->selection); 
+		return $this->passSimple($this->request->Itemid, $this->selection); 
 	}
 }

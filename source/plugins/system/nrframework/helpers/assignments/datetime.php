@@ -9,54 +9,54 @@
 
 defined('_JEXEC') or die;
 
-class nrFrameworkAssignmentsDateTime extends nrFrameworkAssignmentsHelper
+require_once dirname(__DIR__) . '/assignment.php';
+
+class nrFrameworkAssignmentsDateTime extends NRAssignment
 {
-
-	private $assignment;
-	private $params;
-	private $tz;
-
-	function __construct($assignment) {
-    	$this->assignment = $assignment;
-    	$this->params = $assignment->params;
-    	$this->tz = new DateTimeZone(JFactory::getApplication()->getCfg('offset'));
-    	$this->date = JFactory::getDate()->setTimeZone($this->tz);
-   	}
-
+	/**
+	 *  Checks if current date passes date range
+	 *
+	 *  @return  bool
+	 */
 	function passDate()
 	{
-		$this->params->publish_up = $this->params->assign_datetime_param_publish_up;
-		$this->params->publish_down = $this->params->assign_datetime_param_publish_down;
+		$tz = new DateTimeZone($this->app->getCfg('offset'));
 
-		if (!$this->params->publish_up && !$this->params->publish_down)
+		$publish_up   = $this->params->assign_datetime_param_publish_up;
+		$publish_down = $this->params->assign_datetime_param_publish_down;
+
+		// No valid dates
+		if (!$publish_up && !$publish_down)
 		{
-			// no date range set
-			return ($this->assignment->assignment == 'include');
+			return false;
 		}
 
-		NRFrameworkFunctions::fixDate($this->params->publish_up);
-		NRFrameworkFunctions::fixDate($this->params->publish_down);
+		NRFrameworkFunctions::fixDate($publish_up);
+		NRFrameworkFunctions::fixDate($publish_down);
 
-		$now = strtotime($this->date->format('Y-m-d H:i:s', true));
-		$up = JFactory::getDate($this->params->publish_up)->setTimeZone($this->tz);
-		$down = JFactory::getDate($this->params->publish_down)->setTimeZone($this->tz);
+		$now  = $this->getNow();
+		$up   = JFactory::getDate($publish_up)->setTimeZone($tz);
+		$down = JFactory::getDate($publish_down)->setTimeZone($tz);
 
-		if (
-			(
-				(int) $this->params->publish_up
-				&& strtotime($up->format('Y-m-d H:i:s', true)) > $now
-			)
-			|| (
-				(int) $this->params->publish_down
-				&& strtotime($down->format('Y-m-d H:i:s', true)) < $now
-			)
-		)
+		// Out of range
+		if (((int) $publish_up   && strtotime($up->format('Y-m-d H:i:s', true)) > $now) ||
+			((int) $publish_down && strtotime($down->format('Y-m-d H:i:s', true)) < $now))
 		{
-			// outside date range
-			return $this->pass(false);
+			return false;
 		}
 
-		// pass
-		return ($this->assignment->assignment == 'include');
+		// Pass
+		return true;
 	}
+
+	/**
+	 *  Returns current date time
+	 *
+	 *  @return  string
+	 */
+	private function getNow()
+	{
+		return strtotime($this->date->format('Y-m-d H:i:s', true));
+	}
+
 }

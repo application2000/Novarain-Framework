@@ -9,37 +9,34 @@
 
 defined('_JEXEC') or die;
 
-class nrFrameworkAssignmentsAcyMailing extends nrFrameworkAssignmentsHelper
+require_once dirname(__DIR__) . '/assignment.php';
+
+class nrFrameworkAssignmentsAcyMailing extends NRAssignment
 {
-
-	private $selection;
-
-	function __construct($assignment) {
-    	$this->selection = $assignment->selection;
-   	}
-
+	/**
+	 *  Checks if user is subscribed to AcyMailing list
+	 *
+	 *  @return  bool
+	 */
 	function passAcyMailing()
 	{
-    	return $this->passSimple($this->getSubscribedLists(JFactory::getUser()->id), $this->selection);
+    	return $this->passSimple($this->getSubscribedLists(), $this->selection);
 	}
 
 	/**
 	 *  Returns all AcyMailing lists the user is subscribed to
 	 *
-	 *  @param   int  $userid  User's id
-	 *
-	 *  @return  array         AcyMailing lists
+	 *  @return  array  AcyMailing lists
 	 */
-	private function getSubscribedLists($userid)
+	private function getSubscribedLists()
 	{
-
-		if (!$userid)
+		if (!$user = $this->user->id)
 		{
 			return false;
 		}
 
 		// Get a db connection.
-		$db = JFactory::getDbo();
+		$db = $this->db;
 		 
 		// Create a new query object.
 		$query = $db->getQuery(true);
@@ -49,7 +46,7 @@ class nrFrameworkAssignmentsAcyMailing extends nrFrameworkAssignmentsHelper
 			->from($db->quoteName('#__acymailing_listsub', 'list'))
 			->join('INNER', $db->quoteName('#__acymailing_subscriber', 'sub') . ' ON (' . $db->quoteName('list.subid') . '=' . $db->quoteName('sub.subid') . ')')
 			->where($db->quoteName('list.status') . ' = 1')
-			->where($db->quoteName('sub.userid') . ' = ' . $userid)
+			->where($db->quoteName('sub.userid') . ' = ' . $user)
 			->where($db->quoteName('sub.confirmed') . ' = 1')
 			->where($db->quoteName('sub.enabled') . ' = 1');
 		 

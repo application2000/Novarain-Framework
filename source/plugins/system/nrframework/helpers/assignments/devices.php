@@ -9,25 +9,25 @@
 
 defined('_JEXEC') or die;
 
-class nrFrameworkAssignmentsDevices extends nrFrameworkAssignmentsHelper
+require_once dirname(__DIR__) . '/assignment.php';
+
+class nrFrameworkAssignmentsDevices extends NRAssignment
 {
-	private $selection;
-
-	function __construct($assignment) {
-    	$this->selection = $assignment->selection;
-
-        if (!class_exists('Mobile_Detect')) {
-            require_once(JPATH_PLUGINS."/system/nrframework/helpers/vendors/Mobile_Detect.php");
-        }
-   	}
-
+    /**
+     *  Checks visitor's device
+     *
+     *  @return  bool
+     */
 	function passDevices()
 	{
-        if (class_exists('Mobile_Detect')) {
-            $detect = new Mobile_Detect;
-            $detectDeviceType = ($detect->isMobile() ? ($detect->isTablet() ? 'tablet' : 'mobile') : 'desktop');
-
-    		return $this->passSimple($detectDeviceType, $this->selection); 
+        if (!class_exists('Mobile_Detect'))
+        {
+            require_once(JPATH_PLUGINS . "/system/nrframework/helpers/vendors/Mobile_Detect.php");
         }
+
+        $detect = new Mobile_Detect;
+        $detectDeviceType = ($detect->isMobile() ? ($detect->isTablet() ? 'tablet' : 'mobile') : 'desktop');
+
+    	return $this->passSimple($detectDeviceType, $this->selection); 
 	}
 }

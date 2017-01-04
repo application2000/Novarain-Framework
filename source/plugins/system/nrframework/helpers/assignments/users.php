@@ -9,66 +9,61 @@
 
 defined('_JEXEC') or die;
 
-class nrFrameworkAssignmentsUsers extends nrFrameworkAssignmentsHelper 
+require_once dirname(__DIR__) . '/assignment.php';
+
+class nrFrameworkAssignmentsUsers extends NRAssignment 
 {
-
-	private $session;
-	private $selection;
-
-	function __construct($assignment) {
-    	$this->selection = $assignment->selection;
-    	$this->session = JFactory::getSession();
-   	}
-
+	/**
+	 *  Pass Check User Group Levels
+	 *
+	 *  @return  bool
+	 */
 	function passGroupLevels()
 	{
-		$user = JFactory::getUser();
-
-		if (!empty($user->groups))
-		{
-			$groups = array_values($user->groups);
-		}
-		else
-		{
-			$groups = $user->getAuthorisedGroups();
-		}
-
+		$groups = !empty($this->user->groups) ? array_values($this->user->groups) : $this->user->getAuthorisedGroups();
     	return $this->passSimple($groups, $this->selection); 
 	}
 
+	/**
+	 *  Pass Check User's Time on Site
+	 *
+	 *  @return  bool
+	 */
 	function passTimeOnSite()
 	{
 		$pass = false;
 
 		$sessionStartTime = strtotime($this->SessionStartTime());
 
-		if (!$sessionStartTime) {
+		if (!$sessionStartTime)
+		{
 			return $pass;
 		}
 
 		$dateTimeNow = strtotime(NRFrameworkFunctions::dateTimeNow());
 		$diffInSeconds = $dateTimeNow - $sessionStartTime;
 
-		if (intval($this->selection) <= $diffInSeconds) {
+		if (intval($this->selection) <= $diffInSeconds)
+		{
 			$pass = true;
 		}
 
 		return $pass;
 	}
 
-    private static function SessionStartTime() {
+    private static function SessionStartTime()
+    {
         $session = JFactory::getSession();
         
         $var = 'starttime';
         $sessionStartTime = $session->get($var);
 
-        if (!$sessionStartTime) {
+        if (!$sessionStartTime)
+        {
             $date = NRFrameworkFunctions::dateTimeNow();
             $session->set($var, $date);
         }
 
         return $session->get($var);
     }
-
-
 }

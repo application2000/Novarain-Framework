@@ -22,21 +22,20 @@ class nrFrameworkAssignmentsHelper
 	 *  @var  array
 	 */
 	public $types = array(
-		'devices'          => 'Devices',
-		'urls'             => 'URLs',
-		'referrer'         => 'URLs.Referrer',
-		'lang'             => 'Languages',
-		'php'              => 'PHP',
-		'timeonsite'       => 'Users.TimeOnSite',
-		'usergroups'       => 'Users.GroupLevels',
-		'menu'             => 'Menu',
-		'datetime'         => 'DateTime.Date',
-		'acymailing'       => 'AcyMailing',
-		'akeebasubs'       => 'AkeebaSubs',
-		'contentpagetypes' => 'Content.PageTypes',
-		'contentcats'      => 'Content.Categories',
-		'contentarticles'  => 'Content.Articles',
-		'convertforms'	   => 'ConvertForms'
+		'devices'         => 'Devices',
+		'urls'            => 'URLs',
+		'referrer'        => 'URLs.Referrer',
+		'lang'            => 'Languages',
+		'php'             => 'PHP',
+		'timeonsite'      => 'Users.TimeOnSite',
+		'usergroups'      => 'Users.GroupLevels',
+		'menu'            => 'Menu',
+		'datetime'        => 'DateTime.Date',
+		'acymailing'      => 'AcyMailing',
+		'akeebasubs'      => 'AkeebaSubs',
+		'contentcats'     => 'Content.Categories',
+		'contentarticles' => 'Content.Articles',
+		'convertforms'	  => 'ConvertForms'
 	);
 
 	/**
@@ -88,12 +87,12 @@ class nrFrameworkAssignmentsHelper
 	}
 
 	/**
-	 *  Assignment Pass Check
+	 *  Assignment pass check basedon the assignment state
 	 *
-	 *  @param   boolean  $pass        [description]
-	 *  @param   [type]   $assignment  [description]
+	 *  @param   boolean  $pass        
+	 *  @param   string   $assignment  The assignment state
 	 *
-	 *  @return  [type]                [description]
+	 *  @return  boolean
 	 */
 	private function pass($pass = true, $assignment = null)
 	{

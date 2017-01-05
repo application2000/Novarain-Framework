@@ -7,9 +7,9 @@
  * @license         GNU GPLv3 <http://www.gnu.org/licenses/gpl.html> or later
  */
 
-require_once __DIR__ . '/cache.php';
-
 defined('_JEXEC') or die;
+
+require_once __DIR__ . '/cache.php';
 
 /**
  *  Assignment Class
@@ -184,6 +184,13 @@ class NRAssignment
 	 */
 	public function getMenuItemParams($id = 0)
 	{
+		$hash = md5('getMenuItemParams_' . $id);
+
+		if (NRCache::has($hash))
+		{
+			return NRCache::get($hash);
+		}
+
 		$query = $this->db->getQuery(true)
 			->select('m.params')
 			->from('#__menu AS m')
@@ -192,7 +199,7 @@ class NRAssignment
 		$this->db->setQuery($query);
 		$params = $this->db->loadResult();
 		
-		return json_decode($params);
+		return NRCache::set($hash, json_decode($params));
 	}
 
 	/**
@@ -210,6 +217,13 @@ class NRAssignment
 		if (!$id)
 		{
 			return array();
+		}
+
+		$hash = md5('getParentIDs_' . $id . '_' . $table . '_' . $parent . '_' . $child);
+
+		if (NRCache::has($hash))
+		{
+			return NRCache::get($hash);
 		}
 
 		$parent_ids = array();
@@ -232,7 +246,7 @@ class NRAssignment
 			$parent_ids[] = $id;
 		}
 
-		return $parent_ids;
+		return NRCache::set($hash, $parent_ids);
 	}
 }
 

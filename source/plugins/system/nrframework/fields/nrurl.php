@@ -21,7 +21,7 @@ class JFormFieldNRURL extends NRFormField
      */
     function getInput()
     {   
-        $url    = $this->get("url");
+        $url    = $this->get("url", "#");
         $target = $this->get("target", "_blank");
         $text   = $this->get("text");
         $class  = $this->get("class");
@@ -30,7 +30,7 @@ class JFormFieldNRURL extends NRFormField
         $url = str_replace("{{base}}", JURI::base(), $url);
         $url = str_replace("{{root}}", JURI::root(), $url);
 
-        $html[] = '<a class="' . $class . '" href="' . $url . '" target="' . $target . '">';
+        $html[] = '<a class="nrurl ' . $class . '" href="' . $url . '" target="' . $target . '">';
 
         if ($icon)
         {
@@ -39,6 +39,19 @@ class JFormFieldNRURL extends NRFormField
 
         $html[] = $this->prepareText($text);
         $html[] = '</a>';
+
+        // Add CSS to the page
+        $run = false;
+        if (!$run)
+        {
+            JFactory::getDocument()->addStyleDeclaration('
+                .nrurl.disabled {
+                    pointer-events: none;
+                }
+            ');
+
+            $run = true;
+        }
 
         return implode(" ", $html);
     }

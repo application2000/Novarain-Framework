@@ -39,7 +39,8 @@ class JFormFieldAcymailing extends JFormFieldList
 
         $options = array();
 
-        foreach ($lists as $option) {
+        foreach ($lists as $option)
+        {
             $options[] = JHTML::_('select.option', $option->listid, $option->name);
         }
 
@@ -54,8 +55,7 @@ class JFormFieldAcymailing extends JFormFieldList
      */
     private function getList()
     {
-
-        if (!include_once(rtrim(JPATH_ADMINISTRATOR,DIRECTORY_SEPARATOR).DIRECTORY_SEPARATOR.'components'.DIRECTORY_SEPARATOR.'com_acymailing'.DIRECTORY_SEPARATOR.'helpers'.DIRECTORY_SEPARATOR.'helper.php'))
+        if (!@include_once(JPATH_ADMINISTRATOR . "/components/com_acymailing/helpers/helper.php"))
         {
             return false;
         }

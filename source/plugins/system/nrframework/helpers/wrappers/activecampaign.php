@@ -35,9 +35,9 @@ class NR_ActiveCampaign extends NR_Wrapper
 	/**
 	 *  Subscribe user to Active Campaign List
 	 *
-	 *  http://www.activecampaign.com/api/example.php?call=contact_add
+	 *  http://www.activecampaign.com/api/example.php?call=contact_sync
 	 *
-	 *  TODO: Custom Fields, Update existing contact
+	 *  TODO: Custom Fields
 	 *
 	 *  @param   string   $email   	     The name of the Contact
 	 *  @param   string   $name          Email of the Contact
@@ -52,7 +52,7 @@ class NR_ActiveCampaign extends NR_Wrapper
 		$name = explode(" ", $name, 2);
 
 		$data = array(
-			"api_action" 		   => "contact_add",
+			"api_action" 		   => "contact_sync",
 			"email" 			   => $email,
 			"first_name"		   => isset($name[0]) ? $name[0] : null,
 			"last_name"			   => isset($name[1]) ? $name[1] : null,

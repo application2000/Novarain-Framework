@@ -142,14 +142,7 @@ class nrFrameworkAssignmentsContent extends NRAssignment
 			return (array) $this->request->id;
 		}
 
-		// Load article's data if it doesn't exist
-		if (!$this->article && $this->request->id)
-		{
-			$this->article = JTable::getInstance('content');
-			$this->article->load($this->request->id);
-		}
-
-		// If we are article view return article's category id
+		// If we are in article view return article's category id
 		if ($this->article && $this->article->catid)
 		{
 			return (array) $this->article->catid;
@@ -171,7 +164,7 @@ class nrFrameworkAssignmentsContent extends NRAssignment
 		}
 
 		// Check we have right context
-		if ($this->request->option != 'com_content' || (!$this->request->id))
+		if ($this->request->option != 'com_content' || $this->request->view != 'article' || !$this->request->id)
 		{
 			return false;
 		}

@@ -30,20 +30,57 @@ class JFormFieldNRText extends JFormFieldText
             $html[] = parent::getInput();
             $html[] = '<span class="add-on">'.JText::_($addon).'</span>';
             $html[] = '</div>';
-        } else {
+        } else
+        {
             $html[] = parent::getInput();
         }
 
         // Adds a link next to input
-        $url    = $this->element['url'];
-        $text   = $this->element['urltext'];
-        $target = $this->element['urltarget'] ? $this->element['urltarget'] : "_blank";
-        $class  = $this->element['urlclass'] ? $this->element['urlclass'] : "";
+        $url        = $this->element['url'];
+        $text       = $this->element['urltext'];
+        $target     = $this->element['urltarget'] ? $this->element['urltarget'] : "_blank";
+        $class      = $this->element['urlclass'] ? $this->element['urlclass'] : "";
+        $attributes = "";
 
-        if ($url && $text) {
-            $html[] = '<a class="' . $class . '" style="margin-left:10px;" href="' . $url . '" target="' . $target . '">' . JText::_($text) . '</a>';
+        // Popup mode
+        if ($this->element["urlpopup"])
+        {
+            $class .= " nrPopup";
+            $attributes = 'data-width="600" data-height="600"';
+            $this->addPopupScript();
+        }
+
+        if ($url && $text)
+        {
+            $html[] = '<a ' . $attributes . ' class="' . $class . '" style="margin-left:10px;" href="' . $url . '" target="' . $target . '">' . JText::_($text) . '</a>';
         }
 
         return implode(" ", $html);
+    }
+
+    private function addPopupScript()
+    {
+        static $run;
+
+        if ($run)
+        {
+            return;
+        }
+
+        $run = true;
+
+        JFactory::getDocument()->addScriptDeclaration('
+            jQuery(function($) {
+                $(".nrPopup").click(function() {
+                    url    = $(this).attr("href");
+                    width  = $(this).data("width");
+                    height = $(this).data("height");
+
+                    window.open(""+url+"", "nrPopup", "width=" + width + ", height=" + height + "");
+
+                    return false;              
+                })
+            })
+        ');
     }
 }

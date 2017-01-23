@@ -42,7 +42,7 @@ class NR_Wrapper
 	{
 		if (!empty($key))
 		{
-			$this->key = $key;
+			$this->key = trim($key);
 		}
 		else
 		{

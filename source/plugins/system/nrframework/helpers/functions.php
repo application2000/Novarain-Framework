@@ -14,6 +14,28 @@ require_once __DIR__ . '/cache.php';
 class NRFrameworkFunctions
 {
     /**
+     *  Return's a URL with the Google Analytics Campaign Parameters appended to the end
+     *
+     *  @param   string  $url       The URL
+     *  @param   string  $medium    Campaign Medium
+     *  @param   string  $campaign  Campaign Name
+     *
+     *  @return  string
+     */
+    public static function getUTMURL($url, $medium = "upgradebutton", $campaign = "freeversion")
+    {
+        if (!$url)
+        {
+            return;
+        }
+
+        $utm  = 'utm_source=Joomla&utm_medium=' . $medium . '&utm_campaign=' . $campaign;
+        $char = strpos($url, "?") === false ? "?" : "&";
+
+        return $url . $char . $utm;
+    }
+
+    /**
      *  Returns user's Download Key
      *
      *  @return  string

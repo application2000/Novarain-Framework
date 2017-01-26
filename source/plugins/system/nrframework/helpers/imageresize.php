@@ -27,9 +27,12 @@ class NRFrameworkImage {
      */
     function __construct($image)
     {
-        // Replace the base folder that K2 adds to the image
+        $this->image = str_replace(JURI::root(true), '', $image);
 
-        $this->image = urldecode(substr(str_replace(JURI::root(true), '', $image),1));
+        if (substr($this->image, 0, 1) == "/")
+        {
+            $this->image = substr($this->image, 1);
+        }
 
         // Default values
         $this->variables = array (

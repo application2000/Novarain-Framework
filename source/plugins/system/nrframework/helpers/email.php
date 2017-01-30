@@ -29,6 +29,13 @@ class NREmail
     private $mailer;
 
     /**
+     *  Indicates the last error
+     *
+     *  @var  string
+     */
+    private $error;
+
+    /**
      *  Required elements for a valid email object
      *
      *  @var  array
@@ -85,6 +92,7 @@ class NREmail
             if (!isset($email[$key]) || empty($email[$key]))
             {
                 $valid = false;
+                $this->error = "Invalid $key in email object";
                 break;
             }
         }
@@ -104,8 +112,7 @@ class NREmail
         // Validate first the email object
         if (!$this->validate($email))
         {
-            throw new Exception("Error: Email object is invalid");
-            return;
+            throw new Exception($this->error);
         }
 
         $mailer = $this->mailer;
@@ -136,9 +143,8 @@ class NREmail
         
         if ($send !== true)
         {
-            $error = 'Error sending email: ' . $send->__toString();
-            throw new Exception($error);
-            return;
+            $this->error = 'Error sending email: ' . $send->__toString();
+            throw new Exception($this->error);
         }
 
         return true;

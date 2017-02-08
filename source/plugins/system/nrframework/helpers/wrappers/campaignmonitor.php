@@ -62,18 +62,17 @@ class NR_CampaignMonitor extends NR_Wrapper
 	 *  @param 	 string   $name 			  User's Name
 	 *  @param   string   $list          	  The Campaign Monitor list unique ID
 	 *  @param   array    $custom_fields  	  Custom Fields
-	 *  @param   boolean  $resubscribe	      Resubscribe unsubscribed users
 	 *
 	 *  @return  void
 	 */
-	public function subscribe($email, $name, $list, $customFields = array(), $resubscribe = false)
+	public function subscribe($email, $name, $list, $customFields = array())
 	{
 		$data = array(
 			'Subscribers' => array(
 				array(
 					'EmailAddress' => $email,
 					'Name'         => $name,
-					'Resubscribe'  => (boolean) $resubscribe,
+					'Resubscribe'  => true,
 				),
 			),
 		);

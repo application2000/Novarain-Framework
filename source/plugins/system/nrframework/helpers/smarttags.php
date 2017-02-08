@@ -133,9 +133,14 @@ class NRSmartTags
     	// $data is array
     	if (is_array($data))
     	{
-    		foreach ($data as $key => $string)
+    		foreach ($data as $key => $value)
     		{
-    			$data[$key] = strtr($string, $this->tags);
+    			if (is_array($value) || is_object($value))
+    			{
+    				continue;
+    			}
+
+    			$data[$key] = strtr($value, $this->tags);
     		}
 
     		return NRCache::set($hash, $data);

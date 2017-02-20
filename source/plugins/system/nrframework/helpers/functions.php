@@ -9,6 +9,9 @@
 
 defined('_JEXEC') or die;
 
+jimport('joomla.filesystem.file');
+jimport('joomla.filesystem.folder');
+
 require_once __DIR__ . '/cache.php';
 
 class NRFrameworkFunctions

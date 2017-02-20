@@ -9,9 +9,6 @@
 
 defined( '_JEXEC' ) or die( 'Restricted access' );
 
-jimport('joomla.filesystem.file');
-jimport('joomla.filesystem.folder');
-
 require_once __DIR__ . '/helpers/functions.php';
 
 class plgSystemNRFramework extends JPlugin

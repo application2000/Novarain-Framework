@@ -92,7 +92,7 @@ class NREmail
             if (!isset($email[$key]) || empty($email[$key]))
             {
                 $valid = false;
-                $this->error = "Invalid $key in email object";
+                $this->error = "Error sending email: The $key field is either missing or invalid.";
                 break;
             }
         }

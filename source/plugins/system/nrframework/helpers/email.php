@@ -125,18 +125,18 @@ class NREmail
             )
         );
 
-        // Recipient
-        $mailer->addRecipient($email["recipient"]);
-
         // Reply-to
         if (isset($email["reply_to"]))
         {
             $mailer->addReplyTo($email["reply_to"]);
         }
 
-        $mailer->isHTML(true);
-        $mailer->setSubject($email["subject"]);
-        $mailer->setBody($email["body"]);
+        $mailer
+            // Recipient - Support multiple recipients separated by comma
+            ->addRecipient(explode(",", $email["recipient"]))
+            ->isHTML(true)
+            ->setSubject($email["subject"])
+            ->setBody($email["body"]);
 
         // Send mail
         $send = $mailer->Send();

@@ -35,7 +35,9 @@ class nrFrameworkAssignmentsHelper
 		'akeebasubs'      => 'AkeebaSubs',
 		'contentcats'     => 'Content.Categories',
 		'contentarticles' => 'Content.Articles',
-		'convertforms'	  => 'ConvertForms'
+		'convertforms'	  => 'ConvertForms',
+		'geo_country'	  => 'GeoIP.Countries',
+		'geo_continent'	  => 'GeoIP.Continents'
 	);
 
 	/**

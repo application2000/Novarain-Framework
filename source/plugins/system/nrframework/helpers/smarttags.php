@@ -55,7 +55,8 @@ class NRSmartTags
 			'user.email'    => $user->email,
 			
 			// Other
-			'date'			=> JFactory::getDate()->format('Y-m-d H:i:s')
+			'date'			=> JFactory::getDate()->format('Y-m-d H:i:s'),
+			'randomid'		=> bin2hex(JCrypt::genRandomBytes(8))
 		);
 	}
 

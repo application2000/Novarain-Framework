@@ -19,33 +19,144 @@ class NR_ConvertKit extends NR_Wrapper
 {
 	/**
 	 * Create a new instance
-	 * @param string $api_secret Your ConvertKit API Secret
+	 * @param string $api_key Your ConvertKit API Key
 	 * @throws \Exception
 	 */
-	public function __construct($api_secret)
+	public function __construct($api_key)
 	{
 		parent::__construct();
-		$this->setKey($api_secret);
-		$this->endpoint = 'https://api.convertkit.com/v3';
+		$this->setKey($api_key);
+		$this->setEndpoint('https://api.convertkit.com/v3');
 		$this->options->set('headers.Accept', 'application/json; charset=utf-8');
 		$this->options->set('headers.Content-Type', 'application/json');
 	}
 
 	/**
-	 * Setter method for the API Endpoint
-	 * @param string $url The URL which is set in the account's developer settings
-	 * @throws \Exception 
+	 *  Subscribe a user to a ConvertKit Form
+	 *
+	 *  @param   string  $email   The subscriber's email
+	 *  @param   string  $formid  The account owner's form id
+	 *  @param   array   $params  The form's parameters
+	 *
+	 *  @return  boolean
 	 */
-	public function setEndpoint($url)
+	public function subscribe($email, $formid, $params)
 	{
-		if (!empty($url))
-		{
-			$query              = http_build_query(array('key' => $this->key));
-			$this->endpoint = $url . '?' . $query;
-		}
-		else
-		{
-			throw new \Exception("Invalid ConvertKit URL `{$url}` supplied.");
-		}
+		$first_name = (isset($params['first_name'])) ? $params['first_name'] : '';
+		$tags       = (isset($params['tags'])) ? $this->convertTagnamesToTagIDs($params['tags']) : '';
+		$fields     = $this->validateCustomFields($params);
+
+		$data = array(
+			'api_key'    => $this->key,
+			'email'      => $email,
+			'first_name' => $first_name,
+			'tags'       => $tags,
+			'fields'     => $fields,
+		);
+
+		$this->post('forms/' . $formid . '/subscribe', $data);
+
+		return true;
 	}
+
+	/**
+	 *  Converts tag names to tag IDs for the subscribe method
+	 *
+	 *  @param   string  $tagnames  comma separated list of tagnames
+	 *
+	 *  @return  string             comma separated list of tag IDs
+	 */
+	public function convertTagnamesToTagIDs($tagnames)
+	{
+		if (empty($tagnames))
+		{
+			return;
+		}
+
+		$tagnames = explode(',', $tagnames);
+
+		$accountTags = $this->get('tags', array('api_key' => $this->key));
+
+		if (empty($accountTags) || !$this->request_successful)
+		{
+			return;
+		}
+
+		$tagIDs = array();
+
+		foreach ($accountTags['tags'] as $tag)
+		{
+			if (in_array($tag['name'], $tagnames))
+			{
+				$tagIDs[] = $tag['id'];
+			}
+		}
+
+		$tagIDs = implode(',', $tagIDs);
+
+		return $tagIDs;
+
+	}
+
+	/**
+	 *  Returns a new array with valid only custom fields
+	 *
+	 *  @param   array  $formCustomFields   Array of custom fields
+	 *
+	 *  @return  array  					Array of valid only custom fields
+	 */
+	public function validateCustomFields($formCustomFields)
+	{
+		if (!is_array($formCustomFields))
+		{
+			return;
+		}
+
+		$customFields = $this->get('custom_fields', array('api_key' => $this->key));
+
+		if (!$this->request_successful)
+		{
+			return;
+		}
+
+		$fields = array();
+
+		$formCustomFieldsKeys = array_keys($formCustomFields);
+
+		foreach ($customFields['custom_fields'] as $customField)
+		{
+			if (in_array($customField['key'], $formCustomFieldsKeys))
+			{
+				$fields[$customField['key']] = $formCustomFields[$customField['key']];
+			}
+		}
+
+		return $fields;
+	}
+
+	/**
+	 *  Get the last error returned by either the network transport, or by the API.
+	 *
+	 *  @return  string
+	 */
+	public function getLastError()
+	{
+		$body = $this->last_response['body'];
+
+		$message = '';
+
+		if (isset($body['error']) && !empty($body['error']))
+		{
+			$message = $body['error'];
+		}
+
+		if (isset($body['message']) && !empty($body['message']))
+		{
+			$message .= '<br>' . $body['message'];
+		}
+
+		return $message;
+
+	}
+
 }

@@ -76,8 +76,7 @@ class NR_ConvertKit extends NR_Wrapper
 			return;
 		}
 
-		$tagnames = explode(',', $tagnames);
-		$tagnames = array_map('trim', $tagnames);
+		$tagnames = array_map('trim', explode(',', $tagnames));
 
 		$accountTags = $this->get('tags', array('api_key' => $this->key));
 

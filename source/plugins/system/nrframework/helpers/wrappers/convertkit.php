@@ -33,6 +33,9 @@ class NR_ConvertKit extends NR_Wrapper
 
 	/**
 	 *  Subscribe a user to a ConvertKit Form
+	 *  
+	 *  API Reference:
+	 *  http://help.convertkit.com/article/33-api-documentation-v3
 	 *
 	 *  @param   string  $email   The subscriber's email
 	 *  @param   string  $formid  The account owner's form id
@@ -74,6 +77,7 @@ class NR_ConvertKit extends NR_Wrapper
 		}
 
 		$tagnames = explode(',', $tagnames);
+		$tagnames = array_map('trim', $tagnames);
 
 		$accountTags = $this->get('tags', array('api_key' => $this->key));
 
@@ -86,9 +90,13 @@ class NR_ConvertKit extends NR_Wrapper
 
 		foreach ($accountTags['tags'] as $tag)
 		{
-			if (in_array($tag['name'], $tagnames))
+			foreach ($tagnames as $tagname) 
 			{
-				$tagIDs[] = $tag['id'];
+				if (\Joomla\String\StringHelper::strcasecmp($tag['name'], $tagname) == 0) 
+				{
+					$tagIDs[] = $tag['id'];
+					break;
+				}
 			}
 		}
 

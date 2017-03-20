@@ -13,6 +13,8 @@
 // No direct access
 defined('_JEXEC') or die;
 
+use Joomla\String\StringHelper;
+
 require_once __DIR__ . '/wrapper.php';
 
 class NR_ConvertKit extends NR_Wrapper
@@ -76,8 +78,8 @@ class NR_ConvertKit extends NR_Wrapper
 			return;
 		}
 
-		$tagnames = array_map('trim', explode(',', $tagnames));
-
+		$tagArray    = !is_array($tagnames) ? explode(',', $tagnames) : $tagnames;
+		$tagnames    = array_map('trim', $tagArray);
 		$accountTags = $this->get('tags', array('api_key' => $this->key));
 
 		if (empty($accountTags) || !$this->request_successful)
@@ -89,9 +91,9 @@ class NR_ConvertKit extends NR_Wrapper
 
 		foreach ($accountTags['tags'] as $tag)
 		{
-			foreach ($tagnames as $tagname) 
+			foreach ($tagnames as $tagname)
 			{
-				if (\Joomla\String\StringHelper::strcasecmp($tag['name'], $tagname) == 0) 
+				if (StringHelper::strcasecmp($tag['name'], $tagname) == 0) 
 				{
 					$tagIDs[] = $tag['id'];
 					break;
@@ -99,10 +101,7 @@ class NR_ConvertKit extends NR_Wrapper
 			}
 		}
 
-		$tagIDs = implode(',', $tagIDs);
-
-		return $tagIDs;
-
+		return implode(',', $tagIDs);
 	}
 
 	/**
@@ -163,7 +162,5 @@ class NR_ConvertKit extends NR_Wrapper
 		}
 
 		return $message;
-
 	}
-
 }

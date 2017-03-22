@@ -26,17 +26,108 @@ class NR_HubSpot extends NR_Wrapper
 	{
 		parent::__construct();
 		$this->setKey($key);
-		$this->setEndpoint('https://api.hubapi.com/contacts/v1');
-		$this->options->set('headers.Content-Type', 'application/x-www-form-urlencoded; charset=utf-8');
-		$this->options->set('headers.Authorization', 'Bearer ' . $this->key);
+		$this->setEndpoint('https://api.hubapi.com');
 	}
+
 	/**
-	 * Encode the data and attach it to the request
-	 * @param   array $data Assoc array of data to attach
+	 *  Subscribe user to HubSpot
+	 *
+	 *  API References:
+	 *  http://developers.hubspot.com/docs/methods/contacts/update_contact-by-email
+	 *
+	 *  @param   string   $email 	User's email address
+	 *  @param   string   $params  	The forms extra fields
+	 *
+	 *  @return  void
 	 */
-	protected function attachRequestPayload($data)
+	public function subscribe($email, $params)
 	{
-		$this->last_request['body'] = http_build_query($data);
+		$fields = $this->validateCustomFields($params);
+
+		$fields[] = array('property' => 'email', 'value' => $email);
+
+		$data = array(
+			'properties' => $fields
+		);
+
+		$this->post('contacts/v1/contact/createOrUpdate/email/' . $email . '/?hapikey=' . $this->key, $data);
+
+		return true;
+	}
+
+	/**
+	 *  Get the last error returned by either the network transport, or by the API.
+	 *
+	 *  API References:
+	 *  http://developers.hubspot.com/docs/faq/api-error-responses
+	 *
+	 *  @return  string
+	 */
+	public function getLastError()
+	{
+		$body = $this->last_response['body'];
+
+		$message = '';
+
+		if ((isset($body['status'])) && ($body['status'] == 'error'))
+		{
+			$message = $body['message'];
+		}
+
+		return $message;
+
+	}
+
+	/**
+	 *  Returns a new array with valid only custom fields
+	 *
+	 *  API References:
+	 *  http://developers.hubspot.com/docs/methods/contacts/v2/get_contacts_properties
+	 *
+	 *  @param   array  $formCustomFields   Array of custom fields
+	 *
+	 *  @return  array  					Array of valid only custom fields
+	 */
+	public function validateCustomFields($formCustomFields)
+	{
+
+		$fields = array();
+
+		if (!is_array($formCustomFields))
+		{
+			return $fields;
+		}
+
+		$accountFields = $this->get('properties/v1/contacts/properties?hapikey='.$this->key);
+
+		if (!$this->request_successful)
+		{
+			return $fields;
+		}
+
+		$accountFieldsNames = array_map(
+			function ($ar)
+			{
+				return $ar['name'];
+			}, $accountFields
+		);
+
+		$formCustomFieldsKeys = array_keys($formCustomFields);
+
+		foreach ($accountFieldsNames as $accountFieldsName)
+		{
+			if (!in_array($accountFieldsName, $formCustomFieldsKeys))
+			{
+				continue;
+			}
+
+			$fields[] = array(
+				"property" => $accountFieldsName,
+				"value"    => $formCustomFields[$accountFieldsName],
+			);
+		}
+
+		return $fields;
 	}
 
 }

@@ -77,21 +77,24 @@ class NR_MailChimp extends NR_Wrapper
 	/**
 	 *  Returns all available MailChimp lists
 	 *
+	 *  https://developer.mailchimp.com/documentation/mailchimp/reference/lists/#read-get_lists
+	 *
 	 *  @return  array
 	 */
-	public function getLists($fulldata = false)
+	public function getLists()
 	{
 		$data = $this->get("/lists");
-		$lists = array();
 
-		if (!isset($data["lists"]))
+		if (!$this->success())
 		{
-			return $lists;
+			throw new Exception($this->getLastError());
 		}
 
-		if ($fulldata)
+		$lists = array();
+
+		if (!isset($data["lists"]) || !is_array($data["lists"]))
 		{
-			return $data;
+			return $lists;
 		}
 
 		foreach ($data["lists"] as $key => $list)

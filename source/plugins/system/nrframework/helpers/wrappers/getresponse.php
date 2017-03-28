@@ -125,4 +125,38 @@ class NR_GetResponse extends NR_Wrapper
 		
 		return $errorFieldName . ": " . $error["errorDescription"];
 	}
+
+	/**
+	 *  Returns all available GetResponse campaigns
+	 *
+	 *  https://apidocs.getresponse.com/v3/resources/campaigns#campaigns.get.all
+	 *
+	 *  @return  array
+	 */
+	public function getLists()
+	{
+		$data = $this->get("campaigns");
+
+		if (!$this->success())
+		{
+			throw new Exception($this->getLastError());
+		}
+
+		if (!is_array($data) || !count($data))
+		{
+			return;
+		}
+
+		$lists = array();
+
+		foreach ($data as $key => $list)
+		{
+			$lists[] = array(
+				"id"   => $list["campaignId"],
+				"name" => $list["name"]
+			);
+		}
+
+		return $lists;
+	}
 }

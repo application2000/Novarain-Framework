@@ -17,6 +17,20 @@ require_once __DIR__ . "/cache.php";
 class NRSmartTags
 {
 	/**
+	 *  Joomla Document Object
+	 *
+	 *  @var  object
+	 */
+	private $doc;
+
+	/**
+	 *  Joomla User Object
+	 *
+	 *  @var  object
+	 */
+	private $user;
+
+	/**
 	 *  Tags Array
 	 *
 	 *  @var  array
@@ -35,7 +49,8 @@ class NRSmartTags
 	 */
 	function __construct()
 	{
-		$user = JFactory::getUser();
+		$this->user = JFactory::getUser();
+		$this->doc  = JFactory::getDocument();
 
 		$this->tags = array(
 			// Server
@@ -44,15 +59,20 @@ class NRSmartTags
 			'referrer'	    => isset($_SERVER['HTTP_REFERER']) ? $_SERVER['HTTP_REFERER'] : null,
 			'ip'			=> isset($_SERVER['REMOTE_ADDR']) ? $_SERVER['REMOTE_ADDR'] : null,
 
-			 // Site 
+			// Site 
 			'site.name'     => JFactory::getConfig()->get('sitename'),
 			'site.url'      => JURI::root(),
 
-			// Joomla User
-			'user.id'       => $user->id,
-			'user.name'     => $user->name,
-			'user.username' => $user->username,
-			'user.email'    => $user->email,
+			// Page
+			'page.title'    => $this->doc->getTitle(),
+			'page.desc'     => $this->doc->getDescription(),
+			'page.lang'     => $this->doc->getLanguage(),
+
+			// User
+			'user.id'       => $this->user->id,
+			'user.name'     => $this->user->name,
+			'user.username' => $this->user->username,
+			'user.email'    => $this->user->email,
 			
 			// Other
 			'date'			=> JFactory::getDate()->format('Y-m-d H:i:s'),
@@ -147,7 +167,6 @@ class NRSmartTags
     		return NRCache::set($hash, $data);
     	}
 
-    	// $data is tring
     	return NRCache::set($hash, strtr($data, $this->tags));
     }
 

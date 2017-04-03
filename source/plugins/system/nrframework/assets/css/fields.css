@@ -75,3 +75,12 @@
 .input-xmini {
     width: 30px;
 }
+
+.input-flex {
+    display:flex;
+    margin:0 -5px;
+}
+
+.input-flex .input-flex-item {
+    padding:0 5px;
+}

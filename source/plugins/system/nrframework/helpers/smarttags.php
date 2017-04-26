@@ -71,7 +71,7 @@ class NRSmartTags
 			// User
 			'user.id'       => $this->user->id,
 			'user.name'     => $this->user->name,
-			'user.username' => $this->user->username,
+			'user.login'    => $this->user->username,
 			'user.email'    => $this->user->email,
 			
 			// Other
@@ -136,22 +136,18 @@ class NRSmartTags
     /**
      *  Replace tags in object
      *
-     *  @param   mixed  $data  The data object with tags placeholders
+     *  @param   mixed  $obj  The data object for search for smarttags
      *
      *  @return  mixed
      */
-    public function replace($data)
+    public function replace($obj)
     {
-		$hash = md5('smartTags' . serialize($data));
-
-		if (NRCache::has($hash))
-		{
-			return NRCache::get($hash);
-		}
-
     	$this->prepare();
 
-    	// $data is array
+    	// Convert object to array
+    	$data = is_object($obj) ? (array) $obj : $obj;
+
+    	// Array case
     	if (is_array($data))
     	{
     		foreach ($data as $key => $value)
@@ -164,10 +160,14 @@ class NRSmartTags
     			$data[$key] = strtr($value, $this->tags);
     		}
 
-    		return NRCache::set($hash, $data);
+			// Revert object back to its original state
+			$data = is_object($obj) ? (object) $data : $data;
+
+	   		return $data;
     	}
 
-    	return NRCache::set($hash, strtr($data, $this->tags));
+    	// String case
+    	return strtr($data, $this->tags);
     }
 
     /**
@@ -181,6 +181,12 @@ class NRSmartTags
 
     	foreach ($this->tags as $key => $variable)
     	{
+    		// Check if tag is already prepared
+    		if (substr($key, 0, 1) == $placeholder[0])
+			{
+				continue;
+			}
+
     		$this->tags[$placeholder[0] . $key . $placeholder[1]] = $variable;
 			unset($this->tags[$key]);
     	}

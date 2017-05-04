@@ -7,11 +7,8 @@
  * @license         GNU GPLv3 <http://www.gnu.org/licenses/gpl.html> or later
 */
 
-
 // No direct access to this file
 defined('_JEXEC') or die;
-jimport('joomla.form.helper');
-JFormHelper::loadFieldClass('list');
 
 require_once JPATH_PLUGINS . '/system/nrframework/helpers/fieldlist.php';
 
@@ -24,7 +21,7 @@ class JFormFieldModules extends NRFormFieldList
      */
     protected function getOptions()
     {
-        $db = JFactory::getDBO();
+        $db = $this->db;
 
         $query = $db->getQuery(true);
 
@@ -34,13 +31,12 @@ class JFormFieldModules extends NRFormFieldList
             ->where('access !=3')
             ->order('title');
 
-        $rows = $db->setQuery($query);              
+        $rows = $db->setQuery($query);
         $results = $db->loadObjectList();
 
         $options = array();
 
-        $showSelect = $this->get("showselect", "true") == "true" ? true : false;
-        if ($showSelect)
+        if ($this->showSelect())
         {
             $options[] = JHTML::_('select.option', "", '- ' . JText::_("NR_SELECT_MODULE") . ' -');
         }

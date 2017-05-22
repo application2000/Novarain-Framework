@@ -187,7 +187,10 @@ class NRSmartTags
 				continue;
 			}
 
-    		$this->tags[$placeholder[0] . $key . $placeholder[1]] = $variable;
+			// If the object passed to $replace method is in JSON format
+			// we need to escape double quotes in the tag value to prevent JSON failure
+			$this->tags[$placeholder[0] . $key . $placeholder[1]] = addcslashes($variable, '"');
+
 			unset($this->tags[$key]);
     	}
     }

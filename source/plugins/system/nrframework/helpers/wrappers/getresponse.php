@@ -50,7 +50,7 @@ class NR_GetResponse extends NR_Wrapper
 		$data = array(
 			"email" 			=> $email,
 			"name"				=> $name,
-			"dayofCycle"		=> 0,
+			"dayOfCycle"		=> 0,
 			"campaign" 			=> array("campaignId" => $campaign),
 			"customFieldValues"	=> $this->validateCustomFields($customFields),
 			"ipAddress" 		=> $_SERVER['REMOTE_ADDR']

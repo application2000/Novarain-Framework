@@ -13,13 +13,19 @@ require_once dirname(__DIR__) . '/helpers/field.php';
 
 class JFormFieldNR_Gmap extends NRFormField
 {
-
 	/**
 	 * The form field type.
 	 *
 	 * @var    string
 	 */
 	public $type = 'nr_gmap';
+
+	/**
+	 *  The default Google Maps API Key
+	 *
+	 *  @var  string
+	 */
+	public $defaultAPIKey = 'AIzaSyAPgVu1A9L7_q0gtYToFeJiUHDSCCXYZKI';
 
 	/**
 	 * Method to get the field input markup.
@@ -42,7 +48,7 @@ class JFormFieldNR_Gmap extends NRFormField
 		JHtml::_('jquery.framework');
 		Jtext::script('NR_WRONG_COORDINATES');
 
-		$this->doc->addScript('//maps.googleapis.com/maps/api/js?key=AIzaSyDsY82z3zz1V81XLG0AnL_TbSXGxJ4n1cw');
+		$this->doc->addScript('//maps.googleapis.com/maps/api/js?key=' . $this->getAPIKey());
 		NRFrameworkFunctions::addMedia("field.gmap.js");
 
 		// Add styles to DOM
@@ -63,5 +69,25 @@ class JFormFieldNR_Gmap extends NRFormField
 	private function checkCoordinates($coordinates)
 	{
 		return (preg_match("/^[-+]?([1-8]?\d(\.\d+)?|90(\.0+)?),\s*[-+]?(180(\.0+)?|((1[0-7]\d)|([1-9]?\d))(\.\d+)?)$/", $coordinates));
+	}
+
+	/**
+	 *  Get the Google Maps API Key. 
+	 *  If no key is found in the framework options then the default API Key will be used instead.
+	 *  
+	 *  We should update the default API Key once a while.
+	 *
+	 *  @return  string
+	 */
+	private function getAPIKey()
+	{
+		if (!$framework = JPluginHelper::getPlugin('system', 'nrframework'))
+		{
+			return $this->defaultAPIKey;
+		}
+		
+		// Get plugin params
+		$params = new JRegistry($framework->params);
+		return $params->get('gmapkey', $this->defaultAPIKey);
 	}
 }

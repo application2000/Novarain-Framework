@@ -1,12 +1,9 @@
 <?php
 
 /**
- * @package         @pkg.name@
- * @version         @pkg.version@ @vUf@
- *
  * @author          Tassos Marinos <info@tassos.gr>
  * @link            http://www.tassos.gr
- * @copyright       Copyright © 2016 Tassos Marinos All Rights Reserved
+ * @copyright       Copyright © 2017 Tassos Marinos All Rights Reserved
  * @license         GNU GPLv3 <http://www.gnu.org/licenses/gpl.html> or later
  */
 
@@ -53,6 +50,7 @@ class NR_GetResponse extends NR_Wrapper
 		$data = array(
 			"email" 			=> $email,
 			"name"				=> $name,
+			"dayOfCycle"		=> 0,
 			"campaign" 			=> array("campaignId" => $campaign),
 			"customFieldValues"	=> $this->validateCustomFields($customFields),
 			"ipAddress" 		=> $_SERVER['REMOTE_ADDR']
@@ -124,5 +122,39 @@ class NR_GetResponse extends NR_Wrapper
 		$errorFieldName = is_array($error["fieldName"]) ? implode(" ", $error["fieldName"]) : $error["fieldName"];
 		
 		return $errorFieldName . ": " . $error["errorDescription"];
+	}
+
+	/**
+	 *  Returns all available GetResponse campaigns
+	 *
+	 *  https://apidocs.getresponse.com/v3/resources/campaigns#campaigns.get.all
+	 *
+	 *  @return  array
+	 */
+	public function getLists()
+	{
+		$data = $this->get("campaigns");
+
+		if (!$this->success())
+		{
+			throw new Exception($this->getLastError());
+		}
+
+		if (!is_array($data) || !count($data))
+		{
+			return;
+		}
+
+		$lists = array();
+
+		foreach ($data as $key => $list)
+		{
+			$lists[] = array(
+				"id"   => $list["campaignId"],
+				"name" => $list["name"]
+			);
+		}
+
+		return $lists;
 	}
 }

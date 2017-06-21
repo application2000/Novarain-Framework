@@ -3,7 +3,7 @@
 /**
  * @author          Tassos Marinos <info@tassos.gr>
  * @link            http://www.tassos.gr
- * @copyright       Copyright © 2016 Tassos Marinos All Rights Reserved
+ * @copyright       Copyright © 2017 Tassos Marinos All Rights Reserved
  * @license         GNU GPLv3 <http://www.gnu.org/licenses/gpl.html> or later
 */
 
@@ -16,6 +16,20 @@ require_once __DIR__ . "/cache.php";
  */
 class NRSmartTags
 {
+	/**
+	 *  Joomla Document Object
+	 *
+	 *  @var  object
+	 */
+	private $doc;
+
+	/**
+	 *  Joomla User Object
+	 *
+	 *  @var  object
+	 */
+	private $user;
+
 	/**
 	 *  Tags Array
 	 *
@@ -35,7 +49,8 @@ class NRSmartTags
 	 */
 	function __construct()
 	{
-		$user = JFactory::getUser();
+		$this->user = JFactory::getUser();
+		$this->doc  = JFactory::getDocument();
 
 		$this->tags = array(
 			// Server
@@ -44,18 +59,24 @@ class NRSmartTags
 			'referrer'	    => isset($_SERVER['HTTP_REFERER']) ? $_SERVER['HTTP_REFERER'] : null,
 			'ip'			=> isset($_SERVER['REMOTE_ADDR']) ? $_SERVER['REMOTE_ADDR'] : null,
 
-			 // Site 
+			// Site 
 			'site.name'     => JFactory::getConfig()->get('sitename'),
 			'site.url'      => JURI::root(),
 
-			// Joomla User
-			'user.id'       => $user->id,
-			'user.name'     => $user->name,
-			'user.username' => $user->username,
-			'user.email'    => $user->email,
+			// Page
+			'page.title'    => $this->doc->getTitle(),
+			'page.desc'     => $this->doc->getDescription(),
+			'page.lang'     => $this->doc->getLanguage(),
+
+			// User
+			'user.id'       => $this->user->id,
+			'user.name'     => $this->user->name,
+			'user.login'    => $this->user->username,
+			'user.email'    => $this->user->email,
 			
 			// Other
-			'date'			=> JFactory::getDate()->format('Y-m-d H:i:s')
+			'date'			=> JFactory::getDate()->format('Y-m-d H:i:s'),
+			'randomid'		=> bin2hex(JCrypt::genRandomBytes(8))
 		);
 	}
 
@@ -115,22 +136,18 @@ class NRSmartTags
     /**
      *  Replace tags in object
      *
-     *  @param   mixed  $data  The data object with tags placeholders
+     *  @param   mixed  $obj  The data object for search for smarttags
      *
      *  @return  mixed
      */
-    public function replace($data)
+    public function replace($obj)
     {
-		$hash = md5('smartTags' . serialize($data));
-
-		if (NRCache::has($hash))
-		{
-			return NRCache::get($hash);
-		}
-
     	$this->prepare();
 
-    	// $data is array
+    	// Convert object to array
+    	$data = is_object($obj) ? (array) $obj : $obj;
+
+    	// Array case
     	if (is_array($data))
     	{
     		foreach ($data as $key => $value)
@@ -143,11 +160,14 @@ class NRSmartTags
     			$data[$key] = strtr($value, $this->tags);
     		}
 
-    		return NRCache::set($hash, $data);
+			// Revert object back to its original state
+			$data = is_object($obj) ? (object) $data : $data;
+
+	   		return $data;
     	}
 
-    	// $data is tring
-    	return NRCache::set($hash, strtr($data, $this->tags));
+    	// String case
+    	return strtr($data, $this->tags);
     }
 
     /**
@@ -161,7 +181,16 @@ class NRSmartTags
 
     	foreach ($this->tags as $key => $variable)
     	{
-    		$this->tags[$placeholder[0] . $key . $placeholder[1]] = $variable;
+    		// Check if tag is already prepared
+    		if (substr($key, 0, 1) == $placeholder[0])
+			{
+				continue;
+			}
+
+			// If the object passed to $replace method is in JSON format
+			// we need to escape double quotes in the tag value to prevent JSON failure
+			$this->tags[$placeholder[0] . $key . $placeholder[1]] = addcslashes($variable, '"');
+
 			unset($this->tags[$key]);
     	}
     }

@@ -3,7 +3,7 @@
 /**
  * @author          Tassos Marinos <info@tassos.gr>
  * @link            http://www.tassos.gr
- * @copyright       Copyright © 2016 Tassos Marinos All Rights Reserved
+ * @copyright       Copyright © 2017 Tassos Marinos All Rights Reserved
  * @license         GNU GPLv3 <http://www.gnu.org/licenses/gpl.html> or later
 */
 
@@ -14,26 +14,19 @@ defined('_JEXEC') or die('Restricted access');
  */
 class NREmail
 {
-   /**
-     *  Class instance
-     *
-     *  @var  object
-     */
-    private static $instance;
-
-    /**
-     *  Joomla Global Mail Object
-     *
-     *  @var  object
-     */
-    private $mailer;
-
     /**
      *  Indicates the last error
      *
      *  @var  string
      */
     private $error;
+
+    /**
+     *  Email Object
+     *
+     *  @var  email data to be sent
+     */
+    private $email;
 
     /**
      *  Required elements for a valid email object
@@ -51,24 +44,9 @@ class NREmail
     /**
      *  Class constructor
      */
-    private function __construct()
+    public function __construct($email)
     {
-        $this->mailer = JFactory::getMailer();
-    }
-
-    /**
-     *  Returns class instance
-     *
-     *  @return  object
-     */
-    public static function getInstance()
-    {
-        if (is_null(self::$instance))
-        {
-            self::$instance = new self();
-        }
-
-        return self::$instance;
+        $this->email = $email;
     }
 
     /**
@@ -78,8 +56,13 @@ class NREmail
      *
      *  @return  boolean        Returns true if the email object is valid
      */
-    public function validate($email)
+    public function validate()
     {
+        if (!$email = $this->email)
+        {
+            return;
+        }
+
         if (!is_array($email) || !count($email))
         {
             return false;
@@ -105,17 +88,19 @@ class NREmail
      *
      *  @param   array  $email  The mail objecta
      *
-     *  @return  mixed         Returns true on success. Throws exeption on fail.
+     *  @return  mixed          Returns true on success. Throws exeption on fail.
      */
-    public function send($email)
+    public function send()
     {
+        $email = $this->email;
+
         // Validate first the email object
         if (!$this->validate($email))
         {
             throw new Exception($this->error);
         }
 
-        $mailer = $this->mailer;
+        $mailer = JFactory::getMailer();
 
         // Email Sender
         $mailer->setSender(

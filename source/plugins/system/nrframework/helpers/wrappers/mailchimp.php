@@ -1,12 +1,9 @@
 <?php
 
 /**
- * @package         @pkg.name@
- * @version         @pkg.version@ @vUf@
- *
  * @author          Tassos Marinos <info@tassos.gr>
  * @link            http://www.tassos.gr
- * @copyright       Copyright © 2016 Tassos Marinos All Rights Reserved
+ * @copyright       Copyright © 2017 Tassos Marinos All Rights Reserved
  * @license         GNU GPLv3 <http://www.gnu.org/licenses/gpl.html> or later
  */
 
@@ -77,21 +74,24 @@ class NR_MailChimp extends NR_Wrapper
 	/**
 	 *  Returns all available MailChimp lists
 	 *
+	 *  https://developer.mailchimp.com/documentation/mailchimp/reference/lists/#read-get_lists
+	 *
 	 *  @return  array
 	 */
-	public function getLists($fulldata = false)
+	public function getLists()
 	{
 		$data = $this->get("/lists");
-		$lists = array();
 
-		if (!isset($data["lists"]))
+		if (!$this->success())
 		{
-			return $lists;
+			throw new Exception($this->getLastError());
 		}
 
-		if ($fulldata)
+		$lists = array();
+
+		if (!isset($data["lists"]) || !is_array($data["lists"]))
 		{
-			return $data;
+			return $lists;
 		}
 
 		foreach ($data["lists"] as $key => $list)

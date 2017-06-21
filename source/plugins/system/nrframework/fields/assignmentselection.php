@@ -3,24 +3,16 @@
 /**
  * @author          Tassos Marinos <info@tassos.gr>
  * @link            http://www.tassos.gr
- * @copyright       Copyright © 2015 Tassos Marinos All Rights Reserved
+ * @copyright       Copyright © 2017 Tassos Marinos All Rights Reserved
  * @license         GNU GPLv3 <http://www.gnu.org/licenses/gpl.html> or later
 */
 
 defined('JPATH_PLATFORM') or die;
 
-jimport('joomla.form.helper');
+require_once JPATH_PLUGINS . '/system/nrframework/helpers/fieldlist.php';
 
-class JFormFieldAssignmentSelection extends JFormFieldList
+class JFormFieldAssignmentSelection extends NRFormFieldList
 {
-	/**
-	 * The form field type.
-	 *
-	 * @var    string
-	 * @since  11.1
-	 */
-	public $type = 'AssignmentSelection';
-
 	protected function getLabel()
 	{
 		return '';
@@ -28,13 +20,11 @@ class JFormFieldAssignmentSelection extends JFormFieldList
 
 	protected function getInput()
 	{	
-
 		$assetsDir = JURI::root(true)."/plugins/system/nrframework/fields/assets/";
-		$doc = JFactory::getDocument();
-        $doc->addScript($assetsDir.'assignmentselection.js');
-        $doc->addStyleSheet($assetsDir.'assignmentselection.css');
+        $this->doc->addScript($assetsDir.'assignmentselection.js');
+        $this->doc->addStyleSheet($assetsDir.'assignmentselection.css');
 
-		$label = JText::_($this->element["label"]);
+		$label = JText::_($this->get("label"));
 		$this->value = (int) $this->value;
 		$html = array();
 

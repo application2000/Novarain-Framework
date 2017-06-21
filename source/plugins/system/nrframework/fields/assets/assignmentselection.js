@@ -5,7 +5,7 @@ jQuery(function($) {
         input.on("change", function() {
           
             well = $(this).closest("div.well");
-            obj = well.children().eq(1);    
+            obj = well.children(":not(.assignmentselection)") 
 
             well.removeClass("alert-success").removeClass("alert-error")
 

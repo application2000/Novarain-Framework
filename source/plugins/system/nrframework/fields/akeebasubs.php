@@ -3,7 +3,7 @@
 /**
  * @author          Tassos Marinos <info@tassos.gr>
  * @link            http://www.tassos.gr
- * @copyright       Copyright © 2016 Tassos Marinos All Rights Reserved
+ * @copyright       Copyright © 2017 Tassos Marinos All Rights Reserved
  * @license         GNU GPLv3 <http://www.gnu.org/licenses/gpl.html> or later
 */
 
@@ -16,20 +16,12 @@ JFormHelper::loadFieldClass('list');
 class JFormFieldAkeebaSubs extends JFormFieldList
 {
     /**
-     * The field type.
-     *
-     * @var         string
-     */
-    protected $type = 'akeebasubs';
-
-    /**
      * Method to get a list of options for a list input.
      *
      * @return      array           An array of JHtml options.
      */
     protected function getOptions() 
     {
-
         $lists = $this->getLevels();
 
         if (!count($lists))
@@ -39,7 +31,8 @@ class JFormFieldAkeebaSubs extends JFormFieldList
 
         $options = array();
 
-        foreach ($lists as $option) {
+        foreach ($lists as $option)
+        {
             $options[] = JHTML::_('select.option', $option->id, $option->name);
         }
 
@@ -53,7 +46,6 @@ class JFormFieldAkeebaSubs extends JFormFieldList
      */
     private function getLevels()
     {
-
         // Get a db connection.
         $db = JFactory::getDbo();
         

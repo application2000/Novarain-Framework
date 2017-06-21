@@ -1,12 +1,9 @@
 <?php
 
 /**
- * @package         @pkg.name@
- * @version         @pkg.version@ @vUf@
- *
  * @author          Tassos Marinos <info@tassos.gr>
  * @link            http://www.tassos.gr
- * @copyright       Copyright © 2016 Tassos Marinos All Rights Reserved
+ * @copyright       Copyright © 2017 Tassos Marinos All Rights Reserved
  * @license         GNU GPLv3 <http://www.gnu.org/licenses/gpl.html> or later
  */
 
@@ -131,9 +128,6 @@ class NR_CampaignMonitor extends NR_Wrapper
 	/**
 	 *  Get the last error returned by either the network transport, or by the API.
 	 *
-	 *  API Reference
-	 *  https://www.campaignmonitor.com/api/subscribers/#importing_many_subscribers
-	 *
 	 *  @return  string
 	 */
 	public function getLastError()
@@ -153,7 +147,68 @@ class NR_CampaignMonitor extends NR_Wrapper
 		}
 
 		return $message;
-
 	}
 
+	/**
+	 *  Returns all Client lists
+	 *
+	 *  https://www.campaignmonitor.com/api/clients/#getting-subscriber-lists
+	 *
+	 *  @return  array
+	 */
+	public function getLists()
+	{
+		$clients = $this->getClients();
+
+		if (!is_array($clients))
+		{
+			return;
+		}
+
+		$lists = array();
+
+		foreach ($clients as $key => $client)
+		{
+			if (!isset($client["ClientID"]))
+			{
+				continue;
+			}
+
+			$clientLists = $this->get("/clients/".$client["ClientID"]."/lists.json");
+
+			if (!is_array($clientLists))
+			{
+				continue;
+			}
+
+			foreach ($clientLists as $key => $clientList)
+			{
+				$lists[] = array(
+					"id"   => $clientList["ListID"],
+					"name" => $clientList["Name"]
+				);
+			}
+		}
+
+		return $lists;
+	}
+
+	/**
+	 *  Get Clients
+	 *
+	 *  https://www.campaignmonitor.com/api/account/
+	 *
+	 *  @return  mixed   Array on success, Exception on fail
+	 */
+	private function getClients()
+	{
+		$clients = $this->get("/clients.json");
+
+		if (!$this->success())
+		{
+			throw new Exception($this->getLastError());
+		}
+
+		return $clients;
+	}
 }

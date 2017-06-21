@@ -1,20 +1,20 @@
 <?php
+
 /**
  * @author          Tassos Marinos <info@tassos.gr>
  * @link            http://www.tassos.gr
- * @copyright       Copyright © 2016 Tassos Marinos All Rights Reserved
+ * @copyright       Copyright © 2017 Tassos Marinos All Rights Reserved
  * @license         GNU GPLv3 <http://www.gnu.org/licenses/gpl.html> or later
- */
+*/
 
-defined('_JEXEC') or die('Restricted access');
-jimport('joomla.form.helper');
-JFormHelper::loadFieldClass('list');
+// No direct access to this file
+defined('_JEXEC') or die;
 
-class JFormFieldNR_Currencies extends JFormFieldList
+require_once JPATH_PLUGINS . '/system/nrframework/helpers/fieldlist.php';
+
+class JFormFieldNR_Currencies extends NRFormFieldList
 {
-	protected $type = 'nr_currencies';
-
-	protected $currencies = array(
+	public $currencies = array(
 		"AED" => "United Arab Emirates Dirham",
 		"AFN" => "Afghan Afghani",
 		"ALL" => "Albanian Lek",
@@ -192,7 +192,11 @@ class JFormFieldNR_Currencies extends JFormFieldList
 	protected function getOptions()
 	{
 		$options = array();
-		$options[] = JHTML::_('select.option', "", "- " . JText::_("NR_SELECT_CURRENCY"). " -");
+
+		if ($this->showSelect())
+		{
+			$options[] = JHTML::_('select.option', "", "- " . JText::_("NR_SELECT_CURRENCY"). " -");
+		}
 
 		asort($this->currencies);
 

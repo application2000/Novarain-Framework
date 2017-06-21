@@ -2,15 +2,15 @@
 /**
  * @author          Tassos Marinos <info@tassos.gr>
  * @link            http://www.tassos.gr
- * @copyright       Copyright © 2016 Tassos Marinos All Rights Reserved
+ * @copyright       Copyright © 2017 Tassos Marinos All Rights Reserved
  * @license         GNU GPLv3 <http://www.gnu.org/licenses/gpl.html> or later
  */
 
 defined('_JEXEC') or die('Restricted access');
-jimport('joomla.form.helper');
-JFormHelper::loadFieldClass('list');
 
-class JFormFieldNR_Geo extends JFormFieldList
+require_once JPATH_PLUGINS . '/system/nrframework/helpers/fieldlist.php';
+
+class JFormFieldNR_Geo extends NRFormFieldList
 {
 	private $list;
 
@@ -19,7 +19,7 @@ class JFormFieldNR_Geo extends JFormFieldList
 	 *
 	 *  @var  array
 	 */
-	protected $continents = array(
+	public $continents = array(
 		'AF' => 'Africa',
 		'AS' => 'Asia',
 		'EU' => 'Europe',
@@ -34,7 +34,7 @@ class JFormFieldNR_Geo extends JFormFieldList
 	 *
 	 *  @var  array
 	 */
-	protected $countries = array(
+	public $countries = array(
 		'AF' => "Afghanistan",
 		'AX' => "Aland Islands",
 		'AL' => "Albania",
@@ -283,19 +283,25 @@ class JFormFieldNR_Geo extends JFormFieldList
 
 	protected function getOptions()
 	{
-		$this->params = $this->element->attributes();
-
-		switch ($this->params['geo'])
+		switch ($this->get('geo'))
 		{
 			case 'continents':
 				$this->list = $this->continents;
+				$selectLabel = 'NR_SELECT_CONTINENT';
 				break;
 			default:
 				$this->list = $this->countries;
+				$selectLabel = 'NR_SELECT_COUNTRY';
 				break;
 		}
 
 		$options = array();
+
+		if ($this->get("showselect", 'true') === 'true')
+		{
+			$options[] = JHTML::_('select.option', "", "- " . JText::_($selectLabel) . " -");
+		}
+
 		foreach ($this->list as $key => $value)
 		{
 			$options[] = JHTML::_('select.option', $key, $value);

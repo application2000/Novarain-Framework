@@ -55,6 +55,7 @@ class NRSmartTags
 		$this->tags = array(
 			// Server
 			'url'			=> JURI::getInstance()->toString(),
+			'url.encoded'	=> urlencode(JURI::getInstance()->toString()),
 			'url.path'		=> JURI::current(),
 			'referrer'	    => isset($_SERVER['HTTP_REFERER']) ? $_SERVER['HTTP_REFERER'] : null,
 			'ip'			=> isset($_SERVER['REMOTE_ADDR']) ? $_SERVER['REMOTE_ADDR'] : null,

@@ -218,7 +218,7 @@ class NR_MailChimp extends NR_Wrapper
 
 			foreach ($data as $interest) 
 			{
-				if ($params[$category['title']] == $interest['name']) 
+				if (in_array($interest['name'], (array) $params[$category['title']]))
 				{
 					$interests[$interest['id']] = true;
 				}

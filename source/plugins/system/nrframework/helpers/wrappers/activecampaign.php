@@ -30,28 +30,29 @@ class NR_ActiveCampaign extends NR_Wrapper
 	}
 
 	/**
-	 *  Subscribe user to Active Campaign List
+	 *  Subscribe user to ActiveCampaign List
 	 *
 	 *  http://www.activecampaign.com/api/example.php?call=contact_sync
 	 *
-	 *  TODO: Custom Fields
+	 *  @param   string  $email           The name of the Contact
+	 *  @param   string  $name            Email of the Contact
+	 *  @param   string  $list            List ID
+	 *  @param   string  $tags            Tags for this contact (comma-separated). Example: "tag1, tag2, etc"
+	 *  @param   array   $customfields    Custom Fields
+	 *  @param   boolean $updateexisting  Update Existing User
 	 *
-	 *  @param   string   $email   	     The name of the Contact
-	 *  @param   string   $name          Email of the Contact
-	 *  @param   string   $list          List ID
-	 *  @param   string   $tags	 		 Tags for this contact (comma-separated). Example: "tag1, tag2, etc"
-	 *  @param   array    $customfields	 Custom Fields
-	 *
-	 *  @return  void
+	 *  @return  void                   
 	 */
-	public function subscribe($email, $name, $list, $tags = "", $customfields = array())
+	public function subscribe($email, $name, $list, $tags = "", $customfields = array(), $updateexisting)
 	{
 		$name = explode(" ", $name, 2);
 
 		$customFields = $this->validateCustomFields($customfields);
 
+		$apiAction = ($updateexisting) ? 'contact_sync' : 'contact_add';
+
 		$data = array(
-			"api_action"           => "contact_sync",
+			"api_action"           => $apiAction,
 			"email"                => $email,
 			"first_name"           => isset($name[0]) ? $name[0] : null,
 			"last_name"            => isset($name[1]) ? $name[1] : null,

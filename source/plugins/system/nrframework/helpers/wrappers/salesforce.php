@@ -29,7 +29,7 @@ class NR_SalesForce extends NR_Wrapper
 	}
 
 	/**
-	 *  Subscribe user to MailChimp
+	 *  Subscribe user to SalesForce
 	 *
 	 *  API References:
 	 *  https://developer.salesforce.com/page/Wordpress-to-lead
@@ -54,6 +54,32 @@ class NR_SalesForce extends NR_Wrapper
 		$this->post('', $data);
 
 		return true;
+	}
+
+	/**
+	 *  Determine if the Lead has been stored successfully in SalesForce
+	 *
+	 *  @return  string
+	 */
+	public function determineSuccess()
+	{
+		$status = $this->findHTTPStatus();
+
+		if ($status < 200 && $status > 299)
+		{
+			return false;
+		}
+
+		$headers = $this->last_response['headers'];
+
+		if (isset($headers['Is-Processed']) && (strpos($headers['Is-Processed'],'Exception') === false))
+		{
+			$this->last_error = JText::_('NR_SALESFORCE_ERROR');
+			return false;
+		}
+
+		return ($this->request_successful = true);
+
 	}
 
 }

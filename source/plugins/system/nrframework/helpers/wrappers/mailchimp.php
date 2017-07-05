@@ -56,7 +56,10 @@ class NR_MailChimp extends NR_Wrapper
 
 		if (is_array($merge_fields) && count($merge_fields))
 		{
-			$data["merge_fields"] = $merge_fields;
+			foreach ($merge_fields as $merge_field_key => $merge_field_value) 
+			{
+				$data["merge_fields"][$merge_field_key] = (is_array($merge_field_value)) ? implode(',', $merge_field_value) : $merge_field_value;
+			}
 		}
 
 		$interests = $this->validateInterestCategories($list, $merge_fields);
@@ -218,7 +221,7 @@ class NR_MailChimp extends NR_Wrapper
 
 			foreach ($data as $interest) 
 			{
-				if ($params[$category['title']] == $interest['name']) 
+				if (in_array($interest['name'], (array) $params[$category['title']]))
 				{
 					$interests[$interest['id']] = true;
 				}

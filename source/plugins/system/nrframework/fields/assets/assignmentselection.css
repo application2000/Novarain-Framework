@@ -1,7 +1,7 @@
 .well.well-assign {
     color:inherit !important;
     padding: 15px 19px;
-    margin-bottom: 15px;
+    margin-bottom: 10px;
 }
 .well-assign fieldset {
     padding-top:0 !important;
@@ -24,7 +24,6 @@
 }
 .well-assign .btn_ignore.btn.active {
     background-color: #EFEFEF;
-    border-color: #cccccc;
     color: #555555;
 }
 .well-assign .btn_exclude.btn.active {

@@ -55,6 +55,7 @@ class NRSmartTags
 		$this->tags = array(
 			// Server
 			'url'			=> JURI::getInstance()->toString(),
+			'url.encoded'	=> urlencode(JURI::getInstance()->toString()),
 			'url.path'		=> JURI::current(),
 			'referrer'	    => isset($_SERVER['HTTP_REFERER']) ? $_SERVER['HTTP_REFERER'] : null,
 			'ip'			=> isset($_SERVER['REMOTE_ADDR']) ? $_SERVER['REMOTE_ADDR'] : null,
@@ -187,7 +188,10 @@ class NRSmartTags
 				continue;
 			}
 
-    		$this->tags[$placeholder[0] . $key . $placeholder[1]] = $variable;
+			// If the object passed to $replace method is in JSON format
+			// we need to escape double quotes in the tag value to prevent JSON failure
+			$this->tags[$placeholder[0] . $key . $placeholder[1]] = addcslashes($variable, '"');
+
 			unset($this->tags[$key]);
     	}
     }

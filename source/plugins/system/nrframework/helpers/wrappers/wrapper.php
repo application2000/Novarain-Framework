@@ -20,6 +20,7 @@ class NR_Wrapper
 	protected $last_request       = array();
 	protected $timeout            = 60;
 	protected $options;
+	protected $encode             = true;
 
 	public function __construct()
 	{
@@ -237,7 +238,14 @@ class NR_Wrapper
 	 */
 	protected function attachRequestPayload($data)
 	{
+		if (!$this->encode) 
+		{
+			$this->last_request['body'] = http_build_query($data);
+			return;
+		}
+
 		$this->last_request['body'] = json_encode($data);
+		
 	}
 
 	/**

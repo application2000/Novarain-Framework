@@ -16,31 +16,70 @@ class NR_SalesForce extends NR_Wrapper
 {
 	/**
 	 * Create a new instance
-	 * @param string $key Your SalesForce Access Token
+	 * @param string $organizationID Your SalesForce Organization ID
 	 * @throws \Exception
 	 */
-	public function __construct($key, $instance_name)
+	public function __construct($organizationID)
 	{
 		parent::__construct();
-		$this->setKey($key);
-		$this->setEndpoint($instance_name);
-		$this->options->set('headers.Authorization', 'Bearer ' . $this->key);
+		$this->setKey($organizationID);
+		$this->endpoint = 'https://webto.salesforce.com/servlet/servlet.WebToLead?encoding=UTF-8';
+		$this->options->set('headers.Content-Type', 'application/x-www-form-urlencoded');
+		$this->encode = false;
 	}
 
 	/**
-	 * Setter method for the endpoint
-	 * @param string $instance_name The URL which is set in the account's developer settings
-	 * @throws \Exception
+	 *  Subscribe user to SalesForce
+	 *
+	 *  API References:
+	 *  https://developer.salesforce.com/page/Wordpress-to-lead
+	 *
+	 *  @param   string   $email         	  User's email address
+	 *  @param   array    $params  			  All the form fields
+	 *
+	 *  @return  void
 	 */
-	public function setEndpoint($instance_name)
+	public function subscribe($email, $params)
 	{
-		if (!empty($instance_name))
+		$data = array(
+			"email" => $email,
+			"oid"   => $this->key
+		);
+
+		if (is_array($params) && count($params))
 		{
-			$this->endpoint = 'https://' . $instance_name . '.salesforce.com/services/data';
+			$data = array_merge($data, $params);
 		}
-		else
-		{
-			throw new \Exception("Invalid SalesForce Instance Name `{$instance_name}` supplied.");
-		}
+
+		$this->post('', $data);
+
+		return true;
 	}
+
+	/**
+	 *  Determine if the Lead has been stored successfully in SalesForce
+	 *
+	 *  @return  string
+	 */
+	public function determineSuccess()
+	{
+		$status = $this->findHTTPStatus();
+
+		if ($status < 200 && $status > 299)
+		{
+			return false;
+		}
+
+		$headers = $this->last_response['headers'];
+
+		if (isset($headers['Is-Processed']) && (strpos($headers['Is-Processed'],'Exception') === false))
+		{
+			$this->last_error = JText::_('NR_SALESFORCE_ERROR');
+			return false;
+		}
+
+		return ($this->request_successful = true);
+
+	}
+
 }

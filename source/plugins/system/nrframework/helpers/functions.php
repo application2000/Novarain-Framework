@@ -289,7 +289,7 @@ class NRFrameworkFunctions
             require_once($versionFile);
         }
 
-        return $NR_PRO;
+        return ($result = (bool) $NR_PRO);
     }
 
     public static function getExtensionPath($extension = 'plg_system_nrframework', $basePath = JPATH_ADMINISTRATOR, $check_folder = '')

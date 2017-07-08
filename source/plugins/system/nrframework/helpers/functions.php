@@ -272,6 +272,13 @@ class NRFrameworkFunctions
 
     public static function extensionHasProInstalled($extension)
     {
+        static $result;
+
+        if ($result)
+        {
+            return $result;
+        }
+
         // Path to extension's version file
         $versionFile = self::getExtensionPath($extension) . "/version.php";
         $NR_PRO = true;
@@ -282,7 +289,7 @@ class NRFrameworkFunctions
             require_once($versionFile);
         }
 
-        return (bool) $NR_PRO;
+        return $NR_PRO;
     }
 
     public static function getExtensionPath($extension = 'plg_system_nrframework', $basePath = JPATH_ADMINISTRATOR, $check_folder = '')

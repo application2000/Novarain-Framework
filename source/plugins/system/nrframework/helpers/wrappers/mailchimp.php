@@ -271,4 +271,25 @@ class NR_MailChimp extends NR_Wrapper
 			throw new \Exception("Invalid MailChimp key `{$key}` supplied.");
 		}
 	}
+
+	/**
+	 *  The get() method overridden so that it handles
+	 *  the default item paging of MailChimp which is 10
+	 *
+	 *  @param   string          $method URL of the API request method
+	 *  @param   array $args     Assoc array of arguments (usually your data)
+	 *  @return  array|false     Assoc array of API response, decoded from JSON
+	 */
+	public function get($method, $args = array())
+	{
+		$data = $this->makeRequest('get', $method, $args);
+
+		if ($data && isset($data['total_items']) && (int) $data['total_items'] > 10)
+		{
+			$args['count'] = $data['total_items'];
+			return $this->makeRequest('get', $method, $args);
+		}
+
+		return $data;
+	}
 }

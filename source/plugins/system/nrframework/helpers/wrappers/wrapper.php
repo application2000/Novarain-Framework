@@ -165,7 +165,7 @@ class NR_Wrapper
 	 * @return array|false Assoc array of decoded result
 	 * @throws \Exception
 	 */
-	private function makeRequest($http_verb, $method, $args = array())
+	protected function makeRequest($http_verb, $method, $args = array())
 	{
 		// check to see if the endpoint already has GET variables
 		$method = (strpos($this->endpoint, '?') === false) ?  '/' . $method : $method;

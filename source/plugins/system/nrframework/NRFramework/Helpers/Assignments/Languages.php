@@ -7,11 +7,13 @@
  * @license         GNU GPLv3 <http://www.gnu.org/licenses/gpl.html> or later
 */
 
+namespace NRFramework\Helpers\Assignments;
+
 defined('_JEXEC') or die;
 
-require_once dirname(__DIR__) . '/assignment.php';
+use NRFramework\Helpers\Assignment as NRAssignment;
 
-class nrFrameworkAssignmentsLanguages extends NRAssignment
+class Languages extends NRAssignment
 {
 	/**
 	 *  Pass check language
@@ -20,6 +22,6 @@ class nrFrameworkAssignmentsLanguages extends NRAssignment
 	 */
 	function passLanguages()
 	{
-		return $this->passSimple(JFactory::getLanguage()->getTag(), $this->selection); 
+		return $this->passSimple(\JFactory::getLanguage()->getTag(), $this->selection); 
 	}
 }

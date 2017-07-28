@@ -6,12 +6,13 @@
  * @copyright       Copyright © 2017 Tassos Marinos All Rights Reserved
  * @license         GNU GPLv3 <http://www.gnu.org/licenses/gpl.html> or later
 */
+namespace NRFramework\Helpers\Assignments;
 
 defined('_JEXEC') or die;
 
-require_once dirname(__DIR__) . '/assignment.php';
+use NRFramework\Helpers\Assignment as NRAssignment;
 
-class nrFrameworkAssignmentsUsers extends NRAssignment 
+class Users extends NRAssignment 
 {
 	/**
 	 *  Pass Check User Group Levels
@@ -40,7 +41,7 @@ class nrFrameworkAssignmentsUsers extends NRAssignment
 			return $pass;
 		}
 
-		$dateTimeNow = strtotime(NRFrameworkFunctions::dateTimeNow());
+		$dateTimeNow = strtotime(\NRFrameworkFunctions::dateTimeNow());
 		$diffInSeconds = $dateTimeNow - $sessionStartTime;
 
 		if (intval($this->selection) <= $diffInSeconds)
@@ -53,14 +54,14 @@ class nrFrameworkAssignmentsUsers extends NRAssignment
 
     private static function SessionStartTime()
     {
-        $session = JFactory::getSession();
+        $session = \JFactory::getSession();
         
         $var = 'starttime';
         $sessionStartTime = $session->get($var);
 
         if (!$sessionStartTime)
         {
-            $date = NRFrameworkFunctions::dateTimeNow();
+            $date = \NRFrameworkFunctions::dateTimeNow();
             $session->set($var, $date);
         }
 

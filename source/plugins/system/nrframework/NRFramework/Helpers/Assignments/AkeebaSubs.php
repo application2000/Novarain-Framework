@@ -7,11 +7,13 @@
  * @license         GNU GPLv3 <http://www.gnu.org/licenses/gpl.html> or later
 */
 
+namespace NRFramework\Helpers\Assignments;
+
 defined('_JEXEC') or die;
 
-require_once dirname(__DIR__) . '/assignment.php';
+use NRFramework\Helpers\Assignment as NRAssignment;
 
-class nrFrameworkAssignmentsAkeebaSubs extends NRAssignment
+class AkeebaSubs extends NRAssignment
 {
 	/**
 	 *  Checks if user has access to certain subscription levels
@@ -43,7 +45,7 @@ class nrFrameworkAssignmentsAkeebaSubs extends NRAssignment
 		}
 
 		// Get the Akeeba Subscriptions container. Also includes the autoloader.
-		$container = FOF30\Container\Container::getInstance('com_akeebasubs');
+		$container = \FOF30\Container\Container::getInstance('com_akeebasubs');
 
 		$subscriptionsModel = $container->factory->model('Subscriptions')->tmpInstance();
 

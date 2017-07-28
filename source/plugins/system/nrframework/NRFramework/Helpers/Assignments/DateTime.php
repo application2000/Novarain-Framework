@@ -6,12 +6,13 @@
  * @copyright       Copyright © 2017 Tassos Marinos All Rights Reserved
  * @license         GNU GPLv3 <http://www.gnu.org/licenses/gpl.html> or later
 */
+namespace NRFramework\Helpers\Assignments;
 
 defined('_JEXEC') or die;
 
-require_once dirname(__DIR__) . '/assignment.php';
+use NRFramework\Helpers\Assignment as NRAssignment;
 
-class nrFrameworkAssignmentsDateTime extends NRAssignment
+class DateTime extends NRAssignment
 {
 	/**
 	 *  Checks if current date passes date range
@@ -20,7 +21,7 @@ class nrFrameworkAssignmentsDateTime extends NRAssignment
 	 */
 	function passDate()
 	{
-		$tz = new DateTimeZone($this->app->getCfg('offset'));
+		$tz = new \DateTimeZone($this->app->getCfg('offset'));
 
 		$publish_up   = $this->params->assign_datetime_param_publish_up;
 		$publish_down = $this->params->assign_datetime_param_publish_down;
@@ -31,12 +32,12 @@ class nrFrameworkAssignmentsDateTime extends NRAssignment
 			return false;
 		}
 
-		NRFrameworkFunctions::fixDate($publish_up);
-		NRFrameworkFunctions::fixDate($publish_down);
+		\NRFrameworkFunctions::fixDate($publish_up);
+		\NRFrameworkFunctions::fixDate($publish_down);
 
 		$now  = $this->getNow();
-		$up   = JFactory::getDate($publish_up)->setTimeZone($tz);
-		$down = JFactory::getDate($publish_down)->setTimeZone($tz);
+		$up   = \JFactory::getDate($publish_up)->setTimeZone($tz);
+		$down = \JFactory::getDate($publish_down)->setTimeZone($tz);
 
 		// Out of range
 		if (((int) $publish_up   && strtotime($up->format('Y-m-d H:i:s', true)) > $now) ||

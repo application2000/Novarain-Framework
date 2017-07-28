@@ -6,12 +6,13 @@
  * @copyright       Copyright © 2017 Tassos Marinos All Rights Reserved
  * @license         GNU GPLv3 <http://www.gnu.org/licenses/gpl.html> or later
 */
+namespace NRFramework\Helpers\Assignments;
 
 defined('_JEXEC') or die;
 
-require_once dirname(__DIR__) . '/assignment.php';
+use NRFramework\Helpers\Assignment as NRAssignment;
 
-class nrFrameworkAssignmentsPHP extends NRAssignment 
+class PHP extends NRAssignment 
 {
 	/**
 	 *  Pass check Custom PHP

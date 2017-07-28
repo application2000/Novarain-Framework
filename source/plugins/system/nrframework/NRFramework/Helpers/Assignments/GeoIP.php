@@ -7,11 +7,13 @@
  * @license         GNU GPLv3 <http://www.gnu.org/licenses/gpl.html> or later
 */
 
+namespace NRFramework\Helpers\Assignments;
+
 defined('_JEXEC') or die;
 
-require_once dirname(__DIR__) . '/assignment.php';
+use NRFramework\Helpers\Assignment as NRAssignment;
 
-class nrFrameworkAssignmentsGeoIP extends NRAssignment
+class GeoIP extends NRAssignment
 {
     /**
      *  GeoIP Class
@@ -59,7 +61,7 @@ class nrFrameworkAssignmentsGeoIP extends NRAssignment
             }
         }
 
-        $this->geo = new TGeoIP();
+        $this->geo = new \TGeoIP();
     }
 
     /**

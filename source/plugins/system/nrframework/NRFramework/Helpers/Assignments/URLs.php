@@ -7,11 +7,13 @@
  * @license         GNU GPLv3 <http://www.gnu.org/licenses/gpl.html> or later
 */
 
+namespace NRFramework\Helpers\Assignments;
+
 defined('_JEXEC') or die;
 
-require_once dirname(__DIR__) . '/assignment.php';
+use NRFramework\Helpers\Assignment as NRAssignment;
 
-class nrFrameworkAssignmentsURLs extends NRAssignment 
+class URLs extends NRAssignment 
 {
    	/**
    	 *  Pass Check Domain Referrer
@@ -67,7 +69,7 @@ class nrFrameworkAssignmentsURLs extends NRAssignment
 			$this->selection = explode("\n", $this->selection['0']);
 		}
 
-		$url = JURI::getInstance();
+		$url = \JURI::getInstance();
 		$url = $url->toString();
 
 		$urls = array(

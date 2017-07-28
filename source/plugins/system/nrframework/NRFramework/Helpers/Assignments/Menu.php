@@ -7,11 +7,13 @@
  * @license         GNU GPLv3 <http://www.gnu.org/licenses/gpl.html> or later
 */
 
+namespace NRFramework\Helpers\Assignments;
+
 defined('_JEXEC') or die;
 
-require_once dirname(__DIR__) . '/assignment.php';
+use NRFramework\Helpers\Assignment as NRAssignment;
 
-class nrFrameworkAssignmentsMenu extends NRAssignment 
+class Menu extends NRAssignment 
 {
 	/**
 	 *  Pass check for menu items

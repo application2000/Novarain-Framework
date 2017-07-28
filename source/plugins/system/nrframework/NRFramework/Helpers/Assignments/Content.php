@@ -7,11 +7,13 @@
  * @license         GNU GPLv3 <http://www.gnu.org/licenses/gpl.html> or later
  */
 
+ namespace NRFramework\Helpers\Assignments;
+
 defined('_JEXEC') or die;
 
-require_once dirname(__DIR__) . '/assignment.php';
+use NRFramework\Helpers\Assignment as NRAssignment;
 
-class nrFrameworkAssignmentsContent extends NRAssignment
+class Content extends NRAssignment
 {
 	/**
 	 *  Article Object
@@ -174,7 +176,7 @@ class nrFrameworkAssignmentsContent extends NRAssignment
 			require_once JPATH_SITE . '/components/com_content/models/article.php';
 		}
 
-		$model = JModelLegacy::getInstance('article', 'contentModel');
+		$model = \JModelLegacy::getInstance('article', 'contentModel');
 
 		if (!method_exists($model, 'getItem'))
 		{
@@ -185,7 +187,7 @@ class nrFrameworkAssignmentsContent extends NRAssignment
 		{
 			$this->article = $model->getItem($this->request->id);
 		}
-		catch (JException $e)
+		catch (\JException $e)
 		{
 			return null;
 		}

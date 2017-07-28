@@ -7,6 +7,8 @@
  * @license         GNU GPLv3 <http://www.gnu.org/licenses/gpl.html> or later
  */
 
+namespace NRFramework\Helpers;
+
 defined('_JEXEC') or die;
 
 jimport('joomla.filesystem.file');
@@ -14,7 +16,7 @@ jimport('joomla.filesystem.file');
 /**
  *  Novarain Framework Assignments Helper Class
  */
-class nrFrameworkAssignmentsHelper
+class AssignmentsHelper
 {
 	/**
 	 *  Assignment Types
@@ -89,7 +91,7 @@ class nrFrameworkAssignmentsHelper
 	}
 
 	/**
-	 *  Assignment pass check basedon the assignment state
+	 *  Assignment pass check based on the assignment state
 	 *
 	 *  @param   boolean  $pass        
 	 *  @param   string   $assignment  The assignment state
@@ -132,7 +134,7 @@ class nrFrameworkAssignmentsHelper
 			}
 
 			// Discover assignment params
-			$AssignmentParams = new stdClass();
+			$AssignmentParams = new \stdClass();
 			foreach ($params as $key => $value)
 			{
 				if (strpos($key, "assign_" . $id . "_param") !== false)
@@ -205,19 +207,14 @@ class nrFrameworkAssignmentsHelper
 	{
 		$this->initParamsByType($assignment, $type);
 
-		// Load assignment file. If it doesn't exist fails silently.
-		if (!@include_once(__DIR__ . "/assignments/" . strtolower($assignment->maintype) . '.php'))
-		{
-			return false;
-		}
-
 		// Validate assignment class and method
-		$class  = 'nrFrameworkAssignments' .  $assignment->maintype;
+		$class = __NAMESPACE__ . '\\Assignments\\' . $assignment->maintype;
 		$method = 'pass' . $assignment->subtype;
 
+		// Note: class_exists is case-INsensitive and uses autoloading by default
 		if (!class_exists($class) && !method_exists($class, $method))
 		{
-			return false;
+			return false; //
 		}
 
 		// Run Pass Check
@@ -251,5 +248,3 @@ class nrFrameworkAssignmentsHelper
 		$assignment->subtype  = $type['1'];
 	}
 }
-
-?>

@@ -7,14 +7,16 @@
  * @license         GNU GPLv3 <http://www.gnu.org/licenses/gpl.html> or later
  */
 
+namespace NRFramework\Helpers;
+
 defined('_JEXEC') or die;
 
-require_once __DIR__ . '/cache.php';
+require_once JPATH_PLUGINS . '/system/nrframework/helpers/cache.php';
 
 /**
  *  Assignment Class
  */
-class NRAssignment
+class Assignment
 {
 	/**
 	 *  Application Object
@@ -89,10 +91,10 @@ class NRAssignment
 	public function __construct($assignment, $request = null, $date = null)
 	{
 		// Set General Joomla Objects
-		$this->db   = JFactory::getDbo();
-		$this->app  = JFactory::getApplication();
-		$this->doc  = JFactory::getDocument();
-		$this->user = JFactory::getUser();
+		$this->db   = \JFactory::getDbo();
+		$this->app  = \JFactory::getApplication();
+		$this->doc  = \JFactory::getDocument();
+		$this->user = \JFactory::getUser();
 
 		// Set Assignment Options
 		$this->params     = $assignment->params;
@@ -102,7 +104,7 @@ class NRAssignment
 		// Set Request object
 		if (is_null($request))
 		{
-			$request = new stdClass;
+			$request = new \stdClass;
 
 			$request->view   = $this->app->input->get("view");
 			$request->task   = $this->app->input->get("task");
@@ -117,8 +119,8 @@ class NRAssignment
 		// Set date object
 		if (is_null($date))
 		{
-			$tz   = new DateTimeZone(JFactory::getApplication()->getCfg('offset'));
-			$date = JFactory::getDate()->setTimeZone($tz);
+			$tz   = new \DateTimeZone(\JFactory::getApplication()->getCfg('offset'));
+			$date = \JFactory::getDate()->setTimeZone($tz);
 		}
 
 		$this->date = $date;
@@ -186,9 +188,9 @@ class NRAssignment
 	{
 		$hash = md5('getMenuItemParams_' . $id);
 
-		if (NRCache::has($hash))
+		if (\NRCache::has($hash))
 		{
-			return NRCache::get($hash);
+			return \NRCache::get($hash);
 		}
 
 		$query = $this->db->getQuery(true)
@@ -199,7 +201,7 @@ class NRAssignment
 		$this->db->setQuery($query);
 		$params = $this->db->loadResult();
 		
-		return NRCache::set($hash, json_decode($params));
+		return \NRCache::set($hash, json_decode($params));
 	}
 
 	/**
@@ -221,9 +223,9 @@ class NRAssignment
 
 		$hash = md5('getParentIDs_' . $id . '_' . $table . '_' . $parent . '_' . $child);
 
-		if (NRCache::has($hash))
+		if (\NRCache::has($hash))
 		{
-			return NRCache::get($hash);
+			return \NRCache::get($hash);
 		}
 
 		$parent_ids = array();
@@ -246,8 +248,6 @@ class NRAssignment
 			$parent_ids[] = $id;
 		}
 
-		return NRCache::set($hash, $parent_ids);
+		return \NRCache::set($hash, $parent_ids);
 	}
 }
-
-?>

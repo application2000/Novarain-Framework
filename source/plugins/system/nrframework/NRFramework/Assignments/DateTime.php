@@ -6,13 +6,13 @@
  * @copyright       Copyright © 2017 Tassos Marinos All Rights Reserved
  * @license         GNU GPLv3 <http://www.gnu.org/licenses/gpl.html> or later
 */
-namespace NRFramework\Helpers\Assignments;
+namespace NRFramework\Assignments;
 
 defined('_JEXEC') or die;
 
-use NRFramework\Helpers\Assignment as NRAssignment;
+use NRFramework\Assignment;
 
-class DateTime extends NRAssignment
+class DateTime extends Assignment
 {
 	/**
 	 *  Checks if current date passes date range

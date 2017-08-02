@@ -7,13 +7,13 @@
  * @license         GNU GPLv3 <http://www.gnu.org/licenses/gpl.html> or later
 */
 
-namespace NRFramework\Helpers\Assignments;
+namespace NRFramework\Assignments;
 
 defined('_JEXEC') or die;
 
-use NRFramework\Helpers\Assignment as NRAssignment;
+use NRFramework\Assignment;
 
-class Devices extends NRAssignment
+class Devices extends Assignment
 {
     /**
      *  Checks visitor's device

@@ -7,7 +7,7 @@
  * @license         GNU GPLv3 <http://www.gnu.org/licenses/gpl.html> or later
  */
 
-namespace NRFramework\Helpers;
+namespace NRFramework;
 
 defined('_JEXEC') or die;
 
@@ -16,7 +16,7 @@ jimport('joomla.filesystem.file');
 /**
  *  Novarain Framework Assignments Helper Class
  */
-class AssignmentsHelper
+class Assignments
 {
 	/**
 	 *  Assignment Types

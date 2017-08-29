@@ -9,8 +9,6 @@
 
 defined('_JEXEC') or die('Restricted access');
 
-require_once __DIR__ . "/cache.php";
-
 /**
  *   SmartTags replaces placeholder variables in a string
  */

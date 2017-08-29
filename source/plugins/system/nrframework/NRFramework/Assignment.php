@@ -11,7 +11,7 @@ namespace NRFramework;
 
 defined('_JEXEC') or die;
 
-require_once JPATH_PLUGINS . '/system/nrframework/helpers/cache.php';
+use \NRFramework\Cache;
 
 /**
  *  Assignment Class
@@ -188,9 +188,9 @@ class Assignment
 	{
 		$hash = md5('getMenuItemParams_' . $id);
 
-		if (\NRCache::has($hash))
+		if (Cache::has($hash))
 		{
-			return \NRCache::get($hash);
+			return Cache::get($hash);
 		}
 
 		$query = $this->db->getQuery(true)
@@ -201,7 +201,7 @@ class Assignment
 		$this->db->setQuery($query);
 		$params = $this->db->loadResult();
 		
-		return \NRCache::set($hash, json_decode($params));
+		return Cache::set($hash, json_decode($params));
 	}
 
 	/**
@@ -223,9 +223,9 @@ class Assignment
 
 		$hash = md5('getParentIDs_' . $id . '_' . $table . '_' . $parent . '_' . $child);
 
-		if (\NRCache::has($hash))
+		if (Cache::has($hash))
 		{
-			return \NRCache::get($hash);
+			return Cache::get($hash);
 		}
 
 		$parent_ids = array();
@@ -248,6 +248,6 @@ class Assignment
 			$parent_ids[] = $id;
 		}
 
-		return \NRCache::set($hash, $parent_ids);
+		return Cache::set($hash, $parent_ids);
 	}
 }

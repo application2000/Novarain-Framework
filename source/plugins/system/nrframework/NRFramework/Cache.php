@@ -7,12 +7,14 @@
  * @license         GNU GPLv3 <http://www.gnu.org/licenses/gpl.html> or later
 */
 
+namespace NRFramework;
+
 defined('_JEXEC') or die;
 
 /**
  *  Caching mechanism
  */
-class NRCache
+class Cache
 {
 
 	/**
@@ -80,7 +82,7 @@ class NRCache
 			return self::get($hash);
 		}
 
-		$cache = JFactory::getCache('novarain', '');
+		$cache = \JFactory::getCache('novarain', '');
 
 		if ($force)
 		{
@@ -101,7 +103,7 @@ class NRCache
 	 */
 	static public function write($hash, $data, $ttl = 0)
 	{
-		$cache = JFactory::getCache('novarain','');
+		$cache = \JFactory::getCache('novarain','');
 
 		if ($ttl)
 		{

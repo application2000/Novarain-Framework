@@ -9,6 +9,8 @@
 
 defined('_JEXEC') or die;
 
+use \NRFramework\HTML;
+
 require_once dirname(__DIR__) . '/helpers/field.php';
 
 class JFormFieldNR_Users extends NRFormField
@@ -28,9 +30,7 @@ class JFormFieldNR_Users extends NRFormField
 
 		$size     = (int) $this->get('size', 300);
 
-		require_once dirname(__DIR__) . '/helpers/html.php';
-
-		return NRHTML::treeselectSimple($options, $this->name, $this->value, $this->id, $size);
+		return HTML::treeselectSimple($options, $this->name, $this->value, $this->id, $size);
 	}
 
 	public function getUsers()

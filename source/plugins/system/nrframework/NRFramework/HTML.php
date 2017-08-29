@@ -7,12 +7,14 @@
  * @license         GNU GPLv3 <http://www.gnu.org/licenses/gpl.html> or later
 */
 
+namespace NRFramework;
+
 // No direct access
 defined('_JEXEC') or die;
 
 require_once dirname(__DIR__) . '/helpers/functions.php';
 
-class NRHTML
+class HTML
 {
 	/**
 	 * Construct the HTML for the input field in a tree
@@ -20,12 +22,12 @@ class NRHTML
 	 */
 	public static function treeselect(&$options, $name, $value, $id, $size = 300, $simple = 0)
 	{
-		NRFrameworkFunctions::loadLanguage('com_menus', JPATH_ADMINISTRATOR);
-		NRFrameworkFunctions::loadLanguage('com_modules', JPATH_ADMINISTRATOR);
+		\NRFrameworkFunctions::loadLanguage('com_menus', JPATH_ADMINISTRATOR);
+		\NRFrameworkFunctions::loadLanguage('com_modules', JPATH_ADMINISTRATOR);
 
 		if (empty($options))
 		{
-			return '<fieldset class="radio">' . JText::_('NR_NO_ITEMS_FOUND') . '</fieldset>';
+			return '<fieldset class="radio">' . \JText::_('NR_NO_ITEMS_FOUND') . '</fieldset>';
 		}
 
 		if (!is_array($value))
@@ -61,19 +63,19 @@ class NRHTML
 				$input = '<input type="text" name="' . $name . '" id="' . $id . '" value="' . $value . '" size="60">';
 			}
 
-			return '<fieldset class="radio"><label for="' . $id . '">' . JText::_('NR_ITEM_IDS') . ':</label>' . $input . '</fieldset>';
+			return '<fieldset class="radio"><label for="' . $id . '">' . \JText::_('NR_ITEM_IDS') . ':</label>' . $input . '</fieldset>';
 		}
 
 		if ($simple)
 		{
 			$attr = 'style="width: ' . $size . 'px" multiple="multiple"';
 
-			$html = JHtml::_('select.genericlist', $options, $name, trim($attr), 'value', 'text', $value, $id);
+			$html = \JHtml::_('select.genericlist', $options, $name, trim($attr), 'value', 'text', $value, $id);
 
 			return $html;
 		}
 
-		NRFrameworkFunctions::addMedia(array(
+		\NRFrameworkFunctions::addMedia(array(
 			"treeselect.js", 
 			"treeselect.css"
 		));
@@ -83,30 +85,30 @@ class NRHTML
 		$html[] = '<div class="well well-small nr_treeselect" id="' . $id . '">';
 		$html[] = '
 			<div class="form-inline nr_treeselect-controls">
-				<span class="small">' . JText::_('JSELECT') . ':
-					<a class="nr_treeselect-checkall" href="javascript:;">' . JText::_('JALL') . '</a>,
-					<a class="nr_treeselect-uncheckall" href="javascript:;">' . JText::_('JNONE') . '</a>,
-					<a class="nr_treeselect-toggleall" href="javascript:;">' . JText::_('NR_TOGGLE') . '</a>
+				<span class="small">' . \JText::_('JSELECT') . ':
+					<a class="nr_treeselect-checkall" href="javascript:;">' . \JText::_('JALL') . '</a>,
+					<a class="nr_treeselect-uncheckall" href="javascript:;">' . \JText::_('JNONE') . '</a>,
+					<a class="nr_treeselect-toggleall" href="javascript:;">' . \JText::_('NR_TOGGLE') . '</a>
 				</span>
 				<span class="width-20">|</span>
-				<span class="small">' . JText::_('NR_EXPAND') . ':
-					<a class="nr_treeselect-expandall" href="javascript:;">' . JText::_('JALL') . '</a>,
-					<a class="nr_treeselect-collapseall" href="javascript:;">' . JText::_('JNONE') . '</a>
+				<span class="small">' . \JText::_('NR_EXPAND') . ':
+					<a class="nr_treeselect-expandall" href="javascript:;">' . \JText::_('JALL') . '</a>,
+					<a class="nr_treeselect-collapseall" href="javascript:;">' . \JText::_('JNONE') . '</a>
 				</span>
 				<span class="width-20">|</span>
-				<span class="small">' . JText::_('JSHOW') . ':
-					<a class="nr_treeselect-showall" href="javascript:;">' . JText::_('JALL') . '</a>,
-					<a class="nr_treeselect-showselected" href="javascript:;">' . JText::_('NR_SELECTED') . '</a>
+				<span class="small">' . \JText::_('JSHOW') . ':
+					<a class="nr_treeselect-showall" href="javascript:;">' . \JText::_('JALL') . '</a>,
+					<a class="nr_treeselect-showselected" href="javascript:;">' . \JText::_('NR_SELECTED') . '</a>
 				</span>
 				<span class="nr_treeselect-maxmin">
 				<span class="width-20">|</span>
 				<span class="small">
-					<a class="nr_treeselect-maximize" href="javascript:;">' . JText::_('NR_MAXIMIZE') . '</a>
-					<a class="nr_treeselect-minimize" style="display:none;" href="javascript:;">' . JText::_('NR_MINIMIZE') . '</a>
+					<a class="nr_treeselect-maximize" href="javascript:;">' . \JText::_('NR_MAXIMIZE') . '</a>
+					<a class="nr_treeselect-minimize" style="display:none;" href="javascript:;">' . \JText::_('NR_MINIMIZE') . '</a>
 				</span>
 				</span>
 				<input type="text" name="nr_treeselect-filter" class="nr_treeselect-filter input-medium search-query pull-right" size="16"
-					autocomplete="off" placeholder="' . JText::_('JSEARCH_FILTER') . '" aria-invalid="false" tabindex="-1">
+					autocomplete="off" placeholder="' . \JText::_('JSEARCH_FILTER') . '" aria-invalid="false" tabindex="-1">
 			</div>
 
 			<div class="clearfix"></div>
@@ -189,16 +191,16 @@ class NRHTML
 							<span class="caret"></span>
 						</a>
 						<ul class="dropdown-menu">
-							<li class="nav-header">' . JText::_('COM_MODULES_SUBITEMS') . '</li>
+							<li class="nav-header">' . \JText::_('COM_MODULES_SUBITEMS') . '</li>
 							<li class="divider"></li>
-							<li class=""><a class="checkall" href="javascript:;"><span class="icon-checkbox"></span> ' . JText::_('JSELECT') . '</a>
+							<li class=""><a class="checkall" href="javascript:;"><span class="icon-checkbox"></span> ' . \JText::_('JSELECT') . '</a>
 							</li>
-							<li><a class="uncheckall" href="javascript:;"><span class="icon-checkbox-unchecked"></span> ' . JText::_('COM_MODULES_DESELECT') . '</a>
+							<li><a class="uncheckall" href="javascript:;"><span class="icon-checkbox-unchecked"></span> ' . \JText::_('COM_MODULES_DESELECT') . '</a>
 							</li>
 							<div class="nr_treeselect-menu-expand">
 								<li class="divider"></li>
-								<li><a class="expandall" href="javascript:;"><span class="icon-plus"></span> ' . JText::_('NR_EXPAND') . '</a></li>
-								<li><a class="collapseall" href="javascript:;"><span class="icon-minus"></span> ' . JText::_('NR_COLLAPSE') . '</a></li>
+								<li><a class="expandall" href="javascript:;"><span class="icon-plus"></span> ' . \JText::_('NR_EXPAND') . '</a></li>
+								<li><a class="collapseall" href="javascript:;"><span class="icon-minus"></span> ' . \JText::_('NR_COLLAPSE') . '</a></li>
 							</div>
 						</ul>
 					</div>

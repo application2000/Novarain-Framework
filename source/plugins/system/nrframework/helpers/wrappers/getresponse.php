@@ -123,15 +123,21 @@ class NR_GetResponse extends NR_Wrapper
 	{
 		$body = $this->last_response['body'];
 		
-		if (!isset($body["context"]) || !isset($body["context"][0]))
+		if (!isset($body['context']) || !isset($body['context'][0]))
 		{
-			return $body["codeDescription"] . " - " . $body["message"];
+			return $body['codeDescription'] . ' - ' . $body['message'];
 		}
 
-		$error = $body["context"][0];
-		$errorFieldName = is_array($error["fieldName"]) ? implode(" ", $error["fieldName"]) : $error["fieldName"];
+		$error = $body['context'][0];
+
+		if (is_array($error) && isset($error['fieldName'])) 
+		{
+			$errorFieldName = is_array($error['fieldName']) ? implode(' ', $error['fieldName']) : $error['fieldName'];
+			return $errorFieldName . ': ' . $error['errorDescription'];
+		}
 		
-		return $errorFieldName . ": " . $error["errorDescription"];
+		return (is_array($error)) ? implode(' ', $error) : $error;
+		
 	}
 
 	/**

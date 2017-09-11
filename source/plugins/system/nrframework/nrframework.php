@@ -11,6 +11,9 @@ defined( '_JEXEC' ) or die( 'Restricted access' );
 
 require_once __DIR__ . '/helpers/functions.php';
 
+// load class-name aliases
+require_once __DIR__ . '/aliases.php';
+
 class plgSystemNRFramework extends JPlugin
 {
 	/**

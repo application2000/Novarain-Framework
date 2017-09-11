@@ -20,6 +20,7 @@ class NR_Wrapper
 	protected $last_request       = array();
 	protected $timeout            = 60;
 	protected $options;
+	protected $encode             = true;
 
 	public function __construct()
 	{
@@ -164,7 +165,7 @@ class NR_Wrapper
 	 * @return array|false Assoc array of decoded result
 	 * @throws \Exception
 	 */
-	private function makeRequest($http_verb, $method, $args = array())
+	protected function makeRequest($http_verb, $method, $args = array())
 	{
 		// check to see if the endpoint already has GET variables
 		$method = (strpos($this->endpoint, '?') === false) ?  '/' . $method : $method;
@@ -237,7 +238,14 @@ class NR_Wrapper
 	 */
 	protected function attachRequestPayload($data)
 	{
+		if (!$this->encode) 
+		{
+			$this->last_request['body'] = http_build_query($data);
+			return;
+		}
+
 		$this->last_request['body'] = json_encode($data);
+		
 	}
 
 	/**

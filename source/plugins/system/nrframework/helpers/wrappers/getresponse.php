@@ -45,7 +45,7 @@ class NR_GetResponse extends NR_Wrapper
 	 *
 	 *  @return  void
 	 */
-	public function subscribe($email, $name, $campaign, $customFields, $update_existing = false)
+	public function subscribe($email, $name, $campaign, $customFields, $update_existing)
 	{
 		$data = array(
 			"email" 			=> $email,
@@ -59,6 +59,16 @@ class NR_GetResponse extends NR_Wrapper
 		if (empty($name) || is_null($name))
 		{
 			unset($data["name"]);
+		}
+
+		if ($update_existing) 
+		{
+			$contactId = $this->getContact($email);
+		}
+
+		if (!empty($contactId))
+		{
+			return $this->post('contacts/' . $contactId, $data);
 		}
 
 		$this->post('contacts', $data);
@@ -113,15 +123,21 @@ class NR_GetResponse extends NR_Wrapper
 	{
 		$body = $this->last_response['body'];
 		
-		if (!isset($body["context"]) || !isset($body["context"][0]))
+		if (!isset($body['context']) || !isset($body['context'][0]))
 		{
-			return $body["codeDescription"] . " - " . $body["message"];
+			return $body['codeDescription'] . ' - ' . $body['message'];
 		}
 
-		$error = $body["context"][0];
-		$errorFieldName = is_array($error["fieldName"]) ? implode(" ", $error["fieldName"]) : $error["fieldName"];
+		$error = $body['context'][0];
+
+		if (is_array($error) && isset($error['fieldName'])) 
+		{
+			$errorFieldName = is_array($error['fieldName']) ? implode(' ', $error['fieldName']) : $error['fieldName'];
+			return $errorFieldName . ': ' . $error['errorDescription'];
+		}
 		
-		return $errorFieldName . ": " . $error["errorDescription"];
+		return (is_array($error)) ? implode(' ', $error) : $error;
+		
 	}
 
 	/**
@@ -156,5 +172,33 @@ class NR_GetResponse extends NR_Wrapper
 		}
 
 		return $lists;
+	}
+
+	/**
+	 *  Get the Contact resource
+	 *
+	 *  @param   string  $email  The email of the contact which we want to retrieve
+	 *
+	 *  @return  string          The Contact ID
+	 */
+	public function getContact($email)
+	{
+		if (!isset($email)) 
+		{
+			return;
+		}
+
+		$data = $this->get('contacts', array('query[email]' => $email));
+
+		if (empty($data)) 
+		{
+			return;
+		}
+
+		// the returned data is an array with only one contact
+		$contactId = $data[0]['contactId'];
+
+		return ($contactId) ? $contactId : null;
+		
 	}
 }

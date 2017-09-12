@@ -16,15 +16,14 @@ class NR_ActiveCampaign extends NR_Wrapper
 {
 	/**
 	 * Create a new instance
-	 * @param string $key Your ActiveCampaign key
-	 * @param string $url The personal endpoint URL
+	 * @param array $campaignData The Campaign's Data
 	 * @throws \Exception
 	 */
-	public function __construct($key, $url)
+	public function __construct($campaignData)
 	{
 		parent::__construct();
-		$this->setKey($key);
-		$this->setEndpoint($url);
+		$this->setKey($campaignData['api']);
+		$this->setEndpoint($campaignData['endpoint']);
 		$this->options->set('headers.Content-Type', 'application/x-www-form-urlencoded');
 		$this->options->set('follow_location', true);
 	}

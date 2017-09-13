@@ -9,6 +9,8 @@
 
 defined('_JEXEC') or die;
 
+use \NRFramework\HTML;
+
 require_once __DIR__ . '/field.php';
 
 class NRFormGroupField extends NRFormField
@@ -53,15 +55,13 @@ class NRFormGroupField extends NRFormField
 		$group   = $group ?: $this->getGroup();
 		$options = $this->getOptions();
 
-		require_once __DIR__ . '/html.php';
-
 		switch ($group)
 		{
 			case 'categories':
-				return NRHTML::treeselect($options, $this->name, $this->value, $this->id, $size);
+				return HTML::treeselect($options, $this->name, $this->value, $this->id, $size);
 
 			default:
-				return NRHTML::treeselectSimple($options, $this->name, $this->value, $this->id, $size);
+				return HTML::treeselectSimple($options, $this->name, $this->value, $this->id, $size);
 		}
 
 	}

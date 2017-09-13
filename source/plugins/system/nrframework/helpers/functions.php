@@ -12,7 +12,7 @@ defined('_JEXEC') or die;
 jimport('joomla.filesystem.file');
 jimport('joomla.filesystem.folder');
 
-require_once __DIR__ . '/cache.php';
+use \NRFramework\Cache;
 
 class NRFrameworkFunctions
 {
@@ -222,7 +222,7 @@ class NRFrameworkFunctions
     public static function getExtensionVersion($extension, $type = false)
     {
         $hash  = MD5($extension . "_" . ($type ? "1" : "0"));
-        $cache = NRCache::read($hash);
+        $cache = Cache::read($hash);
 
         if ($cache)
         {
@@ -251,7 +251,7 @@ class NRFrameworkFunctions
             $version = $xml["version"] . " " . $extType;
         }
 
-        return NRCache::set($hash, $version);
+        return Cache::set($hash, $version);
     }
 
     public static function getExtensionXMLFile($extension, $basePath = JPATH_ADMINISTRATOR)

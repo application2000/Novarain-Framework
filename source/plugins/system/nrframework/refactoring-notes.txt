@@ -1,0 +1,26 @@
+                                                Namespace Refactoring Notes 
+                                            -----------------------------------
+
+
+                                                Filesystem/Class Changes
+                                            -----------------------------------
+
+Old filename                        Old Classname                                   New filename                 New Classname
+------------------------------      ---------------------------------               -----------------------      ------------------------
+helpers/assignment.php               (NRAssignment)                         -->     NRFramework/Assignment.php   (NRFramework\Assignment)
+helpers/assignments.php              (nrFrameworkAssignmentsHelper)         -->     NRFramework/Assignments.php  (NRFramework\Assignments)
+helpers/assignments/acymailing.php   (nrFrameworkAssignmentsAcyMailing)     -->     NRFramework/AcyMailing.php   (NRFramework\Assignments\AcyMailing)
+helpers/assignments/akeebasubs.php   (nrFrameworkAssignmentsAkeebaSubs)     -->     NRFramework/AkeebaSubs.php   (NRFramework\Assignments\AkeebaSubs)
+helpers/assignments/content.php      (nrFrameworkAssignmentsContent)        -->     NRFramework/Content.php      (NRFramework\Assignments\Content)
+helpers/assignments/convertforms.php (nrFrameworkAssignmentsConvertForms)   -->     NRFramework/ConvertForms.php (NRFramework\Assignments\ConvertForms)
+helpers/assignments/datetime.php     (nrFrameworkAssignmentsDateTime)       -->     NRFramework/DateTime.php     (NRFramework\Assignments\DateTime)
+heleprs/assignments/devices.php      (nrFrameworkAssignmentsDevices)        -->     NRFramework/Devices.php      (NRFramework\Assignments\Devices)
+heleprs/assignments/geoip.php        (nrFrameworkAssignmentsGeoIP)          -->     NRFramework/GeoIP.php        (NRFramework\Assignments\GeoIP)
+heleprs/assignments/languages.php    (nrFrameworkAssignmentsLanguages)      -->     NRFramework/Languages.php    (NRFramework\Assignments\Languages)
+helpers/assignments/menu.php         (nrFrameworkAssignmentsMenu)           -->     NRFramework/Menu.php         (NRFramework\Assignments\Menu)
+heleprs/assignments/php.php          (nrFrameworkAssignmentsPHP)            -->     NRFramework/PHP.php          (NRFramework\Assignments\PHP)
+helpers/assignments/urls.php         (nrFrameworkAssignmentsURLs)           -->     NRFramework/URLs.php         (NRFramework\Assignments\URLs)
+helpers/assignments/users.php        (nrFrameworkAssignmentsUsers)          -->     NRFramework/Users.php        (NRFramework\Assignments\Users)
+
+helpers/cache.php                    (NRCache)                              -->     NRFramework/Cache.php        (NRFramework\Cache)
+helpers/html.php                     (NRHTML)                               -->     NRFramework/HTML.php         (NRFramework\HTML)

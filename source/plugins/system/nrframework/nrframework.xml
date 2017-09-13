@@ -13,11 +13,13 @@
 	<files>
 		<filename plugin="nrframework">nrframework.php</filename>
 		<filename>script.install.helper.php</filename>
+		<filename>aliases.php</filename>
 		<folder>fields</folder>
 		<folder>helpers</folder>
 		<folder>language</folder>
 		<folder>assets</folder>
 		<folder>layouts</folder>
+		<folder>NRFramework</folder>
 	</files>
 	<config>
 		<fields name="params" addfieldpath="/plugins/system/nrframework/fields">

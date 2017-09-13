@@ -17,13 +17,13 @@ class NR_ElasticEmail extends NR_Wrapper
 	/**
 	 * Create a new instance
 	 * 
-	 * @param string $key Your ElasticEmail API key
+	 * @param array $campaignData The Campaign's Data
 	 * @throws \Exception
 	 */
-	public function __construct($key)
+	public function __construct($campaignData)
 	{
 		parent::__construct();
-		$this->setKey($key);
+		$this->setKey($campaignData['api']);
 		$this->endpoint = 'https://api.elasticemail.com/v2';
 	}
 

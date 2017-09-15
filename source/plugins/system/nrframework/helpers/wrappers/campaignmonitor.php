@@ -17,13 +17,13 @@ class NR_CampaignMonitor extends NR_Wrapper
 
 	/**
 	 * Create a new instance
-	 * @param array $campaignData The Campaign's Data
+	 * @param array $options The service's required options
 	 * @throws \Exception
 	 */
-	public function __construct($campaignData)
+	public function __construct($options)
 	{
 		parent::__construct();
-		$this->setKey($campaignData['api']);
+		$this->setKey($options['api']);
 		$this->setEndpoint('https://api.createsend.com/api/v3.1');
 		$this->options->set('userauth', $this->key);
 		$this->options->set('passwordauth', 'nopass');

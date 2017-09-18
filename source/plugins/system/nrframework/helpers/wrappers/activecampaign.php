@@ -59,7 +59,7 @@ class NR_ActiveCampaign extends NR_Wrapper
 			"tags"                 => $tags,
 			"status[1]"            => 1,
 			"instantresponders[1]" => 1,
-			"ip4"                  => $_SERVER['REMOTE_ADDR'],
+			"ip4"                  => $_SERVER['REMOTE_ADDR']
 		);
 
 		$data = array_merge($data, $customFields);
@@ -72,22 +72,19 @@ class NR_ActiveCampaign extends NR_Wrapper
 	 *
 	 *  @return  array
 	 */
-	public function getLists($fulldata = false)
+	public function getLists()
 	{
-		$data  = $this->get("/lists");
+		$data = $this->get('', array('api_action' => 'list_list', 'ids' => 'all'));
 		$lists = array();
 
-		if (!isset($data["lists"]))
+		if (isset($data['result_code']) && $data['result_code'] == 0)
 		{
 			return $lists;
 		}
 
-		if ($fulldata)
-		{
-			return $data;
-		}
+		unset($data['result_code'], $data['result_message'], $data['result_output']);
 
-		foreach ($data["lists"] as $key => $list)
+		foreach ($data as $list)
 		{
 			$lists[] = array(
 				"id"   => $list["id"],

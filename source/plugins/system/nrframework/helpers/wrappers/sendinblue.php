@@ -16,13 +16,13 @@ class NR_SendInBlue extends NR_Wrapper
 {
 	/**
 	 * Create a new instance
-	 * @param string $key Your SendInBLue API Key
+	 * @param array $options The service's required options
 	 * @throws \Exception
 	 */
-	public function __construct($key)
+	public function __construct($options)
 	{
 		parent::__construct();
-		$this->setKey($key);
+		$this->setKey($options['api']);
 		$this->setEndpoint('https://api.sendinblue.com/v2.0');
 		$this->options->set('headers.api-key', $this->key);
 	}
@@ -35,23 +35,60 @@ class NR_SendInBlue extends NR_Wrapper
 	 *
 	 *  @param   string  $email   The user's email
 	 *  @param   array   $params  All the form fields
-	 *  @param   string  $listid  A comma separated list of list IDs
+	 *  @param   string  $listid  The List ID
 	 *
 	 *  @return  boolean
 	 */
-	public function subscribe($email, $params, $listid)
+	public function subscribe($email, $params, $listid = false)
 	{
-		$listid = (isset($params['listid'])) ? array_map('trim', explode(',',$params['listid'])) : array_map('trim', explode(',', $listid));
-
 		$data = array(
 			'email'      => $email,
-			'listid'     => $listid,
 			'attributes' => $params,
 		);
+
+		if ($listid) 
+		{
+			$data['listid'] = $listid;
+		}
 
 		$this->post('user/createdituser', $data);
 
 		return true;
+	}
+
+	/**
+	 *  Returns all Campaign  lists
+	 *
+	 *  https://apidocs.sendinblue.com/list/#1
+	 *
+	 *  @return  array
+	 */
+	public function getLists()
+	{
+		$data = array(
+			'page' => 1,
+			'page_limit' => 50
+		);
+
+		$lists = array();
+
+		$data = $this->get('/list', $data);
+
+		if (!isset($data['data']['lists']) || !is_array($data['data']['lists']) || $data['data']['total_list_records'] == 0)
+		{
+			return $lists;
+		}
+
+		foreach ($data['data']['lists'] as $key => $list)
+		{
+			$lists[] = array(
+				'id'   => $list['id'],
+				'name' => $list['name']
+			);
+		}
+
+		return $lists;
+		
 	}
 
 	/**

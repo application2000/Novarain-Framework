@@ -20,22 +20,18 @@ class NR_iContact extends NR_Wrapper
 
 	/**
 	 * Create a new instance
-	 * @param string $appId    			The AppId provided by iContact
-	 * @param string $username 			The username for iContact
-	 * @param string $password 			The password set for the App created in iContact
-	 * @param string $accountID 		The AccountID obtained only through the API
-	 * @param string $clientFolderID 	The ClientFolderID obtained only through the API
+	 * @param array $options The service's required options
 	 */
-	public function __construct($appId, $username, $password, $accountID = false, $clientFolderID = false)
+	public function __construct($options)
 	{
 		parent::__construct();
 		$this->endpoint = 'https://app.icontact.com/icp/a';
 		$this->options->set('headers.API-Version', '2.2');
-		$this->options->set('headers.API-AppId', $appId);
-		$this->options->set('headers.API-Username', $username);
-		$this->options->set('headers.API-Password', $password);
-		$this->accountID      = $this->setAccountID($accountID);
-		$this->clientFolderID = $this->setClientFolderID($clientFolderID);
+		$this->options->set('headers.API-AppId', $options['appID']);
+		$this->options->set('headers.API-Username', $options['username']);
+		$this->options->set('headers.API-Password', $options['appPassword']);
+		$this->setAccountID($options['accountID']);
+		$this->setClientFolderID($options['clientFolderID']);
 	}
 
 	/**
@@ -47,7 +43,7 @@ class NR_iContact extends NR_Wrapper
 	{
 		if ($accountID)
 		{
-			return $this->accountID = $accountID;
+			$this->accountID = $accountID;
 		}
 		
 		$accounts = $this->get('');
@@ -55,14 +51,13 @@ class NR_iContact extends NR_Wrapper
 		// Make sure the account is active
 		if (intval($accounts['accounts'][0]['enabled']) === 1)
 		{
-			return (integer) $accounts['accounts'][0]['accountId'];
+			$this->accountID = (integer) $accounts['accounts'][0]['accountId'];
 		}
 		else
 		{
 			throw new Exception(JText::_('NR_ICONTACT_ACCOUNTID_ERROR'), 1);
 		}
 	
-		return;
 	}
 
 	/**
@@ -74,7 +69,7 @@ class NR_iContact extends NR_Wrapper
 	{
 		if ($clientFolderID)
 		{
-			return $clientFolderID;
+			$this->clientFolderID = $clientFolderID;
 		}
 
 		// We need an existant accountID
@@ -82,7 +77,7 @@ class NR_iContact extends NR_Wrapper
 		{
 			try
 			{
-				$this->accountID = $this->setAccountID();
+				$this->setAccountID();
 			}
 			catch (Exception $e)
 			{
@@ -92,10 +87,9 @@ class NR_iContact extends NR_Wrapper
 
 		if ($clientFolder = $this->get($this->accountID . '/c/'))
 		{
-			return $clientFolder['clientfolders'][0]['clientFolderId'];
+			$this->clientFolderID = $clientFolder['clientfolders'][0]['clientFolderId'];
 		}
 
-		return;
 	}
 
 	/**
@@ -106,11 +100,11 @@ class NR_iContact extends NR_Wrapper
 	 *
 	 *  @param   string   $email
 	 *  @param   object   $params  The extra form fields
-	 *  @param   mixed    $listID  The iContact List ID
+	 *  @param   mixed    $list  The iContact List ID
 	 *
 	 *  @return  boolean            
 	 */
-	public function subscribe($email, $params, $listID)
+	public function subscribe($email, $params, $list)
 	{
 		$data = array('contact' => array_merge(array('email' => $email, 'status' => 'normal'), (array) $params));
 		
@@ -125,7 +119,7 @@ class NR_iContact extends NR_Wrapper
 		
 		if ((isset($contact['contacts'])) && (is_array($contact['contacts'])) && (count($contact['contacts']) > 0)) 
 		{
-			$this->addToList($listID, $contact['contacts'][0]['contactId']);
+			$this->addToList($list, $contact['contacts'][0]['contactId']);
 		}
 
 		return true;
@@ -152,6 +146,40 @@ class NR_iContact extends NR_Wrapper
 		$this->post($this->accountID .'/c/' . $this->clientFolderID . '/subscriptions',$data);
 	}
 
+	/**
+	 *  Returns all Client lists
+	 *
+	 *  API REFERENCE
+	 *  https://www.icontact.com/developerportal/documentation/lists
+	 *
+	 *  @return  array
+	 */
+	public function getLists()
+	{
+		$data = $this->get($this->accountID .'/c/' . $this->clientFolderID . '/lists');
+
+		if (!$this->success())
+		{
+			throw new Exception($this->getLastError());
+		}
+
+		$lists = array();
+
+		if (!isset($data["lists"]) || !is_array($data["lists"]))
+		{
+			return $lists;
+		}
+
+		foreach ($data["lists"] as $key => $list)
+		{
+			$lists[] = array(
+				'id'   => $list['listId'],
+				'name' => $list['name']
+			);
+		}
+
+		return $lists;
+	}
 
 	/**
 	 * Get the last error returned by either the network transport, or by the API.

@@ -47,9 +47,13 @@ class NRSmartTags
 	/**
 	 *  Class constructor
 	 */
-	function __construct()
+	function __construct($options = array())
 	{
-		$this->user = JFactory::getUser();
+		$user = isset($options['user']) ? $options['user'] : null;
+
+		$this->user = JFactory::getUser($user);
+		$this->setUserFirstLastName();
+
 		$this->doc  = JFactory::getDocument();
 
 		$this->tags = array(
@@ -70,10 +74,13 @@ class NRSmartTags
 			'page.lang'     => $this->doc->getLanguage(),
 
 			// User
-			'user.id'       => $this->user->id,
-			'user.name'     => $this->user->name,
-			'user.login'    => $this->user->username,
-			'user.email'    => $this->user->email,
+			'user.id'        => $this->user->id,
+			'user.name'      => $this->user->name,
+			'user.firstname' => $this->user->firstname,
+			'user.lastname'  => $this->user->lastname,
+			'user.login'     => $this->user->username,
+			'user.email'     => $this->user->email,
+			'user.groups'    => implode(",", $this->user->groups),
 			
 			// Other
 			'date'			=> JFactory::getDate()->format('Y-m-d H:i:s'),
@@ -194,6 +201,19 @@ class NRSmartTags
 
 			unset($this->tags[$key]);
     	}
+    }
+
+    /**
+     *  Split User's name into First and Last name
+     *
+     *  @return  void
+     */
+    private function setUserFirstLastName()
+    {
+    	$nameParts = explode(' ', $this->user->name, 2);
+
+    	$this->user->firstname = trim($nameParts[0]);
+    	$this->user->lastname  = isset($nameParts[1]) ? trim($nameParts[1]) : $this->user->firstname;
     }
 }
 

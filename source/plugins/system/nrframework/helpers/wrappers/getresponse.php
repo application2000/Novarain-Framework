@@ -17,13 +17,13 @@ class NR_GetResponse extends NR_Wrapper
 
 	/**
 	 * Create a new instance
-	 * @param string $key Your GetResponse API key
+	 * @param array $options The service's required options
 	 * @throws \Exception
 	 */
-	public function __construct($key)
+	public function __construct($options)
 	{
 		parent::__construct();
-		$this->setKey($key);
+		$this->setKey($options['api']);
 		$this->endpoint = 'https://api.getresponse.com/v3';
 		$this->options->set('headers.Content-Type', 'application/json');
 		$this->options->set('headers.X-Auth-Token', 'api-key ' . $this->key);

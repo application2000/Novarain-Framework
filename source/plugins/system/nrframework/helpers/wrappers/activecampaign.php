@@ -16,15 +16,14 @@ class NR_ActiveCampaign extends NR_Wrapper
 {
 	/**
 	 * Create a new instance
-	 * @param string $key Your ActiveCampaign key
-	 * @param string $url The personal endpoint URL
+	 * @param array $options The service's required options
 	 * @throws \Exception
 	 */
-	public function __construct($key, $url)
+	public function __construct($options)
 	{
 		parent::__construct();
-		$this->setKey($key);
-		$this->setEndpoint($url);
+		$this->setKey($options['api']);
+		$this->setEndpoint($options['endpoint']);
 		$this->options->set('headers.Content-Type', 'application/x-www-form-urlencoded');
 		$this->options->set('follow_location', true);
 	}
@@ -60,7 +59,7 @@ class NR_ActiveCampaign extends NR_Wrapper
 			"tags"                 => $tags,
 			"status[1]"            => 1,
 			"instantresponders[1]" => 1,
-			"ip4"                  => $_SERVER['REMOTE_ADDR'],
+			"ip4"                  => $_SERVER['REMOTE_ADDR']
 		);
 
 		$data = array_merge($data, $customFields);
@@ -73,22 +72,19 @@ class NR_ActiveCampaign extends NR_Wrapper
 	 *
 	 *  @return  array
 	 */
-	public function getLists($fulldata = false)
+	public function getLists()
 	{
-		$data  = $this->get("/lists");
+		$data = $this->get('', array('api_action' => 'list_list', 'ids' => 'all'));
 		$lists = array();
 
-		if (!isset($data["lists"]))
+		if (isset($data['result_code']) && $data['result_code'] == 0)
 		{
 			return $lists;
 		}
 
-		if ($fulldata)
-		{
-			return $data;
-		}
+		unset($data['result_code'], $data['result_message'], $data['result_output']);
 
-		foreach ($data["lists"] as $key => $list)
+		foreach ($data as $list)
 		{
 			$lists[] = array(
 				"id"   => $list["id"],

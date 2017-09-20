@@ -48,6 +48,11 @@ class NR_iContact extends NR_Wrapper
 		
 		$accounts = $this->get('');
 
+		if (!$this->success())
+		{
+			throw new Exception($this->getLastError());
+		}
+
 		// Make sure the account is active
 		if (intval($accounts['accounts'][0]['enabled']) === 1)
 		{
@@ -57,7 +62,6 @@ class NR_iContact extends NR_Wrapper
 		{
 			throw new Exception(JText::_('NR_ICONTACT_ACCOUNTID_ERROR'), 1);
 		}
-	
 	}
 
 	/**
@@ -89,7 +93,6 @@ class NR_iContact extends NR_Wrapper
 		{
 			$this->clientFolderID = $clientFolder['clientfolders'][0]['clientFolderId'];
 		}
-
 	}
 
 	/**

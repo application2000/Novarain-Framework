@@ -13,5 +13,3 @@ defined('_JEXEC') or die;
  * This file is deprecated.
  * nrFrameworkAssignmentsDevices has been renamed to \NRFramework\Assignments\Devices
  */
-
-// class_exists('\\NRFramework\\Assignments\\Devices'); 

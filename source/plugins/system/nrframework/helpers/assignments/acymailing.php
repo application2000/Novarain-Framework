@@ -13,5 +13,3 @@ defined('_JEXEC') or die;
  * This file is deprecated.
  * nrFrameworkAssignmentsAcyMailing has been renamed to \NRFramework\Assignments\AcyMailing
  */
-
-// class_exists('\\NRFRamework\\Assignments\\AcyMailing');

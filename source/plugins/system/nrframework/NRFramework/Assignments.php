@@ -26,6 +26,8 @@ class Assignments
 	public $types = array(
 		'devices'         => 'Devices',
 		'urls'            => 'URLs',
+		'os'							=> 'OS',
+		'browsers'				=> 'Browsers',
 		'referrer'        => 'URLs.Referrer',
 		'lang'            => 'Languages',
 		'php'             => 'PHP',
@@ -38,7 +40,7 @@ class Assignments
 		'contentcats'     => 'Content.Categories',
 		'contentarticles' => 'Content.Articles',
 		'convertforms'	  => 'ConvertForms',
-		'geo_country'	  => 'GeoIP.Countries',
+		'geo_country'	  	=> 'GeoIP.Countries',
 		'geo_continent'	  => 'GeoIP.Continents'
 	);
 

@@ -29,6 +29,8 @@ JLoader::registerAlias('nrFrameworkAssignmentsMenu',          '\\NRFramework\\As
 JLoader::registerAlias('nrFrameworkAssignmentsPHP',           '\\NRFramework\\Assignments\\PHP');
 JLoader::registerAlias('nrFrameworkAssignmentsURLs',          '\\NRFramework\\Assignments\\URLs');
 JLoader::registerAlias('nrFrameworkAssignmentsUsers',         '\\NRFramework\\Assignments\\Users');
+JLoader::registerAlias('nrFrameworkAssignmentsOS',            '\\NRFramework\\Assignments\\OS');
+JLoader::registerAlias('nrFrameworkAssignmentsBrowsers',      '\\NRFramework\\Assignments\\Browsers');
 
 // helper class aliases
 JLoader::registerAlias('NRCache',     '\\NRFramework\\Cache');

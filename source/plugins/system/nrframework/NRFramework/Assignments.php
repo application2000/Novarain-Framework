@@ -42,7 +42,8 @@ class Assignments
 		'contentarticles' => 'Content.Articles',
 		'convertforms'	  => 'ConvertForms',
 		'geo_country'	  => 'GeoIP.Countries',
-		'geo_continent'	  => 'GeoIP.Continents'
+		'geo_continent'	  => 'GeoIP.Continents',
+		'cookiename'	  => 'Cookies.Name'
 	);
 
 	/**

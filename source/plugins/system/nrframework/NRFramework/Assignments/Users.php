@@ -52,6 +52,36 @@ class Users extends Assignment
 		return $pass;
 	}
 
+	/**
+	 * Check the number of pageviews
+	 *
+	 * @return bool
+	 */
+	public function passPageviews()
+	{
+		$pass = false;
+
+		$session = \JFactory::getSession();
+		$visits = $session->get('session.counter', 0);
+
+		$pageviews_param = intval($this->params->assign_pageviews_param_views);
+
+		switch ($this->selection)
+		{
+			case 'exactly':
+				$pass = $visits === $pageviews_param;
+				break;
+			case 'fewer':
+				$pass = $visits < $pageviews_param;
+				break;
+			case 'greater':
+				$pass = $visits > $pageviews_param;
+				break;
+		}
+
+		return $pass;
+	}
+
     private static function SessionStartTime()
     {
         $session = \JFactory::getSession();

@@ -43,7 +43,8 @@ class Assignments
 		'convertforms'	  => 'ConvertForms',
 		'geo_country'	  => 'GeoIP.Countries',
 		'geo_continent'	  => 'GeoIP.Continents',
-		'cookiename'	  => 'Cookies.Name'
+		'cookiename'	  => 'Cookies.Name',
+		'ip_addresses'	  => 'IP.Range'
 	);
 
 	/**

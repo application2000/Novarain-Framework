@@ -34,6 +34,7 @@ class Assignments
 		'timeonsite'      => 'Users.TimeOnSite',
 		'usergroups'      => 'Users.GroupLevels',
 		'pageviews'		  => 'Users.Pageviews',
+		'user_id'		  => 'Users.IDs',
 		'menu'            => 'Menu',
 		'datetime'        => 'DateTime.Date',
 		'acymailing'      => 'AcyMailing',

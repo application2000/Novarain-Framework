@@ -82,6 +82,29 @@ class Users extends Assignment
 		return $pass;
 	}
 
+
+	/**
+	 * Check User ID
+	 *
+	 * @return bool
+	 */
+	public function passIDs()
+	{
+		// get the current user's id
+		$user_id = \JFactory::getUser()->id;
+
+		// prepare an array(of ints) from the supplied IDs(string)		
+		$ids = array_map('intval', array_map('trim', explode(',', $this->selection)));
+
+		//
+		if (in_array($user_id, $ids))
+		{
+			return true;
+		}
+
+		return false;
+	}
+
     private static function SessionStartTime()
     {
         $session = \JFactory::getSession();

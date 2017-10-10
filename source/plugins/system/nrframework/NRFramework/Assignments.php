@@ -41,6 +41,7 @@ class Assignments
 		'akeebasubs'      => 'AkeebaSubs',
 		'contentcats'     => 'Content.Categories',
 		'contentarticles' => 'Content.Articles',
+		'components'	  => 'Components',
 		'convertforms'	  => 'ConvertForms',
 		'geo_country'	  => 'GeoIP.Countries',
 		'geo_continent'	  => 'GeoIP.Continents',

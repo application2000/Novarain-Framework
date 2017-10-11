@@ -10,46 +10,93 @@ defined('_JEXEC') or die('Restricted access');
 
 require_once JPATH_PLUGINS . '/system/nrframework/helpers/fieldlist.php';
 
+jimport('joomla.filesystem.folder');
+jimport('joomla.filesystem.file');
+
 class JFormFieldNRComponents extends NRFormFieldList
 {
     protected function getOptions()
     {
-        $component_list = $this->getInstalledComponents();
-        $options = array_merge(parent::getOptions(), $component_list);
-        return $options;
+        return array_merge(parent::getOptions(), $this->getInstalledComponents());
     }
-
+    
     /**
-     * Creates a list of installed components
-     * @return array
+     *  Creates a list of installed components
+     *
+     *  @return array
      */
-
     protected function getInstalledComponents()
     {
-        $db    = $this->db;
-        $query = $db->getQuery(true)
-            ->select($db->quoteName(array('name', 'manifest_cache', 'type')))
-            ->from($db->quoteName('#__extensions'))
-            ->where($db->quoteName('type') . ' = ' . $db->quote('component'));
-        
-        $db->setQuery($query);
+        $lang = JFactory::getLanguage();
+        $db = $this->db;
 
-        try
-		{
-            $results = $db->loadObjectList();
-		}
-		catch (RuntimeException $e)
-		{
-			JError::raiseWarning(500, $e->getMessage());
-			return false;
-        }
+        $components = $db->setQuery(
+            $db->getQuery(true)
+                ->select('name, element')
+                ->from('#__extensions')
+                ->where('type = ' . $this->db->quote('component'))
+                ->where('name != ""')
+                ->where('element != ""')
+                ->where('enabled = 1')
+                ->group('element')
+                ->order('element, name')
+        )->loadObjectList();
+
+        $comps = array();
         
-        foreach ($results as $res)
+        foreach ($components as $component)
         {
-            // Todo: Use a more user-friendly name for the option's key
-            $components[] = JHTML::_('select.option', $res->name, $res->name);
+            // Make sure we have a valid element
+            if (empty($component->element))
+            {
+                continue;
+            }
+
+            // Skip backend-based only components
+            if ($this->get('frontend', false))
+            {
+                $component_folder = JPATH_SITE . '/components/' . $component->element;
+
+                if (!\JFolder::exists($component_folder))
+                {
+                    continue;
+                }
+
+                if (!\JFolder::exists($component_folder . '/views') && ! \JFolder::exists($component_folder . '/view'))
+                {
+                    continue;
+                }
+            }
+
+            // Try loading component's system language file in order to display a user friendly component name
+            // Runs only if the component's name is not translated already.
+            if (strpos($component->name, ' ') === false)
+            {   
+                $filename  = $component->element . '.sys';
+                $adminpath = JPATH_ADMINISTRATOR . '/components/' . $component->element;
+
+                // Discover component's language file 
+                $lang->load($filename, JPATH_BASE, null)
+                || $lang->load($filename, $adminpath, null)
+                || $lang->load($filename, JPATH_BASE, $lang->getDefault())
+                || $lang->load($filename, $adminpath, $lang->getDefault());
+
+                // Translate component's name
+                $component->name = JText::_(strtoupper($component->name));
+            }
+
+            $comps[strtolower($component->element)] = $component->name;
         }
 
-        return $components;
+        asort($comps);
+
+        $options = array();
+
+        foreach ($comps as $key => $name)
+        {
+            $options[] = JHtml::_('select.option', $key, $name);
+        }
+
+        return $options;
     }
 }

@@ -37,6 +37,7 @@ class Assignments
 		'user_id'		  => 'Users.IDs',
 		'menu'            => 'Menu',
 		'datetime'        => 'DateTime.Date',
+		'timerange'		  => 'DateTime.TimeRange',
 		'acymailing'      => 'AcyMailing',
 		'akeebasubs'      => 'AkeebaSubs',
 		'contentcats'     => 'Content.Categories',

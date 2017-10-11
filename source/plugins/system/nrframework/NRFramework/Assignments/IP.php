@@ -26,8 +26,7 @@ class IP extends Assignment
 
         // get the supplied ip addresses/ranges as an array
         $ip_ranges = $this->prepareRanges($this->selection);
-        
-        //
+
         foreach ($ip_ranges as $range)
         {
             if ($this->isInRange($user_ip, $range))
@@ -50,8 +49,8 @@ class IP extends Assignment
         // replace newlines with commas
         $ip_list = preg_replace('/\s+/',',',trim($ip_list));
 
-        // return ip ranges as an array
-        return explode(',', $ip_list);
+        // strip out empty values and return ip ranges as an array
+        return array_filter(explode(',', $ip_list));
     }
 
     /**

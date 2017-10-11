@@ -90,14 +90,10 @@ class Users extends Assignment
 	 */
 	public function passIDs()
 	{
-		// get the current user's id
-		$user_id = \JFactory::getUser()->id;
-
 		// prepare an array(of ints) from the supplied IDs(string)		
 		$ids = array_map('intval', array_map('trim', explode(',', $this->selection)));
 
-		//
-		if (in_array($user_id, $ids))
+		if (in_array($this->user->id, $ids))
 		{
 			return true;
 		}

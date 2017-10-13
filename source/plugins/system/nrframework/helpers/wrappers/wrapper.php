@@ -10,6 +10,8 @@
 // No direct access
 defined('_JEXEC') or die;
 
+jimport('joomla.log.log');
+
 class NR_Wrapper
 {
 	protected $key;
@@ -167,10 +169,12 @@ class NR_Wrapper
 	 */
 	protected function makeRequest($http_verb, $method, $args = array())
 	{
-		// check to see if the endpoint already has GET variables
-		$method = (strpos($this->endpoint, '?') === false) ?  '/' . $method : $method;
+		$url = $this->endpoint;
 
-		$url = $this->endpoint . $method;
+		if (!empty($method) && !is_null($method) && strpos($url, '?') === false)
+		{
+			$url .= '/' . $method;
+		}
 
 		$this->last_error         = '';
 		$this->request_successful = false;
@@ -194,6 +198,7 @@ class NR_Wrapper
 
 			case 'get':
 				$query = http_build_query($args, '', '&');
+				$this->last_request['body'] = $query;
 				$response = (strpos($url,'?') !== false) ? $http->get($url . '&' . $query) : $http->get($url . '?' . $query);
 				break;
 
@@ -215,7 +220,13 @@ class NR_Wrapper
         // Log debug message
         if (JDEBUG)
         {
-        	JLog::add(print_r($response, true), JLog::DEBUG, 'nrframework');
+        	$debug = array(
+        		'wrapper'  => get_called_class(),
+        		'request'  => $this->last_request,
+        		'response' => $response
+        	);
+
+        	JLog::add(print_r($debug, true), JLog::DEBUG, 'nrframework');
         }
 
 		// Convert body JSON to array
@@ -256,14 +267,9 @@ class NR_Wrapper
 	protected function determineSuccess()
 	{
 		$status = $this->findHTTPStatus();
+		$success = ($status >= 200 && $status <= 299) ? true : false;
 
-		if ($status >= 200 && $status <= 299)
-		{
-			return ($this->request_successful = true);
-		}
-
-		$this->last_error = 'Unknown error, call getLastResponse() to find out what happened.';
-		return false;
+		return ($this->request_successful = $success);
 	}
 
 	/**

@@ -208,6 +208,8 @@ class NRSmartTags
      */
     private function setUserFirstLastName()
     {
+    	$this->user->name      = ucwords(strtolower($this->user->name));
+
     	$nameParts = explode(' ', $this->user->name, 2);
 
     	$this->user->firstname = trim($nameParts[0]);

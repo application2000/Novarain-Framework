@@ -41,7 +41,25 @@
 					url="https://developers.google.com/maps/documentation/javascript/get-api-key"
 					urltext="NR_GMAP_FIND_KEY"
 					urlclass="btn"
-				/>	
+				/>
+				
+
+		        <field name="recaptchaStart" type="nr_well" 
+		            description="NR_RECAPTCHA_DESC"
+		            label="NR_RECAPTCHA"
+		        />
+				<field name="recaptcha_sitekey" type="text" 
+					label="NR_RECAPTCHA_SITE_KEY"
+					description="NR_RECAPTCHA_SITE_KEY_DESC"
+				/>
+				<field name="recaptcha_secretkey" type="text" 
+					label="NR_RECAPTCHA_SECRET_KEY"
+					description="NR_RECAPTCHA_SECRET_KEY_DESC"
+				/>
+		        <field name="recaptchaEnd" type="nr_well" 
+		            end="1"
+		        />
+
 			</fieldset>
 		</fields>
 	</config>

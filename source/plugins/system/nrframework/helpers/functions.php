@@ -431,6 +431,47 @@ class NRFrameworkFunctions
         return JFactory::getDate()->format("Y-m-d H:i:s");
     }
 
+    /**
+     *  Get framework plugin's parameters
+     *
+     *  @return  JRegistry   The plugin parameters
+     */
+    public static function params()
+    {
+        $hash = md5('frameworkParams');
+
+        if (NRCache::has($hash))
+        {
+            return NRCache::read($hash);
+        }
+
+        $db = JFactory::getDBO();
+
+        $result = $db->setQuery(
+            $db->getQuery(true)
+            ->select('params')
+            ->from('#__extensions')
+            ->where('element = ' . $db->quote('nrframework'))
+        )->loadResult();
+
+        return NRCache::set($hash, new \JRegistry($result));
+    }
+
+    public static function loadReCaptcha()
+    {
+        JHtml::_(
+            'script', 
+            'plg_system_nrframework/recaptcha.js', 
+            array('version' => 'auto', 'relative' => true)
+        );
+
+        JHtml::_(
+            'script', 
+            '//www.google.com/recaptcha/api.js?onload=NRInitReCaptcha&render=explicit&hl=' . JFactory::getLanguage()->getTag(), 
+            array(), 
+            array('async' => true, 'defer' => true)
+        );
+    }
 }
 
 ?>

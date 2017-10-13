@@ -119,7 +119,7 @@ class Assignment
 		// Set date object
 		if (is_null($date))
 		{
-			$tz   = new \DateTimeZone(\JFactory::getApplication()->getCfg('offset'));
+			$tz   = new \DateTimeZone($this->app->getCfg('offset'));
 			$date = \JFactory::getDate()->setTimeZone($tz);
 		}
 

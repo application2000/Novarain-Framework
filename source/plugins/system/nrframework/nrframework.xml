@@ -13,7 +13,7 @@
 	<files>
 		<filename plugin="nrframework">nrframework.php</filename>
 		<filename>script.install.helper.php</filename>
-		<filename>aliases.php</filename>
+		<filename>autoload.php</filename>
 		<folder>fields</folder>
 		<folder>helpers</folder>
 		<folder>language</folder>

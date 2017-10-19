@@ -9,10 +9,8 @@
 
 defined( '_JEXEC' ) or die( 'Restricted access' );
 
-require_once __DIR__ . '/helpers/functions.php';
-
-// load class-name aliases
-require_once __DIR__ . '/aliases.php';
+// Initialize Novarain Library
+require_once __DIR__ . '/autoload.php';
 
 class plgSystemNRFramework extends JPlugin
 {
@@ -108,19 +106,4 @@ class plgSystemNRFramework extends JPlugin
 
 		return false;
 	}
-
-	/** 
-	 *  Registers the framework's namespace (NRFramework)
-	 *
-	 *  This event is triggered after the Joomla framework has loaded 
-	 *  and the application initialise method has been called.
-	 *
-	 *  https://docs.joomla.org/Plugin/Events/System#onAfterInitialise
-	 *  https://docs.joomla.org/Using_own_library_in_your_extensions
-	 */
-	public function onAfterInitialise()
-	{
-		JLoader::registerNamespace('NRFramework', __DIR__ );
-	}
-
 }

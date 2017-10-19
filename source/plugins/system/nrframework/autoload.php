@@ -9,12 +9,11 @@
 
 defined( '_JEXEC' ) or die( 'Restricted access' );
 
-/**
- * 
- */
-
+// Registers framework's namespace
+JLoader::registerNamespace('NRFramework', __DIR__ );
 
 // Assignment related class aliases
+JLoader::registerAlias('NRFrameworkFunctions',                '\\NRFramework\\Functions');
 JLoader::registerAlias('NRAssignment',                        '\\NRFramework\\Assignment');
 JLoader::registerAlias('nrFrameworkAssignmentsHelper',        '\\NRFramework\\Assignments');
 JLoader::registerAlias('nrFrameworkAssignmentsAcyMailing',    '\\NRFramework\\Assignments\\AcyMailing');

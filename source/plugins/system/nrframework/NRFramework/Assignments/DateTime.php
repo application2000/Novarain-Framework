@@ -48,8 +48,8 @@ class DateTime extends Assignment
 			return false;
 		}
 
-		\NRFrameworkFunctions::fixDate($publish_up);
-		\NRFrameworkFunctions::fixDate($publish_down);
+		\NRFramework\Functions::fixDate($publish_up);
+		\NRFramework\Functions::fixDate($publish_down);
 
 		$now  = $this->getNow();
 		$up   = \JFactory::getDate($publish_up)->setTimeZone($this->tz);

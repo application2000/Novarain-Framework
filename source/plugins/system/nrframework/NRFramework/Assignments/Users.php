@@ -41,7 +41,7 @@ class Users extends Assignment
 			return $pass;
 		}
 
-		$dateTimeNow = strtotime(\NRFrameworkFunctions::dateTimeNow());
+		$dateTimeNow = strtotime(\NRFramework\Functions::dateTimeNow());
 		$diffInSeconds = $dateTimeNow - $sessionStartTime;
 
 		if (intval($this->selection) <= $diffInSeconds)
@@ -110,7 +110,7 @@ class Users extends Assignment
 
         if (!$sessionStartTime)
         {
-            $date = \NRFrameworkFunctions::dateTimeNow();
+            $date = \NRFramework\Functions::dateTimeNow();
             $session->set($var, $date);
         }
 

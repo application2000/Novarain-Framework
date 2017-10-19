@@ -14,7 +14,7 @@ defined('_JEXEC') or die;
 jimport('joomla.filesystem.file');
 jimport('joomla.filesystem.folder');
 
-use \NRFramework\Cache;
+use Joomla\Registry\Registry;
 
 class Functions
 {
@@ -56,7 +56,7 @@ class Functions
 
         require_once $file;
 
-        $class = new NRUpdateSites();
+        $class = new \NRUpdateSites();
         return $class->getDownloadKey();
     }
 
@@ -364,7 +364,7 @@ class Functions
         }
 
         // Success! Return module's html
-        return JModuleHelper::renderModule($module, $moduleStyle);
+        return \JModuleHelper::renderModule($module, $moduleStyle);
     }
 
     public static function fixDate(&$date)
@@ -442,9 +442,9 @@ class Functions
     {
         $hash = md5('frameworkParams');
 
-        if (NRCache::has($hash))
+        if (Cache::has($hash))
         {
-            return NRCache::read($hash);
+            return Cache::read($hash);
         }
 
         $db = \JFactory::getDBO();
@@ -456,18 +456,18 @@ class Functions
             ->where('element = ' . $db->quote('nrframework'))
         )->loadResult();
 
-        return NRCache::set($hash, new \JRegistry($result));
+        return Cache::set($hash, new Registry($result));
     }
 
     public static function loadReCaptcha()
     {
-        JHtml::_(
+        \JHtml::_(
             'script', 
             'plg_system_nrframework/recaptcha.js', 
             array('version' => 'auto', 'relative' => true)
         );
 
-        JHtml::_(
+        \JHtml::_(
             'script', 
             '//www.google.com/recaptcha/api.js?onload=NRInitReCaptcha&render=explicit&hl=' . \JFactory::getLanguage()->getTag(), 
             array(), 

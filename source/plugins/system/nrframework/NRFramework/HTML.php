@@ -12,8 +12,6 @@ namespace NRFramework;
 // No direct access
 defined('_JEXEC') or die;
 
-require_once dirname(__DIR__) . '/helpers/functions.php';
-
 class HTML
 {
 	/**
@@ -22,8 +20,8 @@ class HTML
 	 */
 	public static function treeselect(&$options, $name, $value, $id, $size = 300, $simple = 0)
 	{
-		\NRFrameworkFunctions::loadLanguage('com_menus', JPATH_ADMINISTRATOR);
-		\NRFrameworkFunctions::loadLanguage('com_modules', JPATH_ADMINISTRATOR);
+		Functions::loadLanguage('com_menus', JPATH_ADMINISTRATOR);
+		Functions::loadLanguage('com_modules', JPATH_ADMINISTRATOR);
 
 		if (empty($options))
 		{
@@ -75,7 +73,7 @@ class HTML
 			return $html;
 		}
 
-		\NRFrameworkFunctions::addMedia(array(
+		Functions::addMedia(array(
 			"treeselect.js", 
 			"treeselect.css"
 		));

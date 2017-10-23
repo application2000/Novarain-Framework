@@ -48,7 +48,7 @@ class NR_SendInBlue extends NR_Wrapper
 
 		if ($listid) 
 		{
-			$data['listid'] = $listid;
+			$data['listid'] = array($listid);
 		}
 
 		$this->post('user/createdituser', $data);

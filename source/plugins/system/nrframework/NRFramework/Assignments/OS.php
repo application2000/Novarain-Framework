@@ -12,6 +12,7 @@ namespace NRFramework\Assignments;
 defined('_JEXEC') or die;
 
 use NRFramework\Assignment;
+use NRFramework\WebClient;
 
 class OS extends Assignment
 {
@@ -22,23 +23,6 @@ class OS extends Assignment
      */
     function passOS()
     {
-      //-- TODO: factor out common code with Browsers Assignment!
-      $platformInt = $this->app->client->platform;
-
-      // get the constants from JApplicationWebClient as an array using the Reflection API
-      $r = new \ReflectionClass('JApplicationWebClient');
-      $constantsArray = $r->getConstants();
-
-      // flip the associative array to do a lookup based on $platformInt
-      $constantsArray = array_flip($constantsArray);
-      //--
-
-      if (isset($constantsArray[$platformInt]))
-      {
-        $platformStr = strtolower($constantsArray[$platformInt]);
-        return $this->passSimple($platformStr, $this->selection);
-      }
-      
-      return false;      
+        return $this->passSimple(WebClient::getOS(), $this->selection);
     }
 }

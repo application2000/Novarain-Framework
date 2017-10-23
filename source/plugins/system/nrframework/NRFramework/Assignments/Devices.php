@@ -12,24 +12,17 @@ namespace NRFramework\Assignments;
 defined('_JEXEC') or die;
 
 use NRFramework\Assignment;
+use NRFramework\WebClient;
 
 class Devices extends Assignment
 {
     /**
-     *  Checks visitor's device
+     *  Checks client's device type
      *
      *  @return  bool
      */
 	function passDevices()
 	{
-        if (!class_exists('Mobile_Detect'))
-        {
-            require_once(JPATH_PLUGINS . "/system/nrframework/helpers/vendors/Mobile_Detect.php");
-        }
-
-        $detect = new \Mobile_Detect;
-        $detectDeviceType = ($detect->isMobile() ? ($detect->isTablet() ? 'tablet' : 'mobile') : 'desktop');
-
-    	return $this->passSimple($detectDeviceType, $this->selection); 
+    	return $this->passSimple(WebClient::getDeviceType(), $this->selection);
 	}
 }

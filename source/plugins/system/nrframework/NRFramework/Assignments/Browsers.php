@@ -12,6 +12,7 @@ namespace NRFramework\Assignments;
 defined('_JEXEC') or die;
 
 use NRFramework\Assignment;
+use NRFramework\WebClient;
 
 class Browsers extends Assignment
 {
@@ -22,28 +23,6 @@ class Browsers extends Assignment
      */
     function passBrowsers()
     {
-      // get the JApplicationWebClient instance
-      $client = $this->app->client;
-
-      // get the client's browser constant value (Integer)
-      // see https://api.joomla.org/cms-3/classes/Joomla.Application.Web.WebClient.html
-      $browserInt = $client->browser;
-
-      // get the constants from JApplicationWebClient as an array using the Reflection API
-      $r = new \ReflectionClass('JApplicationWebClient');
-      $constantsArray = $r->getConstants();
-
-      // flip the associative array to do a lookup based on $browserInt
-      $constantsArray = array_flip($constantsArray);
-
-
-      if (isset($constantsArray[$browserInt]))
-      {
-        // get the browser name (lowercase)
-        $browserStr = strtolower($constantsArray[$browserInt]);
-        return $this->passSimple($browserStr, $this->selection);
-      }
-      
-      return false;
-    }  
+        return $this->passSimple(WebClient::getBrowser()['name'], $this->selection);
+    }
 }

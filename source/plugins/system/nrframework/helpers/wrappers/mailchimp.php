@@ -15,6 +15,13 @@ require_once __DIR__ . '/wrapper.php';
 class NR_MailChimp extends NR_Wrapper
 {
 	/**
+	 *  MailChimp Endpoint URL
+	 *
+	 *  @var  string
+	 */
+	protected $endpoint = 'https://<dc>.api.mailchimp.com/3.0';
+
+	/**
 	 * Create a new instance
 	 * 
 	 * @param array $options The service's required options
@@ -23,10 +30,14 @@ class NR_MailChimp extends NR_Wrapper
 	public function __construct($options)
 	{
 		parent::__construct();
-		$this->setKey($options['api']);
-		$this->endpoint = 'https://<dc>.api.mailchimp.com/3.0';
+
+		// This line ensures backwards compatibility with other extensions such as MailChimp Auto-Subscribe
+		$apiKey = is_array($options) ? $options['api'] : $options;
+		$this->setKey($apiKey);
+
 		list(, $data_center) = explode('-', $this->key);
 		$this->endpoint  = str_replace('<dc>', $data_center, $this->endpoint);
+
 		$this->options->set('headers.Accept', 'application/vnd.api+json');
 		$this->options->set('headers.Content-Type', 'application/vnd.api+json');
 		$this->options->set('headers.Authorization', 'apikey ' . $this->key);

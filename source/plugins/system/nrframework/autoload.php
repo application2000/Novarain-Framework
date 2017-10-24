@@ -34,3 +34,4 @@ JLoader::registerAlias('NRCache', 							 '\\NRFramework\\Cache');
 JLoader::registerAlias('NRHTML', 							 '\\NRFramework\\HTML');
 JLoader::registerAlias('NRUpdateSites', 					 '\\NRFramework\\Updatesites');
 JLoader::registerAlias('NRSmartTags', 					     '\\NRFramework\\SmartTags');
+JLoader::registerAlias('NREmail', 					         '\\NRFramework\\Email');

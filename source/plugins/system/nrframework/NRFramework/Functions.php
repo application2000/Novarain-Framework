@@ -421,7 +421,7 @@ class Functions
         }
 
         $date = \JFactory::getDate($date, \JFactory::getUser()->getParam('timezone', \JFactory::getConfig()->get('offset')));
-        $date->setTimezone(new DateTimeZone('UTC'));
+        $date->setTimezone(new \DateTimeZone('UTC'));
 
         $date = $date->format('Y-m-d H:i:s', true, false);
     }

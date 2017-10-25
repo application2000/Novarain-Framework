@@ -19,6 +19,20 @@ use Joomla\Registry\Registry;
 class Functions
 {
     /**
+     *  Log message to framework's log file
+     *
+     *  @param   mixed  $data    Log message
+     *
+     *  @return  void
+     */
+    public static function log($data)
+    {
+        $data = (is_object($data) || is_array($data)) ? print_r($data, true) : $data;
+
+        \JLog::add($data, \JLog::DEBUG, 'nrframework');
+    }
+
+    /**
      *  Return's a URL with the Google Analytics Campaign Parameters appended to the end
      *
      *  @param   string  $url       The URL

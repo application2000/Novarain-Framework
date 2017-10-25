@@ -23,28 +23,10 @@ class NR_ZohoCRM extends NR_Wrapper
 	public function __construct($options)
 	{
 		parent::__construct();
-
+		$this->setKey($options['authenticationToken']);
 		$this->options->set('headers.Accept', 'text/xml;charset=utf-8');
 		$this->options->set('headers.Content-Type', 'text/xml;charset=utf-8');
 		$this->response_type = 'xml';
-
-		if (!empty($options['authenticationToken']))
-		{
-			$this->setKey($options['authenticationToken']);
-		}
-
-		if (empty($options['authenticationToken']) && !empty($options['userid']) && !empty($options['password']))
-		{
-			$this->userid   = $options['userid'];
-			$this->password = $options['password'];
-			$this->setAuthenticationToken();
-		}
-
-		if (empty($this->key))
-		{
-			throw new \Exception("The Zoho CRM Authentication Token could not be retrieved.");
-		}
-
 	}
 
 	/**
@@ -93,7 +75,7 @@ class NR_ZohoCRM extends NR_Wrapper
 		$xmlData = $xml->asXML();
 
 		$data = array(
-			'authtoken'      => $this->getAuthenticationToken(),
+			'authtoken'      => $this->key,
 			'scope'          => 'crmapi',
 			'xmlData'        => $xmlData,
 			'version'        => '4',
@@ -150,58 +132,6 @@ class NR_ZohoCRM extends NR_Wrapper
 		{
 			throw new \Exception("Invalid ZohoCRM key `{$key}` supplied.");
 		}
-	}
-
-	/**
-	 *  Sets the Authentication Token from Zoho CRM
-	 *
-	 *  @return  string
-	 */
-	public function setAuthenticationToken()
-	{
-		$urlParams = array(
-			'SCOPE'        => 'ZohoCRM/crmapi',
-			'EMAIL_ID'     => $this->userid,
-			'PASSWORD'     => $this->password,
-			'DISPLAY_NAME' => 'convertforms'
-		);
-
-		$this->endpoint = 'https://accounts.zoho.eu/apiauthtoken/nb/create?' . http_build_query($urlParams);
-
-		// temporarily switch the response to text
-		$this->response_type = 'text';
-		$result              = $this->post('');
-
-		// switch back to xml
-		$this->response_type = 'xml';
-
-		$textInArray = explode("\n", $result);
-		$authToken   = explode("=", $textInArray['2']);
-		$cmp         = strcmp($authToken['0'], "AUTHTOKEN");
-
-		if ($cmp == 0)
-		{
-			$this->setKey($authToken['1']);
-		}
-		else
-		{
-			throw new \Exception("The Zoho CRM Authentication Token could not be retrieved.");
-		}
-	}
-
-	/**
-	 *  Get the Zoho CRM Authentication Token
-	 *
-	 *  @return  string
-	 */
-	public function getAuthenticationToken()
-	{
-		if (empty($this->key))
-		{
-			$this->setAuthenticationToken();
-		}
-
-		return $this->key;
 	}
 
 	/**

@@ -9,7 +9,8 @@
 
 defined( '_JEXEC' ) or die( 'Restricted access' );
 
-require_once __DIR__ . '/helpers/functions.php';
+// Initialize Novarain Library
+require_once __DIR__ . '/autoload.php';
 
 class plgSystemNRFramework extends JPlugin
 {
@@ -69,8 +70,7 @@ class plgSystemNRFramework extends JPlugin
 		}
 
 		// Set Download Key & fix Update Sites
-		require_once __DIR__ . '/helpers/updatesites.php';
-		$upds = new NRUpdateSites();
+		$upds = new NRFramework\Updatesites();
 		$upds->update();
 	}
 
@@ -83,7 +83,6 @@ class plgSystemNRFramework extends JPlugin
 	 */
 	public function onInstallerBeforePackageDownload(&$url, &$headers)
 	{
-
 		$isOurExtension = JString::strrpos($url, "tassos.gr/update");
 
 		if (!$isOurExtension)

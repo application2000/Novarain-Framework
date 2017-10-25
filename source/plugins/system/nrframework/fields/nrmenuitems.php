@@ -8,8 +8,10 @@
 
 defined('_JEXEC') or die;
 
+use \NRFramework\HTML;
+
 require_once dirname(__DIR__) . '/helpers/field.php';
-require_once dirname(__DIR__) . '/helpers/html.php';
+
 
 class JFormFieldNRMenuItems extends NRFormField
 {
@@ -22,7 +24,7 @@ class JFormFieldNRMenuItems extends NRFormField
 		$size    = $this->get('size', 300);
 		$options = $this->getMenuItems();
 
-		return NRHTML::treeselect($options, $this->name, $this->value, $this->id, $size);
+		return HTML::treeselect($options, $this->name, $this->value, $this->id, $size);
 	}
 
 		/**

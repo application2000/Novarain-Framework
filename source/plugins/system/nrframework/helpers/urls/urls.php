@@ -9,6 +9,8 @@
 
 defined('_JEXEC') or die;
 
+use \NRFramework\Cache;
+
 class NRURLs {
 
     private $url;
@@ -73,7 +75,7 @@ class NRURLs {
         }
 
         $hash  = MD5($this->shortener->name . $this->url);
-        $cache = NRCache::read($hash, true);
+        $cache = Cache::read($hash, true);
 
         if ($cache)
         {
@@ -105,12 +107,12 @@ class NRURLs {
             return false;
         }
 
-        NRCache::set($hash, $data);
+        Cache::set($hash, $data);
 
         // Store to cache
         if ($this->cache)
         {
-            NRCache::write($hash, $data);
+            Cache::write($hash, $data);
         }
 
         return $data;

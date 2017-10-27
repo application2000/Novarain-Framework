@@ -82,7 +82,7 @@ class Email
 
         foreach ($recipients as $key => $recipient)
         {
-            if (!filter_var($recipient, FILTER_VALIDATE_EMAIL))
+            if (!$this->validateEmailAddress($recipient))
             {
                 $this->setError("Invalid recipient email address: $recipient");
                 return;
@@ -92,7 +92,7 @@ class Email
         $this->email['recipient'] = $recipients;
 
         // Validate sender email address
-        if (!filter_var($this->email['from_email'], FILTER_VALIDATE_EMAIL))
+        if (!$this->validateEmailAddress($this->email['from_email']))
         {
             $this->setError('Invalid sender email address: ' . $this->email['from_email']);
             return;  
@@ -161,6 +161,19 @@ class Email
     {
         $this->error = 'Error sending email: ' . $error;
         Functions::log($error);
+    }
+
+    /**
+     *  Removes all illegal characters and validates an email address
+     *
+     *  @param   string  $email  Email address string
+     *
+     *  @return  bool
+     */
+    private function validateEmailAddress($email)
+    {
+        $email = filter_var($email, FILTER_SANITIZE_EMAIL);
+        return filter_var($email, FILTER_VALIDATE_EMAIL);
     }
 }
 

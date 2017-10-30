@@ -110,14 +110,13 @@ class Email
      */
     public function send()
     {
-        $email = $this->email;
-
         // Validate first the email object
-        if (!$this->validate($email))
+        if (!$this->validate($this->email))
         {
             return;
         }
 
+        $email  = $this->email;
         $mailer = \JFactory::getMailer();
 
         // Email Sender

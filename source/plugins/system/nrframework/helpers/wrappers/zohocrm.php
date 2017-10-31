@@ -14,6 +14,8 @@ require_once __DIR__ . '/wrapper.php';
 
 class NR_ZohoCRM extends NR_Wrapper
 {
+	public $module = 'leads';
+
 	/**
 	 * Create a new instance
 	 *
@@ -24,6 +26,7 @@ class NR_ZohoCRM extends NR_Wrapper
 	{
 		parent::__construct();
 		$this->setKey($options['authenticationToken']);
+		$this->module = $options['zohomodule'];
 		$this->options->set('headers.Accept', 'text/xml;charset=utf-8');
 		$this->options->set('headers.Content-Type', 'text/xml;charset=utf-8');
 		$this->response_type = 'xml';
@@ -40,39 +43,17 @@ class NR_ZohoCRM extends NR_Wrapper
 	 */
 	public function subscribe($email, $fields = array(), $update_existing = true)
 	{
-
-		$xml = new SimpleXMLElement('<Leads/>');
-		$row = $xml->addChild('row');
-		$row->addAttribute('no', '1');
-
-		// add mandatory email in XML
-		$xmlField = $row->addChild('FL', $email);
-		$xmlField->addAttribute('val', 'Email');
-
-		if (is_array($fields) && count($fields))
-		{
-			foreach ($fields as $field_key => $field_value)
-			{
-				$xmlField = $row->addChild('FL', $field_value);
-				$xmlField->addAttribute('val', $field_key);
-			}
-
-			// check for mandatory Last Name
-			if (!array_key_exists('Last Name', $fields))
-			{
-				throw new \Exception("The Lead could not be inserted without a name field");
-			}
-
-			// check for mandatory company
-			// we can take it upon ourselves and send 'Not Available' if there isn't any
-			if (!array_key_exists('Company', $fields))
-			{
-				$xmlField = $row->addChild('FL', 'Not Available');
-				$xmlField->addAttribute('val', 'Company');
-			}
+		switch ($this->module) {
+			case 'leads':
+				$xmlData = $this->buildXML($email, $fields, array('Last Name'));
+				break;
+			case 'accounts':
+				$xmlData = $this->buildXML($email, $fields, array('Account Name'));
+				break;
+			case 'contacts':
+				$xmlData = $this->buildXML($email, $fields, array('Last Name'));
+				break;
 		}
-
-		$xmlData = $xml->asXML();
 
 		$data = array(
 			'authtoken'      => $this->key,
@@ -87,11 +68,50 @@ class NR_ZohoCRM extends NR_Wrapper
 			$data['duplicateCheck'] = '2';
 		}
 
-		$this->endpoint = 'https://crm.zoho.eu/crm/private/xml/Leads/insertRecords?' . http_build_query($data);
+		$this->endpoint = 'https://crm.zoho.eu/crm/private/xml/' . ucfirst($this->module) . '/insertRecords?' . http_build_query($data);
 
 		$this->post('');
 
 		return true;
+		
+	}
+
+	/**
+	 *  Build the XML for each module
+	 *
+	 *  @param   string  $email            User's email address
+	 *  @param   array   $fields           Form fields
+	 *  @param   array   $mandatoryFields  Mandatory field names
+	 *
+	 *  @return  string                    The XML
+	 */
+	public function buildXML($email, $fields, $mandatoryFields)
+	{
+		$xml = new SimpleXMLElement('<' . ucfirst($this->module) . '/>');
+		$row = $xml->addChild('row');
+		$row->addAttribute('no', '1');
+
+		$xmlField = $row->addChild('FL', $email);
+		$xmlField->addAttribute('val', 'Email');
+
+		if (is_array($fields) && count($fields))
+		{
+			foreach ($mandatoryFields as $mandatoryField) 
+			{
+				if (!array_key_exists($mandatoryField, $fields) || empty($fields[$mandatoryField])) 
+				{
+					throw new \Exception('The Lead could not be inserted with no ' . $mandatoryField . ' field');
+				}
+			}
+
+			foreach ($fields as $field_key => $field_value)
+			{
+				$xmlField = $row->addChild('FL', $field_value);
+				$xmlField->addAttribute('val', $field_key);
+			}
+		}
+
+		return $xml->asXML();
 	}
 
 	/**

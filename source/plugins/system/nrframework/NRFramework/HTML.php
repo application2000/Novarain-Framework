@@ -80,7 +80,7 @@ class HTML
 
 		$html = array();
 
-		$html[] = '<div class="well well-small nr_treeselect" id="' . $id . '">';
+		$html[] = '<div class="nr_treeselect" id="' . $id . '">';
 		$html[] = '
 			<div class="form-inline nr_treeselect-controls">
 				<span class="small">' . \JText::_('JSELECT') . ':

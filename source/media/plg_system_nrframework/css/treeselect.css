@@ -1,12 +1,13 @@
 div.nr_treeselect {
-	margin-bottom: 0
+	background-color: #fff;
+	padding: 15px;
+	border: solid 1px #ddd;
+	border-radius: 3px;
 }
-
 div.nr_treeselect ul.nr_treeselect-ul {
 	margin: 8px 0 0;
 	padding: 0
 }
-
 div.nr_treeselect ul.nr_treeselect-ul li {
 	margin: 0;
 	padding: 2px 10px;

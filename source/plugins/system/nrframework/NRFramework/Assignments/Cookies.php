@@ -17,12 +17,14 @@ class Cookies extends Assignment
     public function passName()
     {
         $pass = false;
-        $input_cookie = $this->app->input->cookie;
-        
-        $cookie_data = $input_cookie->get($this->params->assign_cookiename_param_name);
-        $user_content = empty($this->params->assign_cookiename_param_content) ? 
-                            '' : 
-                            $this->params->assign_cookiename_param_content; 
+        $input_cookie       = $this->app->input->cookie;
+        $cookie_data        = $input_cookie->get($this->params->assign_cookiename_param_name);
+        $user_content       = empty($this->params->assign_cookiename_param_content) ? 
+                                '' : 
+                                $this->params->assign_cookiename_param_content;
+        $starts_ends_content = empty($this->params->assign_cookiename_param_starts_ends) ? 
+                                '' : 
+                                $this->params->assign_cookiename_param_starts_ends; 
 
         // return false if the cookie is not found
         if($cookie_data === null)
@@ -47,7 +49,18 @@ class Cookies extends Assignment
                     $pass = true;
                 }
                 break;
-            
+            case 'starts':
+                if ($starts_ends_content !== '' && substr($cookie_data, 0, strlen($starts_ends_content)) === $starts_ends_content )
+                {
+                    $pass = true;
+                }
+                break;
+            case 'ends':
+                if ($starts_ends_content !== '' && substr($cookie_data, -strlen($starts_ends_content)) === $starts_ends_content )
+                {
+                    $pass = true;
+                }
+                break;
         }
 
         return $pass;

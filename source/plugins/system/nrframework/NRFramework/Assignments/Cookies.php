@@ -22,9 +22,6 @@ class Cookies extends Assignment
         $user_content       = empty($this->params->assign_cookiename_param_content) ? 
                                 '' : 
                                 $this->params->assign_cookiename_param_content;
-        $starts_ends_content = empty($this->params->assign_cookiename_param_starts_ends) ? 
-                                '' : 
-                                $this->params->assign_cookiename_param_starts_ends; 
 
         // return false if the cookie is not found
         if($cookie_data === null)
@@ -50,13 +47,13 @@ class Cookies extends Assignment
                 }
                 break;
             case 'starts':
-                if ($starts_ends_content !== '' && substr($cookie_data, 0, strlen($starts_ends_content)) === $starts_ends_content )
+                if ($user_content !== '' && substr($cookie_data, 0, strlen($user_content)) === $user_content)
                 {
                     $pass = true;
                 }
                 break;
             case 'ends':
-                if ($starts_ends_content !== '' && substr($cookie_data, -strlen($starts_ends_content)) === $starts_ends_content )
+                if ($user_content !== '' && substr($cookie_data, -strlen($user_content)) === $user_content)
                 {
                     $pass = true;
                 }

@@ -9,40 +9,52 @@
 
 defined('JPATH_PLATFORM') or die;
 
-require_once JPATH_PLUGINS . '/system/nrframework/helpers/fieldlist.php';
-
-class JFormFieldAssignmentSelection extends NRFormFieldList
+class JFormFieldAssignmentSelection extends JFormFieldList
 {
-	protected function getLabel()
-	{
-		return '';
-	}
+	/**
+	 *  Assignment options
+	 *
+	 *  @var  array
+	 */
+    protected $options = array(
+        0 => 'JDISABLED',
+        1 => 'NR_INCLUDE',
+        2 => 'NR_EXCLUDE'
+    );
 
-	protected function getInput()
-	{	
-		$assetsDir = JURI::root(true)."/plugins/system/nrframework/fields/assets/";
-        $this->doc->addScript($assetsDir.'assignmentselection.js');
-        $this->doc->addStyleSheet($assetsDir.'assignmentselection.css');
+    /**
+     *  Return options list to field
+     *
+     *  @return  array
+     */
+    protected function getOptions()
+    {
+        foreach ($this->options as $key => $value)
+        {
+            $options[] = JHTML::_('select.option', $key, JText::_($value));
+        }
 
-		$label = JText::_($this->get("label"));
-		$this->value = (int) $this->value;
-		$html = array();
+        return array_merge(parent::getOptions(), $options);
+    }
 
-		// Start the radio field output.
-		$html[] = '<div class="assignmentselection">';
-		$html[] = '<div class="control-group">';
-		$html[] = '<div class="control-label"><label><strong>' . $label . '</strong></label></div>';
-		$html[] = '<div class="controls">';
-		$html[] = '<fieldset id="' . $this->id . '"  class="radio btn-group">';
-		$html[] = '<input type="radio" id="' . $this->id . '0" name="' . $this->name . '" value="0"' . ((!$this->value) ? ' checked="checked"' : '').'/>';
-		$html[] = '<label class="btn_ignore" for="' . $this->id . '0">' . JText::_('NR_IGNORE') . '</label>';
-		$html[] = '<input type="radio" id="' . $this->id . '1" name="' . $this->name . '" value="1"' . (($this->value === 1) ? ' checked="checked"' : '').'/>';
-		$html[] = '<label class="btn_include" for="' . $this->id . '1">' . JText::_('NR_INCLUDE') . '</label>';
-		$html[] = '<input type="radio" id="' . $this->id . '2" name="' . $this->name . '" value="2"' . (($this->value === 2) ? ' checked="checked"' : '').'/>';
-		$html[] = '<label class="btn_exclude" for="' . $this->id . '2">' . JText::_('NR_EXCLUDE') . '</label>';
-		$html[] = '</fieldset>';
-		$html[] = '</div></div></div>';
+    /**
+     *  Setup field with predefined classes and load its media files
+     *
+     *  @param   SimpleXMLElement  $element  
+     *  @param   String            $value   
+     *  @param   String            $group    
+     *
+     *  @return  SimpleXMLElement                    
+     */
+    public function setup(SimpleXMLElement $element, $value, $group = NULL)
+    {
+        $return = parent::setup($element, $value, $group);
 
-		return implode($html);
-	}
+		JHtml::script('plg_system_nrframework/assignmentselection.js',false, true, false);
+		JHtml::stylesheet('plg_system_nrframework/assignmentselection.css', false, true, false);
+
+        $this->class = 'assignmentselection input-medium chzn-color-state';
+
+        return $return;
+    }
 }

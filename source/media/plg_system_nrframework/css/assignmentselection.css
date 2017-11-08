@@ -7,8 +7,10 @@
 .assignments .controls {
     margin-left: 210px !important;
 }
-.assign-group:not(:last-child) {
-    margin-bottom:30px;
+.assign-group {
+    border-top:solid 1px #eee;
+    padding-top:20px;
+    margin-top:20px;
 }
 .assign-group p {
     opacity:.7;

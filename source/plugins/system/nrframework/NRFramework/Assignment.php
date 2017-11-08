@@ -178,33 +178,6 @@ class Assignment
 	}
 
 	/**
-	 *  Returns paramteres of the active menu item
-	 *
-	 *  @param   integer  $id  Menu Item
-	 *
-	 *  @return  array         Menu Item parameters
-	 */
-	public function getMenuItemParams($id = 0)
-	{
-		$hash = md5('getMenuItemParams_' . $id);
-
-		if (Cache::has($hash))
-		{
-			return Cache::get($hash);
-		}
-
-		$query = $this->db->getQuery(true)
-			->select('m.params')
-			->from('#__menu AS m')
-			->where('m.id = ' . (int) $id);
-
-		$this->db->setQuery($query);
-		$params = $this->db->loadResult();
-		
-		return Cache::set($hash, json_decode($params));
-	}
-
-	/**
 	 *  Returns all parent rows
 	 *
 	 *  @param   integer  $id      Row primary key

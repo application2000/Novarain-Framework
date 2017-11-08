@@ -214,14 +214,14 @@ class Assignment
 	 *
 	 *  @return  array             Array with IDs
 	 */
-	public function getParentIDs($id = 0, $table = 'categories', $parent = 'parent_id', $child = 'id')
+	public function getParentIds($id = 0, $table = 'menu', $parent = 'parent_id', $child = 'id')
 	{
 		if (!$id)
 		{
-			return array();
+			return [];
 		}
 
-		$hash = md5('getParentIDs_' . $id . '_' . $table . '_' . $parent . '_' . $child);
+		$hash = md5('getParentIds_' . $id . '_' . $table . '_' . $parent . '_' . $child);
 
 		if (Cache::has($hash))
 		{
@@ -237,9 +237,9 @@ class Assignment
 				->from('#__' . $table . ' as t')
 				->where('t.' . $child . ' = ' . (int) $id);
 			$this->db->setQuery($query);
-
 			$id = $this->db->loadResult();
 
+			// Break if no parent is found or parent already found before for some reason
 			if (!$id || in_array($id, $parent_ids))
 			{
 				break;

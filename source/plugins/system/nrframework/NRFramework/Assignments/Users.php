@@ -64,7 +64,7 @@ class Users extends Assignment
 		$session = \JFactory::getSession();
 		$visits = $session->get('session.counter', 0);
 
-		$pageviews_param = intval($this->params->assign_pageviews_param_views);
+		$pageviews_param = intval($this->params->views);
 
 		switch ($this->selection)
 		{

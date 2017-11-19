@@ -18,11 +18,8 @@ class Cookies extends Assignment
     {
         $pass = false;
         $input_cookie       = $this->app->input->cookie;
-        $cookie_data        = $input_cookie->get($this->params->assign_cookiename_param_name);
-        $user_content       = empty($this->params->assign_cookiename_param_content) ? 
-                                '' : 
-                                $this->params->assign_cookiename_param_content;
-
+        $cookie_data        = $input_cookie->get($this->params->name);
+        $user_content       = empty($this->params->content) ? '' : $this->params->content;
         // return false if the cookie is not found
         if($cookie_data === null)
         {

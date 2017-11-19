@@ -73,12 +73,11 @@ class Content extends Assignment
 
 		$this->params->inc_categories = false;
 		$this->params->inc_articles   = false;
-		$this->params->inc_children   = $this->params->assign_contentcats_param_inc_children;
 
-		if (isset($this->params->assign_contentcats_param_inc) && is_array($this->params->assign_contentcats_param_inc))
+		if (isset($this->params->inc) && is_array($this->params->inc))
 		{
-			$this->params->inc_categories = in_array('inc_categories', $this->params->assign_contentcats_param_inc);
-			$this->params->inc_articles   = in_array('inc_articles', $this->params->assign_contentcats_param_inc);
+			$this->params->inc_categories = in_array('inc_categories', $this->params->inc);
+			$this->params->inc_articles   = in_array('inc_articles', $this->params->inc);
 		}
 
 		// Check we have a valid context

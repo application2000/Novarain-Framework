@@ -39,8 +39,8 @@ class DateTime extends Assignment
 	 */
 	function passDate()
 	{
-		$publish_up   = $this->params->assign_datetime_param_publish_up;
-		$publish_down = $this->params->assign_datetime_param_publish_down;
+		$publish_up   = $this->params->publish_up;
+		$publish_down = $this->params->publish_down;
 
 		// No valid dates
 		if (!$publish_up && !$publish_down)
@@ -73,16 +73,65 @@ class DateTime extends Assignment
 	 */
 	public function passTimeRange()
 	{
-		list($up_hours, $up_mins) = explode(':', $this->params->assign_timerange_param_publish_up);
-		list($down_hours, $down_mins) = explode(':', $this->params->assign_timerange_param_publish_down);
-
+		list($up_hours, $up_mins) = explode(':', $this->params->publish_up);
+        if (!is_null($this->params->publish_down))
+        {
+            list($down_hours, $down_mins) = explode(':', $this->params->publish_down);
+        }
 
 		$up = \JFactory::getDate()->setTimezone($this->tz)->setTime($up_hours, $up_mins);
-		$down = \JFactory::getDate()->setTimezone($this->tz)->setTime($down_hours, $down_mins);
-		$now = $this->getNow();
+		$down = is_null($this->params->publish_down) ? null : \JFactory::getDate()->setTimezone($this->tz)->setTime($down_hours, $down_mins);
 
 		return $this->checkRange($up, $down);
-	}
+    }
+    
+    /**
+     * Check current weekday
+     *
+     * @return bool
+     */
+    public function passDays()
+    {
+        if (is_array($this->selection) && !empty($this->selection))
+        {
+            // 'N' -> week day
+            // 'l' -> fulltext week day
+            // http://php.net/manual/en/function.date.php
+            $today      = date('N');
+            $todayText  = date('l');
+            if (in_array($today, $this->selection) ||
+                in_array($todayText, $this->selection))
+            {
+                return true;
+            }
+        }      
+
+        return false;
+    }
+
+    /**
+     * Check current month
+     *
+     * @return void
+     */
+    public function passMonths()
+    {
+        if (is_array($this->selection) && !empty($this->selection))
+        {
+            // 'n' -> month number (1 to 12)
+            // 'F' -> full-text month name
+            // http://php.net/manual/en/function.date.php
+            $month = date('n');
+            $monthText = date('F');
+            if (in_array($month, $this->selection) ||
+                in_array($monthText, $this->selection))
+            {
+                return true;
+            }
+        }      
+
+        return false;
+    }
 
 	/**
 	 *  Returns current date time
@@ -107,8 +156,8 @@ class DateTime extends Assignment
 	{
 		$now = $this->getNow();
 
-		if (strtotime($up_date->format('Y-m-d H:i:s', true)) > $now ||
-			strtotime($down_date->format('Y-m-d H:i:s', true)) < $now)
+		if (((bool)$up_date && strtotime($up_date->format('Y-m-d H:i:s', true)) > $now) ||
+			((bool)$down_date && strtotime($down_date->format('Y-m-d H:i:s', true)) < $now))
 		{
 			return false;
 		}

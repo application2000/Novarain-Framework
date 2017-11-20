@@ -22,9 +22,8 @@ class Menu extends Assignment
 	 */
 	function passMenu()
 	{
-		$includeChildren = isset($this->params->assign_menu_param_inc_children) ? $this->params->assign_menu_param_inc_children : false;
-    	$includeNoItemID = isset($this->params->assign_menu_param_noitem) ? $this->params->assign_menu_param_noitem : false;
-
+		$includeChildren = isset($this->params->inc_children) ? $this->params->inc_children : false;
+    	$includeNoItemID = isset($this->params->noitem) ? $this->params->noitem : false;
     	// Pass if selection is empty or the itemid is missing
     	if (!$this->request->Itemid || empty($this->selection))
         {

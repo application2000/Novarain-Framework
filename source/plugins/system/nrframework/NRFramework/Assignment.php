@@ -88,7 +88,7 @@ class Assignment
 	 *  @param  object  $request     
 	 *  @param  object  $date        
 	 */
-	public function __construct($assignment, $request = null, $date = null)
+	public function __construct($options, $request = null, $date = null)
 	{
 		// Set General Joomla Objects
 		$this->db   = \JFactory::getDbo();
@@ -97,9 +97,9 @@ class Assignment
 		$this->user = \JFactory::getUser();
 
 		// Set Assignment Options
-		$this->params     = $assignment->params;
-		$this->selection  = $assignment->selection;
-		$this->assignment = $assignment->assignment;
+		$this->params           = $options->params;
+		$this->selection        = $options->selection;
+		$this->assignment_state = $options->assignment_state;
 
 		// Set Request object
 		if (is_null($request))

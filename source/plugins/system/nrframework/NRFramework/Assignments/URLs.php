@@ -57,7 +57,7 @@ class URLs extends Assignment
    	 */
 	function passURLs()
 	{
-		$regex = isset($this->params->assign_urls_param_regex) ? $this->params->assign_urls_param_regex : true;
+		$regex = isset($this->params->regex) ? $this->params->regex : true;
 
 		if (!is_array($this->selection))
 		{
@@ -103,7 +103,6 @@ class URLs extends Assignment
 
 					continue;
 				}
-
 				if (strpos($url, $s) !== false)
 				{
 					$pass = true;

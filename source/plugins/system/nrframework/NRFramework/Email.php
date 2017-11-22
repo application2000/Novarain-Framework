@@ -137,7 +137,7 @@ class Email
             ->addRecipient($email['recipient'])
             ->isHTML(true)
             ->setSubject($email['subject'])
-            ->setBody($email['body']);
+            ->setBody(nl2br($email['body']));
 
         // Send mail
         $send = $mailer->Send();

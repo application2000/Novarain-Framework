@@ -82,7 +82,6 @@ class Users extends Assignment
 		return $pass;
 	}
 
-
 	/**
 	 * Check User ID
 	 *
@@ -90,8 +89,10 @@ class Users extends Assignment
 	 */
 	public function passIDs()
 	{
+		$this->selection = is_array($this->selection) ? $this->selection : explode(',', $this->selection);
+
 		// prepare an array(of ints) from the supplied IDs(string)		
-		$ids = array_map('intval', array_map('trim', explode(',', $this->selection)));
+		$ids = array_map('intval', array_map('trim', $this->selection));
 
 		if (in_array($this->user->id, $ids))
 		{

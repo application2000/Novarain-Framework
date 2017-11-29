@@ -10,7 +10,7 @@
 // No direct access to this file
 defined('_JEXEC') or die;
 
-require_once JPATH_LIBRARIES . '/joomla/form/fields/number.php';
+JFormHelper::loadFieldClass('number');
 
 class JFormFieldNRNumber extends JFormFieldNumber
 {

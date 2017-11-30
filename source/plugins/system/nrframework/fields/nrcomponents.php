@@ -38,7 +38,6 @@ class JFormFieldNRComponents extends NRFormFieldList
                 ->where('name != ""')
                 ->where('element != ""')
                 ->where('enabled = 1')
-                ->group('element')
                 ->order('element, name')
         )->loadObjectList();
 

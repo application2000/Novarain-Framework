@@ -63,9 +63,8 @@ class JFormFieldNRGroupLevel extends NRFormField
 			->select($value . ' AS value, a.title AS text, COUNT(DISTINCT b.id) AS level')
 			->from('#__usergroups AS a')
 			->join('LEFT', '#__usergroups AS b on a.lft > b.lft AND a.rgt < b.rgt')
-			->group('a.id')
+			->group('a.id, a.title, a.lft')
 			->order('a.lft ASC');
-
 		$db->setQuery($query);
 
 		return $db->loadObjectList();

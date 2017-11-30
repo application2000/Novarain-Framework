@@ -27,7 +27,7 @@ class JFormFieldNRMenuItems extends NRFormField
 		return HTML::treeselect($options, $this->name, $this->value, $this->id, $size);
 	}
 
-		/**
+	/**
 	 * Get a list of menu links for one or all menus.
 	 * Logic from administrator\components\com_menus\helpers\menus.php@getMenuLinks()
 	 */
@@ -40,7 +40,7 @@ class JFormFieldNRMenuItems extends NRFormField
 			->from('#__menu AS a')
 			->join('LEFT', $db->quoteName('#__menu') . ' AS b ON a.lft > b.lft AND a.rgt < b.rgt')
 			->where('a.published != -2')
-			->group('a.id, a.title, a.level, a.menutype, a.type, a.template_style_id, a.checked_out, a.lft')
+			->group('a.id, a.alias, a.title, a.level, a.menutype, a.type, a.template_style_id, a.checked_out, a.lft, a.language')
 			->order('a.lft ASC');
 
 		// Get the options.

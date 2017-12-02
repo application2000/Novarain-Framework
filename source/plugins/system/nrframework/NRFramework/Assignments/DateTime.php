@@ -94,6 +94,22 @@ class DateTime extends Assignment
     {
         if (is_array($this->selection) && !empty($this->selection))
         {
+            // convert 'weekdays' and 'weekend' values to day ids
+            foreach ($this->selection as $d)
+            {
+                if (preg_match('/^weekdays?$/', trim($d)))
+                {
+                    $this->selection = array_merge($this->selection, range(1, 5));
+                    continue;
+                }
+
+                if ($d === 'weekend')
+                {
+                    $this->selection = array_merge($this->selection, [6, 7]);
+                }
+            }
+            $this->selection = array_unique($this->selection);
+
             // 'N' -> week day
             // 'l' -> fulltext week day
             // http://php.net/manual/en/function.date.php

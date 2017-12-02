@@ -11,18 +11,50 @@ namespace NRFramework\Assignments;
 defined('_JEXEC') or die;
 
 use NRFramework\Assignment;
+use NRFramework\Cache;
 
 class Users extends Assignment 
 {
+    /**
+     *  md5 hash used for caching the groups map
+     *
+     *  @var [type]
+     */
+    protected $_groupsHash;
+
+    /**
+     *  Constructor
+     *
+     *  @param object $options
+     *  @param object $request
+     *  @param object $date
+     */
+    public function __construct($options, $request = null, $date = null)
+    {
+        parent::__construct($options, $request = null, $date = null);
+
+        $_groupsHash = md5('NRFramework\Assignments\User_groupsHash');
+    }
+    
 	/**
 	 *  Pass Check User Group Levels
 	 *
 	 *  @return  bool
 	 */
-	function passGroupLevels()
+	public function passGroupLevels()
 	{
-		$groups = !empty($this->user->groups) ? array_values($this->user->groups) : $this->user->getAuthorisedGroups();
-    	return $this->passSimple($groups, $this->selection); 
+        $groups = $this->getGroups();
+        // replace group names with ids in selection
+        foreach ($this->selection as $key => $id)
+        {
+            if (!is_numeric($id))
+            {
+                $this->selection[$key] = array_search(strtolower($id), $groups);
+            }
+        }
+
+		$usergroups = !empty($this->user->groups) ? array_values($this->user->groups) : $this->user->getAuthorisedGroups();
+    	return $this->passSimple($usergroups, $this->selection); 
 	}
 
 	/**
@@ -30,7 +62,7 @@ class Users extends Assignment
 	 *
 	 *  @return  bool
 	 */
-	function passTimeOnSite()
+	public function passTimeOnSite()
 	{
 		$pass = false;
 
@@ -116,5 +148,36 @@ class Users extends Assignment
         }
 
         return $session->get($var);
+    }
+
+    /**
+     *  Returns User Groups map (ID => Name)
+     *
+     *  @return array
+     */
+    protected function getGroups()
+    {
+        if (Cache::has($this->_groupsHash))
+        {
+            return Cache::get($this->_groupsHash);
+        }
+
+        $db = \JFactory::getDBO();
+        $query = $db->getQuery(true);
+
+        $query
+            ->select('id, title')
+            ->from('#__usergroups');
+        $db->setQuery($query);
+        
+        $res = $db->loadObjectList();
+        $groups = [];
+        foreach ($res as $r)
+        {
+            $groups[$r->id] = strtolower($r->title);
+        }
+        Cache::set($this->_groupsHash, $groups);
+
+        return $groups;
     }
 }

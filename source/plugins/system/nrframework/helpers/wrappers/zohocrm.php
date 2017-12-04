@@ -14,66 +14,60 @@ require_once __DIR__ . '/wrapper.php';
 
 class NR_ZohoCRM extends NR_Wrapper
 {
-	public $module = 'leads';
+	/**
+	 *  Response Type
+	 *
+	 *  @var  string
+	 */
+	protected $response_type = 'xml';
+
+	/**
+	 *  Data Center API Endpoint
+	 *
+	 *  @var  string
+	 */
+	private $datacenter = 'crm.zoho.com';
 
 	/**
 	 * Create a new instance
 	 *
 	 * @param array $options The service's required options
-	 * @throws \Exception
 	 */
 	public function __construct($options)
 	{
 		parent::__construct();
 		$this->setKey($options['authenticationToken']);
-		$this->module = $options['zohomodule'];
-		$this->options->set('headers.Accept', 'text/xml;charset=utf-8');
-		$this->options->set('headers.Content-Type', 'text/xml;charset=utf-8');
-		$this->response_type = 'xml';
 	}
-
+	
 	/**
 	 *  Subscribe user to ZohoCRM
 	 *
-	 *  @param   string   $email         	  User's email address
-	 *  @param   Object   $fields  	          Available form fields
-	 *  @param   boolean  $update_existing	  Update existing user
+	 *  https://www.zoho.eu/crm/help/api/insertrecords.html#Insert_records_into_Zoho_CRM_from_third-party_applications
+	 *
+	 *  @param   string   $email            User's email address
+	 *  @param   array    $fields           Available form fields
+	 *  @param   string   $module           Zoho module to be used
+	 *  @param   boolean  $update_existing  Update existing users
+	 *  @param   string   $workflow         Trigger the workflow rule while inserting record
+	 *  @param   string   $approve          Approve records (Supports: Leads, Contacts, and Cases modules)
 	 *
 	 *  @return  void
 	 */
-	public function subscribe($email, $fields = array(), $update_existing = true)
+	public function subscribe($email, $fields, $module = 'leads', $update_existing = true, $workflow = false, $approve = false)
 	{
-		switch ($this->module) {
-			case 'leads':
-				$xmlData = $this->buildXML($email, $fields, array('Last Name'));
-				break;
-			case 'accounts':
-				$xmlData = $this->buildXML($email, $fields, array('Account Name'));
-				break;
-			case 'contacts':
-				$xmlData = $this->buildXML($email, $fields, array('Last Name'));
-				break;
-		}
-
 		$data = array(
 			'authtoken'      => $this->key,
 			'scope'          => 'crmapi',
-			'xmlData'        => $xmlData,
-			'version'        => '4',
-			'duplicateCheck' => '1'
+			'xmlData'        => $this->buildModuleXML($email, $fields, $module),
+			'duplicateCheck' => $update_existing ? '2' : '1',
+			'wfTrigger'      => $workflow ? 'true' : 'false',
+			'isApproval'     => $approve ? 'true' : 'false',
+			'version'        => '4'
 		);
 
-		if ($update_existing)
-		{
-			$data['duplicateCheck'] = '2';
-		}
-
-		$this->endpoint = 'https://crm.zoho.eu/crm/private/xml/' . ucfirst($this->module) . '/insertRecords?' . http_build_query($data);
+		$this->endpoint = 'https://' . $this->datacenter . '/crm/private/xml/' . ucfirst($module) . '/insertRecords?' . http_build_query($data);
 
 		$this->post('');
-
-		return true;
-		
 	}
 
 	/**
@@ -81,13 +75,13 @@ class NR_ZohoCRM extends NR_Wrapper
 	 *
 	 *  @param   string  $email            User's email address
 	 *  @param   array   $fields           Form fields
-	 *  @param   array   $mandatoryFields  Mandatory field names
+	 *  @param   string  $module           Module to be used
 	 *
 	 *  @return  string                    The XML
 	 */
-	public function buildXML($email, $fields, $mandatoryFields)
+	private function buildModuleXML($email, $fields, $module)
 	{
-		$xml = new SimpleXMLElement('<' . ucfirst($this->module) . '/>');
+		$xml = new SimpleXMLElement('<' . ucfirst($module) . '/>');
 		$row = $xml->addChild('row');
 		$row->addAttribute('no', '1');
 
@@ -96,14 +90,6 @@ class NR_ZohoCRM extends NR_Wrapper
 
 		if (is_array($fields) && count($fields))
 		{
-			foreach ($mandatoryFields as $mandatoryField) 
-			{
-				if (!array_key_exists($mandatoryField, $fields) || empty($fields[$mandatoryField])) 
-				{
-					throw new \Exception('The Lead could not be inserted with no ' . $mandatoryField . ' field');
-				}
-			}
-
 			foreach ($fields as $field_key => $field_value)
 			{
 				$xmlField = $row->addChild('FL', $field_value);
@@ -134,24 +120,6 @@ class NR_ZohoCRM extends NR_Wrapper
 		}
 
 		return 'Unknown error';
-
-	}
-
-	/**
-	 *  Set the API Key
-	 *
-	 *  @param  string
-	 */
-	public function setKey($key)
-	{
-		if (!empty($key))
-		{
-			$this->key = $key;
-		}
-		else
-		{
-			throw new \Exception("Invalid ZohoCRM key `{$key}` supplied.");
-		}
 	}
 
 	/**
@@ -175,9 +143,7 @@ class NR_ZohoCRM extends NR_Wrapper
 		{
 			return false;
 		}
-		
-		$this->request_successful = true;
 
-		return $this->request_successful;
+		return ($this->request_successful = true);
 	}
 }

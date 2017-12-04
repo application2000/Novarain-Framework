@@ -15,6 +15,20 @@ require_once __DIR__ . '/wrapper.php';
 class NR_SalesForce extends NR_Wrapper
 {
 	/**
+	 *  Service API Endpoint
+	 *
+	 *  @var  string
+	 */
+	protected $endpoint = 'https://webto.salesforce.com/servlet/servlet.WebToLead?encoding=UTF-8';
+
+	/**
+	 *  Encode data before sending the request
+	 *
+	 *  @var  boolean
+	 */
+	protected $encode = false;
+
+	/**
 	 * Create a new instance
 	 * @param string $organizationID Your SalesForce Organization ID
 	 * @throws \Exception
@@ -23,9 +37,7 @@ class NR_SalesForce extends NR_Wrapper
 	{
 		parent::__construct();
 		$this->setKey($organizationID);
-		$this->endpoint = 'https://webto.salesforce.com/servlet/servlet.WebToLead?encoding=UTF-8';
 		$this->options->set('headers.Content-Type', 'application/x-www-form-urlencoded');
-		$this->encode = false;
 	}
 
 	/**
@@ -72,14 +84,12 @@ class NR_SalesForce extends NR_Wrapper
 
 		$headers = $this->last_response['headers'];
 
-		if (isset($headers['Is-Processed']) && (strpos($headers['Is-Processed'],'Exception') === false))
+		if (isset($headers['Is-Processed']) && (strpos($headers['Is-Processed'], 'Exception') !== false))
 		{
-			$this->last_error = JText::_('NR_SALESFORCE_ERROR');
+			$this->last_error = JText::_('PLG_CONVERTFORMS_SALESFORCE_ERROR');
 			return false;
 		}
 
 		return ($this->request_successful = true);
-
 	}
-
 }

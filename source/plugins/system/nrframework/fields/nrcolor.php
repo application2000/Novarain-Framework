@@ -9,69 +9,15 @@
 
 defined('JPATH_PLATFORM') or die;
 
+JFormHelper::loadFieldClass('color');
+
 /**
  * Color Form Field class for the Joomla Platform.
  * This implementation is designed to be compatible with HTML5's `<input type="color">`
  */
 
-class JFormFieldNRColor extends JFormField
+class JFormFieldNRColor extends JFormFieldColor
 {
-	/**
-	 * The form field type.
-	 *
-	 * @var    string
-	 * @since  11.3
-	 */
-	public $type = 'NRColor';
-
-	/**
-	 * The control.
-	 *
-	 * @var    mixed
-	 * @since  3.2
-	 */
-	protected $control = 'hue';
-
-	/**
-	 * The format.
-	 *
-	 * @var    string
-	 * @since  3.6.0
-	 */
-	protected $format = 'hex';
-
-	/**
-	 * The keywords (transparent,initial,inherit).
-	 *
-	 * @var    string
-	 * @since  3.6.0
-	 */
-	protected $keywords = '';
-
-	/**
-	 * The position.
-	 *
-	 * @var    mixed
-	 * @since  3.2
-	 */
-	protected $position = 'default';
-
-	/**
-	 * The colors.
-	 *
-	 * @var    mixed
-	 * @since  3.2
-	 */
-	public $colors;
-
-	/**
-	 * The split.
-	 *
-	 * @var    integer
-	 * @since  3.2
-	 */
-	protected $split = 3;
-
 	/**
 	 * Method to attach a JForm object to the field.
 	 *
@@ -90,24 +36,15 @@ class JFormFieldNRColor extends JFormField
 	{
 		$return = parent::setup($element, $value, $group);
 
-		if ($return)
-		{
-			$this->control  = isset($this->element['control']) ? (string) $this->element['control'] : 'hue';
-			$this->format   = isset($this->element['format']) ? (string) $this->element['format'] : 'hex';
-			$this->keywords = isset($this->element['keywords']) ? (string) $this->element['keywords'] : '';
-			$this->position = isset($this->element['position']) ? (string) $this->element['position'] : 'default';
-
-			$colors = '#eee|#333|#ef2345|#2379ef|#2ec664|#ee7a38|';
-			$colors .= ($this->format == "rgba") ? "rgba(255, 255, 255, .1)" : "#E3EE38";
-
-			$this->colors = $colors;
-
-			if (isset($this->element['colors']))
-			{
-				$this->colors = ($this->element['colors'] == "false") ? "" : $this->element['colors'];
-			}
-
-		}
+		$this->colors = array(
+			'#eee',
+			'#333',
+			'#ef2345',
+			'#2379ef',
+			'#2ec664',
+			'#ee7a38',
+			'#eed938'
+		);
 
 		return $return;
 	}
@@ -121,6 +58,12 @@ class JFormFieldNRColor extends JFormField
 	 */
 	protected function getInput()
 	{
+		if (version_compare(JVERSION, '4.0', 'ge'))
+		{
+			$this->colors = implode(',', $this->colors);
+			return parent::getInput();
+		}
+
 		$lang = JFactory::getLanguage();
 
 		// Translate placeholder text
@@ -244,7 +187,7 @@ class JFormFieldNRColor extends JFormField
  			$run = true;
         }
 
-		return '<input data-swatches="'.$this->colors.'" type="text" name="' . $this->name . '" id="' . $this->id . '"' . ' value="'
+		return '<input data-swatches="' . implode('|', $this->colors) . '" type="text" name="' . $this->name . '" id="' . $this->id . '"' . ' value="'
 			. htmlspecialchars($color, ENT_COMPAT, 'UTF-8') . '"' . $hint . $class . $position . $control
 			. $readonly . $disabled . $required . $onchange . $autocomplete . $autofocus
 			. $format . $keywords . $direction . $validate . '/>';

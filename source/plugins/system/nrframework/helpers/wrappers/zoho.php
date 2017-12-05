@@ -113,10 +113,12 @@ class NR_ZoHo extends NR_Wrapper
 	{
 		$body = $this->last_response['body'];
 
-		if (isset($body['status']) && $body['status'] == 'error')
+		if (isset($body['message']))
 		{
 			return $body['message'];
 		}
+
+		return 'An unspecified error occured';
 	}
 
 	/**
@@ -134,7 +136,6 @@ class NR_ZoHo extends NR_Wrapper
 			return ($this->request_successful = true);
 		}
 
-		$this->last_error = 'Unknown error, call getLastResponse() to find out what happened.';
 		return false;
 	}
 

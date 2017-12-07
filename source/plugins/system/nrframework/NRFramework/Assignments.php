@@ -48,7 +48,7 @@ class Assignments
         'convertforms'	                     => 'ConvertForms',
         'geo_country|country|countries'	     => 'GeoIP.Countries',
         'geo_continent|continent|continents' => 'GeoIP.Continents',
-        'cookiename'	                     => 'Cookies.Name',
+        'cookiename|cookie'                  => 'Cookies.Name',
         'ip_addresses|iprange|ip'            => 'IP.Range'
     );
     

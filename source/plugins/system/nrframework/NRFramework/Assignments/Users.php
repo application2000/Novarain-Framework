@@ -44,6 +44,7 @@ class Users extends Assignment
 	public function passGroupLevels()
 	{
         $groups = $this->getGroups();
+
         // replace group names with ids in selection
         foreach ($this->selection as $key => $id)
         {
@@ -91,23 +92,25 @@ class Users extends Assignment
 	 */
 	public function passPageviews()
 	{
-		$pass = false;
+		if (is_null($this->params->views) || !is_numeric($this->params->views))
+		{
+			return;
+		}
 
-		$session = \JFactory::getSession();
-		$visits = $session->get('session.counter', 0);
-
-		$pageviews_param = intval($this->params->views);
+		$pageviews = intval($this->params->views);
+		$visits    = \JFactory::getSession()->get('session.counter', 0);
+		$pass      = false;
 
 		switch ($this->selection)
 		{
-			case 'exactly':
-				$pass = $visits === $pageviews_param;
-				break;
 			case 'fewer':
-				$pass = $visits < $pageviews_param;
+				$pass = $visits < $pageviews;
 				break;
 			case 'greater':
-				$pass = $visits > $pageviews_param;
+				$pass = $visits > $pageviews;
+				break;
+			default: // 'exactly'
+				$pass = $visits === $pageviews;
 				break;
 		}
 

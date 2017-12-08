@@ -13,6 +13,13 @@ defined('_JEXEC') or die;
 
 use NRFramework\Assignment;
 
+/**
+ *  IP addresses sample
+ *
+ *  Greece:  94.67.238.3
+ *  Belgium: 37.62.255.255
+ *  USA:     72.229.28.185
+ */
 class GeoIP extends Assignment
 {
     /**
@@ -79,5 +86,4 @@ class GeoIP extends Assignment
     {
         return $this->passSimple($this->geo->getContinentCode(), $this->selection);
     }
-
 }

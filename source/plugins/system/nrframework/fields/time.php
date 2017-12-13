@@ -62,6 +62,12 @@ class JFormFieldNR_Time extends NRFormField
 			$run = true;
 		}
 
-		return '<div class="input-group input-append clockpicker" data-donetext="'.$this->donetext.'" data-default="'.$this->default.'" data-placement="'.$this->placement.'" data-align="'.$this->align.'" data-autoclose="'.$this->autoclose.'"><input class="'.$this->class.'" placeholder="'.$this->hint.'" name="' . $this->name . '" type="text" class="form-control" value="' . $this->value . '"><span class="add-on"><span class="icon-clock">&nbsp;</span></span></div>';
+		return '
+			<div class="input-group input-append input-group clockpicker" data-donetext="' . $this->donetext . '" data-default="' . $this->default . '" data-placement="' . $this->placement . '" data-align="' . $this->align . '" data-autoclose="' . $this->autoclose . '">
+				<input class="'.$this->class.'" placeholder="' . $this->hint . '" name="' . $this->name . '" type="text" class="form-control" value="' . $this->value . '">
+				<span class="add-on input-group-addon">
+					<span class="icon-clock">&nbsp;</span>
+				</span>
+			</div>';
 	}
 }

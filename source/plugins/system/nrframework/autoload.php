@@ -36,3 +36,4 @@ JLoader::registerAlias('NRUpdateSites', 					 '\\NRFramework\\Updatesites');
 JLoader::registerAlias('NRSmartTags', 					     '\\NRFramework\\SmartTags');
 JLoader::registerAlias('NREmail', 					         '\\NRFramework\\Email');
 JLoader::registerAlias('NRVisitor', 					     '\\NRFramework\\VisitorToken');
+JLoader::registerAlias('NRFonts', 					         '\\NRFramework\\Fonts');

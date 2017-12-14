@@ -119,7 +119,7 @@ class Fonts
 			// If font is a Google Font then load it into the document
 	        if (in_array($value, self::$google))
 	        {
-	            JFactory::getDocument()->addStylesheet('//fonts.googleapis.com/css?family=' . urlencode($value));
+	            \JFactory::getDocument()->addStylesheet('//fonts.googleapis.com/css?family=' . urlencode($value));
 	        }
 		}
 	}

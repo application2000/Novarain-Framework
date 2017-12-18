@@ -35,7 +35,7 @@ class JFormFieldNR_Well extends NRFormField
      */
     protected function getLayoutPaths()
     {
-        return JPATH_PLUGINS . "/system/nrframework/layouts/";
+        return JPATH_PLUGINS . '/system/nrframework/layouts/';
     }
 
     /**
@@ -45,7 +45,7 @@ class JFormFieldNR_Well extends NRFormField
      */
     protected function getInput()
     {   
-        JFactory::getDocument()->addStylesheet(JURI::root(true) . "/plugins/system/nrframework/assets/css/fields.css");
+        JHtml::stylesheet('plg_system_nrframework/fields.css', false, true);
 
         $title       = $this->get('label');
         $description = $this->get('description');

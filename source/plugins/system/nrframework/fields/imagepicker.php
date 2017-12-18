@@ -20,8 +20,8 @@ class JFormFieldImagePicker extends JFormFieldList
 		$showlabels = $params->get('showlabels', 'true');
 		$hideselect = $params->get('hideselect', 'true');
 		
-		JHtml::script('plg_system_nrframework/image-picker.min.js', false, true, false);
-		JHtml::stylesheet('plg_system_nrframework/image-picker.css', false, true, false);
+		JHtml::script('plg_system_nrframework/image-picker.min.js', false, true);
+		JHtml::stylesheet('plg_system_nrframework/image-picker.css', false, true);
 
         JFactory::getDocument()->addScriptDeclaration('
 			jQuery(function($) {

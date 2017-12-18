@@ -42,7 +42,6 @@ class NRFormFieldList extends JFormFieldList
 	{
 		$this->doc = JFactory::getDocument();
 		$this->app = JFactory::getApplication();
-		$this->doc->addStylesheet(JURI::root(true) . "/plugins/system/nrframework/assets/css/fields.css");
 		$this->db = JFactory::getDbo();
 
 		parent::__construct();

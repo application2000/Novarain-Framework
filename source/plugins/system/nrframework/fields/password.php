@@ -23,7 +23,9 @@ class JFormFieldNR_Password extends JFormFieldPassword
 		$id = $this->id . '_btn';
 
 		$doc = JFactory::getDocument();
-		$doc->addStylesheet(JURI::root() . '/plugins/system/nrframework/assets/css/fields.css');
+
+		JHtml::stylesheet('plg_system_nrframework/fields.css', false, true);
+
 		$doc->addStyleDeclaration('
 			.nr-pass-btn {
 				display:flex;

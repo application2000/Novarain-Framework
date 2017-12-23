@@ -47,7 +47,11 @@ class Assignments
 		'geo_country'	  => 'GeoIP.Countries',
 		'geo_continent'	  => 'GeoIP.Continents',
 		'cookiename'	  => 'Cookies.Name',
-		'ip_addresses'	  => 'IP.Range'
+        'ip_addresses'	  => 'IP.Range',
+        'k2_items'        => 'K2.Items',
+        'k2_cats'         => 'K2.Categories',
+        'k2_tags'         => 'K2.Tags',
+        'k2_pagetypes'    => 'K2.Pagetypes'
 	);
 
 	/**

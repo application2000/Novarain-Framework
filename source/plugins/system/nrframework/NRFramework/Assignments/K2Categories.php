@@ -23,7 +23,7 @@ class K2Categories extends K2
      */
     public function passK2Categories()
     {
-        if(!$this->_passContext())
+        if(!$this->passContext())
         {
             return false;
         }
@@ -112,8 +112,11 @@ class K2Categories extends K2
 		// If we are in article view return article's category id
 		if ($this->request->view == 'item')
 		{
-            $res = $this->getK2Item('catid');
-            return (array) $res->catid;
+            $res = $this->getK2Item();
+            if ($res && isset($res->catid))
+            {
+                return (array) $res->catid;
+            }
 		}
 
 		return false;

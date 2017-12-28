@@ -25,7 +25,7 @@ class K2Items extends K2
     {
         // return false if we are not viewing a K2 item
         if (!$this->request->id || 
-            !$this->_passContext() || 
+            !$this->passContext() || 
             $this->request->view != 'item')
 		{
 			return false;
@@ -44,32 +44,17 @@ class K2Items extends K2
         {
             $pass = $this->passSimple($id, $this->selection);
         }
-
         // check items's text
         if (!empty($this->params->assign_k2_items_param_cont_keywords))
         {
-            $keywords = $this->params->assign_k2_items_param_cont_keywords;
-            // replace commas with space and convert to array
-            if (is_string($keywords))
-            {
-                $keywords = str_replace(',', ' ', $keywords);
-            }
-            $keywords = $this->makeArray($keywords);
-                
-            $pass = $this->_passContentKeywords($keywords);
+            $keywords = $this->splitKeywords($this->params->assign_k2_items_param_cont_keywords);                
+            $pass     = $this->passContentKeywords($keywords);
         }
         // check item's metakeywords
         if (!empty($this->params->assign_k2_items_param_meta_keywords))
         {
-            $meta = $this->params->assign_k2_items_param_meta_keywords;
-            // replace commas with space and convert to array
-            if (is_string($meta))
-            {
-                $meta = str_replace(',', ' ', $meta);
-            }
-            $meta = $this->makeArray($meta);
-
-            $pass = $this->_passMetaKeywords($meta);
+            $meta = $this->splitKeywords($this->params->assign_k2_items_param_meta_keywords);
+            $pass = $this->passMetaKeywords($meta);
         }
 
         return $pass;
@@ -78,13 +63,14 @@ class K2Items extends K2
     /**
      *  Checks item's content for keywords.
      *  Used by passItems
-     *
+     *  
+     *  @param  string $keywords
      *  @return bool
      */
-    protected function _passContentKeywords($keywords)
+    protected function passContentKeywords($keywords)
     {
         $fields = ['introtext', 'fulltext'];
-        $item = $this->getK2Item($fields);
+        $item = $this->getK2Item();
         if (!$item)
         {
             return false;
@@ -122,12 +108,13 @@ class K2Items extends K2
      *  Checks item's meta keyywords.
      *  Used by passItems
      *
+     *  @param  string $param_keywords
      *  @return bool
      */
-    protected function _passMetaKeywords($param_keywords)
+    protected function passMetaKeywords($param_keywords)
     {
         // get current item's meta keywords
-        $item = $this->getK2Item('metakey');
+        $item = $this->getK2Item();
         if (!isset($item->metakey) || empty($item->metakey))
         {
             return false;
@@ -153,5 +140,38 @@ class K2Items extends K2
             return true;
         }
         return false;
+    }
+
+
+    /**
+     *  Splits a keyword string on commas and newlines
+     *
+     * @param string $keywords
+     * @return array
+     */
+    protected function splitKeywords($keywords)
+    {
+        if (empty($keywords) || !is_string($keywords))
+        {
+            return [];
+        }
+
+        // replace newlines with commas
+        $keywords = str_replace("\r\n", ',', $keywords);
+
+        // split keywords on commas
+        $keywords = explode(',', $keywords);
+        
+        // trim entries
+        $keywords = array_map(function($str)
+        {
+            return trim($str);
+        }, $keywords);
+
+        // filter out empty strings and return the resulting array
+        return array_filter($keywords, function($str)
+        {
+            return !empty($str);
+        });
     }
 }

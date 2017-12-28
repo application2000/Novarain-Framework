@@ -23,12 +23,12 @@ class K2Tags extends K2
      */
     public function passK2Tags()
     {
-        if (empty($this->selection) || !$this->_passContext() || $this->request->view != 'item')
+        if (empty($this->selection) || !$this->passContext() || $this->request->view != 'item')
         {
             return false;
         }
 
-        $id     = $this->getItemID();
+        $id = $this->getItemID();
         if (!$id)
         {
             return false;

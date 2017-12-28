@@ -15,16 +15,34 @@ use NRFramework\Assignment;
 
 abstract class K2 extends Assignment
 {
+
     /**
-     * Gets K2 item's id using K2Model
+     * K2 model object
      *
-     * @return int|null
+     * @var object
+     */
+    protected $model;
+
+    /**
+	 *  Class constructor
+	 *
+	 *  @param  object  $assignment
+	 */
+	public function __construct($assignment)
+	{
+		parent::__construct($assignment);
+		$this->model = \JModelLegacy::getInstance('Item', 'K2Model');
+    }
+    
+    /**
+     *  Gets K2 item's id using K2Model
+     *
+     *  @return int|null
      */
     protected function getItemID()
     {
-        $model = \JModelLegacy::getInstance('Item', 'K2Model');
-        $item  = $model->getData();
-        if (is_object($item) && $item->id)
+        $item  = $this->getK2Item();
+        if (is_object($item) && isset($item->id))
 		{
 			return (int) $item->id;
         }
@@ -35,41 +53,11 @@ abstract class K2 extends Assignment
     /**
      *  Returns a K2 item
      *
-     *  @param  array|string   Selected fields from the item
-     *  @return object
+     *  @return object|null
      */
-    protected function getK2Item($fields)
+    protected function getK2Item()
     {
-        if (empty($fields))
-        {
-            return null;
-        }
-
-        if (is_array($fields))
-        {
-            $fields = array_map(function($el){
-                return 'i.' . $el;
-            }, $fields);
-        }
-
-        if (is_string($fields))
-        {
-            $fields = 'i.' . $fields;
-        }
-
-        $id     = $this->getItemID();
-        if (!$id)
-        {
-            return null;
-        }
-        $q      = $this->db->getQuery(true);
-
-        $q->select($fields)
-            ->from('#__k2_items as i')
-            ->where('id = ' . $id);
-        $this->db->setQuery($q);
-
-        return $this->db->loadObject();
+        return $this->model->getData();
     }   
     
     /**
@@ -77,7 +65,7 @@ abstract class K2 extends Assignment
      *
      *  @return bool
      */
-    protected function _passContext()
+    protected function passContext()
     {
         if ($this->request->option != 'com_k2')
 		{

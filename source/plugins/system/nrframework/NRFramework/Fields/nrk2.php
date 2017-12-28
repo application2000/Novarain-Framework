@@ -79,7 +79,7 @@ class JFormFieldNRK2 extends NRFormGroupField
         $cats = $this->db->loadObjectList();
 
         $options = [];
-        // get children category levels
+        // get category levels
         foreach ($cats as $c)
         {
             $level = 0;
@@ -94,8 +94,41 @@ class JFormFieldNRK2 extends NRFormGroupField
             $c->level = $level;
             $options[] = $c;
         }
-        
+
+        // sort options
+        $options = $this->sortTreeSelectOptions($options);        
         return $this->getOptionsByList($options, array('language'));
+    }
+
+    /**
+     *  Sorts treeselect options
+     * 
+     *  @param  array $options
+     *  @param  int   $parent_id
+     * 
+     *  @return array
+     */
+    protected function sortTreeSelectOptions($options, $parent_id = 0)
+    {
+        if (empty($options))
+        {
+            return [];
+        }
+
+        $result = [];
+
+        $sub_options = array_filter($options, function($option) use($parent_id)
+        {
+            return $option->parent == $parent_id;
+        });
+
+        foreach ($sub_options as $option)
+        {
+            $result[] = $option;
+            $result = array_merge($result, $this->sortTreeSelectOptions($options, $option->id));
+        }
+
+        return $result;
     }
 
     /**

@@ -23,7 +23,7 @@ class K2Pagetypes extends K2
      */
     public function passK2Pagetypes()
     {
-        if (empty($this->selection) || !$this->_passContext())
+        if (empty($this->selection) || !$this->passContext())
         {
             return false;
         }

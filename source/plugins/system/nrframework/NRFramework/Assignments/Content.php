@@ -110,7 +110,7 @@ class Content extends Assignment
 			// Pass check for child items
 			if (!$pass && $this->params->inc_children)
 			{
-				$parent_ids = $this->getParentIDs($catid);
+				$parent_ids = $this->getParentIDs($catid, 'categories');
 				$parent_ids = array_diff($parent_ids, array('1'));
 
 				foreach ($parent_ids as $id)

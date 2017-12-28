@@ -48,10 +48,10 @@ class Assignments
 		'geo_continent'	  => 'GeoIP.Continents',
 		'cookiename'	  => 'Cookies.Name',
         'ip_addresses'	  => 'IP.Range',
-        'k2_items'        => 'K2Items',
-        'k2_cats'         => 'K2Categories',
-        'k2_tags'         => 'K2Tags',
-        'k2_pagetypes'    => 'K2Pagetypes'
+        'k2_items'        => 'K2Item',
+        'k2_cats'         => 'K2Category',
+        'k2_tags'         => 'K2Tag',
+        'k2_pagetypes'    => 'K2Pagetype'
 	);
 
 	/**

@@ -14,14 +14,14 @@ defined('_JEXEC') or die;
 use NRFramework\Assignment;
 use NRFramework\Assignments\K2;
 
-class K2Pagetypes extends K2
+class K2Pagetype extends K2
 {
     /**
      *  Pass check for K2 page types
      *
      *  @return bool
      */
-    public function passK2Pagetypes()
+    public function passK2Pagetype()
     {
         if (empty($this->selection) || !$this->passContext())
         {

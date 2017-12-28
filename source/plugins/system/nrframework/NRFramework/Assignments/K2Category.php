@@ -14,14 +14,14 @@ defined('_JEXEC') or die;
 use NRFramework\Assignment;
 use NRFramework\Assignments\K2;
 
-class K2Categories extends K2
+class K2Category extends K2
 {
     /**
      *  Pass check for K2 categories
      *
      *  @return bool
      */
-    public function passK2Categories()
+    public function passK2Category()
     {
         if(!$this->passContext())
         {

@@ -14,14 +14,14 @@ defined('_JEXEC') or die;
 use NRFramework\Assignment;
 use NRFramework\Assignments\K2;
 
-class K2Items extends K2
+class K2Item extends K2
 {
     /**
      *  Pass check for K2 items
      *
      *  @return bool
      */
-    public function passK2Items()
+    public function passK2Item()
     {
         // return false if we are not viewing a K2 item
         if (!$this->request->id || 

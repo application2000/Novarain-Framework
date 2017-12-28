@@ -14,14 +14,14 @@ defined('_JEXEC') or die;
 use NRFramework\Assignment;
 use NRFramework\Assignments\K2;
 
-class K2Tags extends K2
+class K2Tag extends K2
 {
     /**
      *  Pass check for K2 Tags
      *
      *  @return bool
      */
-    public function passK2Tags()
+    public function passK2Tag()
     {
         if (empty($this->selection) || !$this->passContext() || $this->request->view != 'item')
         {

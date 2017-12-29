@@ -34,7 +34,7 @@ class K2Category extends K2
 			return false;
 		}
 
-		$is_category = ($this->request->view == 'itemlist' && $this->request->layout == 'category') || $this->request->view == 'latest';
+		$is_category = ($this->request->view == 'itemlist' && $this->request->task == 'category') || $this->request->view == 'latest';
 		$is_item     = $this->request->view == 'item';
 
 

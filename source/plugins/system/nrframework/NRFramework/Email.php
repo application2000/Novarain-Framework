@@ -118,6 +118,7 @@ class Email
 
         $email  = $this->email;
         $mailer = \JFactory::getMailer();
+        $mailer->CharSet = 'UTF-8';
 
         // Email Sender
         $mailer->setSender(
@@ -138,6 +139,8 @@ class Email
             ->isHTML(true)
             ->setSubject($email['subject'])
             ->setBody(nl2br($email['body']));
+        
+        $mailer->AltBody = nl2br(strip_tags($email['body']));
 
         // Send mail
         $send = $mailer->Send();

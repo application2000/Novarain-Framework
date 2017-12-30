@@ -21,10 +21,10 @@ class JFormFieldNROs extends NRFormFieldList
         'linux'      => 'NR_LINUX',
         'mac'        => 'NR_MAC',
         'android'    => 'NR_ANDROID',
-        'iphone'     => 'NR_IPHONE',
-        'ipad'       => 'NR_IPAD',
+        'ios'        => 'NR_IOS',
         'windows'    => 'NR_WINDOWS',
-        'blackberry' => 'NR_BLACKBERRY'
+        'blackberry' => 'NR_BLACKBERRY',
+        'chromeos'   => 'NR_CHROMEOS'
 	);
 	
 	protected function getOptions()

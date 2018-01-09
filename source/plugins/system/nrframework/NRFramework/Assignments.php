@@ -101,6 +101,37 @@ class Assignments
     }
 
     /**
+     *  Checks if an assignment exists
+     *
+     *  @param  string $assignment Assignment class name or alias
+     *  @return bool
+     */
+    public function exists($assignment)
+    {
+        if (!$assignment)
+        {
+            return false;
+        }
+
+        // search by Assignment name
+        if (array_search($assignment, $this->typeAliases) !== false)
+        {
+            return true;
+        }
+
+        // search assignment aliases
+        $assignment = strtolower($assignment);
+        foreach (array_keys($this->typeAliases) as $key)
+        {
+            if (strpos($key, $assignment) !== false)
+            {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
     *  Assignment pass check based on the assignment state
     *
     *  @param   boolean  $pass        

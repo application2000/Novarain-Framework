@@ -82,14 +82,28 @@ class Assignments
 
         foreach ($assignments as $a)
         {
-            // Break if not passed and matching method is ALL
-			// Or if passed and matching method is ANY
+            // Break if not passed and matching method is AND
+			// Or if passed and matching method is OR
 			if (
 				(!$pass && $match_method == 'and')
 				|| ($pass && $match_method == 'or')
 			)
 			{
 				break;
+            }
+
+            // Return false if the assignment doesnt exist and the matching method is AND
+            // or continue checking if the the matching method is OR
+            if (is_null($a))
+            {
+                if ($match_method == 'and')
+                {
+                    return false;
+                }
+                else
+                {
+                    continue;
+                }
             }
             
             $assignment = new $a->class($a->options);
@@ -132,6 +146,31 @@ class Assignments
     }
 
     /**
+     *  Returns the classname for a given assignment alias
+     *
+     *  @param  string       $alias
+     *  @return string|void
+     */
+    public function aliasToClassname($alias)
+    {
+        foreach ($this->typeAliases as $aliases => $type)
+        {
+            if (strtolower($type) == strtolower($alias))
+            {
+                return $type;
+            }
+
+            $aliases = explode('|', $aliases);
+            if (in_array($alias, $aliases))
+            {
+                return $type;                
+            }   
+        }
+
+        return null;
+    }
+
+    /**
     *  Assignment pass check based on the assignment state
     *
     *  @param   boolean  $pass        
@@ -155,7 +194,7 @@ class Assignments
         $assignments = array();
         foreach ($assignments_info as $a)
         {
-            if (!is_object($a) ||!isset($a->type) || !isset($a->selection) ||
+            if (!is_object($a) ||!isset($a->alias) || !isset($a->selection) ||
                 !isset($a->params) || !isset($a->assignment_state))
             {
                 continue;
@@ -163,29 +202,21 @@ class Assignments
 
             $assignment = new \stdClass();
             
-            // check if the type string is in $typeAliases
-            foreach ($this->typeAliases as $alias => $type)
+            // check if the assignment type exists
+            if (!$this->exists($a->alias) || !$this->setTypeParams($assignment, $this->aliasToClassname($a->alias)))
             {
-                if (strtolower($type) !== strtolower($a->type))
-                {
-                    $alias = explode('|', $alias);
-                    if (!in_array($a->type, $alias))
-                    {
-                        continue;
-                    }
-                }               
-                if (!$this->setTypeParams($assignment, $type))
-                {
-                    continue;
-                }
-
+                $assignment = null;
+            }
+            else
+            {
                 $assignment->options = (object) array(
                     'selection'         => $a->selection,
                     'params'            => $a->params,
                     'assignment_state'  => $this->getAssignmentState($a->assignment_state)
                 );
-                $assignments[] = $assignment;
             }
+
+            $assignments[] = $assignment;
         }
 
         return $assignments;
@@ -235,7 +266,7 @@ class Assignments
                 }
 
                 $assignments_info[] = (object) array(
-                    'type'              => $alias,
+                    'alias'              => $alias,
                     'assignment_state'  => $this->getAssignmentState($params->{'assign_' . $alias}),
                     'selection'         => isset($params->{'assign_' . $alias . '_list'}) ? $params->{'assign_' . $alias . '_list'} : array(),
                     'params'            => $assignment_params

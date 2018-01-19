@@ -35,10 +35,13 @@ class NR_ReCaptcha extends NR_Wrapper
 	{
 		parent::__construct();
 
-		// Retrieve secret key from framework's settings if not key is passed
-		$secret = array_key_exists('secret', $options) ? $options['secret'] : NRFrameworkFunctions::params()->get("recaptcha_secretkey");
-		
-		$this->setKey($secret);
+		if (!array_key_exists('secret', $options))
+		{
+			$this->setError('Invalid secret key');
+			throw new Exception($this->getLastError());
+		}
+
+		$this->setKey($options['secret']);
 	}
 
 	/**

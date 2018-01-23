@@ -126,6 +126,7 @@ class Assignments
         {
             return false;
         }
+        $assignment = strtolower($assignment);
 
         // search by Assignment name
         if (array_search($assignment, $this->typeAliases) !== false)
@@ -134,7 +135,6 @@ class Assignments
         }
 
         // search assignment aliases
-        $assignment = strtolower($assignment);
         foreach (array_keys($this->typeAliases) as $key)
         {
             if (strpos($key, $assignment) !== false)
@@ -153,14 +153,15 @@ class Assignments
      */
     public function aliasToClassname($alias)
     {
+        $alias = strtolower($alias);
         foreach ($this->typeAliases as $aliases => $type)
         {
-            if (strtolower($type) == strtolower($alias))
+            if (strtolower($type) == $alias)
             {
                 return $type;
             }
 
-            $aliases = explode('|', $aliases);
+            $aliases = explode('|', strtolower($aliases));
             if (in_array($alias, $aliases))
             {
                 return $type;                

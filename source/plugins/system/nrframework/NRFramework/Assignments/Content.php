@@ -71,22 +71,25 @@ class Content extends Assignment
 			return false;
 		}
 
-		$this->params->inc_categories = false;
-		$this->params->inc_articles   = false;
+		$inc_categories = false;
+		$inc_articles   = false;
 
-		if (isset($this->params->inc) && is_array($this->params->inc))
+		if (isset($this->params->inc))
 		{
-			$this->params->inc_categories = in_array('inc_categories', $this->params->inc);
-			$this->params->inc_articles   = in_array('inc_articles', $this->params->inc);
+			$this->params->inc = is_array($this->params->inc) ? $this->params->inc : array($this->params->inc);
+			$inc_categories = in_array('inc_categories', $this->params->inc);
+			$inc_articles   = in_array('inc_articles', $this->params->inc);
 		}
 
 		// Check we have a valid context
-		if (!($this->params->inc_categories && $is_category) && !($this->params->inc_articles && $is_item))
+		if (!($inc_categories && $is_category) && !($inc_articles && $is_item))
 		{
 			return false;
 		}
 
 		$pass = false;
+
+		$inc_children = isset($this->params->inc_children) ? $this->params->inc_children : false;
 
 		$catids = $this->getCategoryIds($is_category);
 
@@ -100,14 +103,14 @@ class Content extends Assignment
 			$pass = in_array($catid, $this->selection);
 
 			// Pass check on child items only
-			if ($pass && $this->params->inc_children == 2)
+			if ($pass && $inc_children == 2)
 			{
 				$pass = false;
 				continue;
 			}
 
 			// Pass check for child items
-			if (!$pass && $this->params->inc_children)
+			if (!$pass && $inc_children)
 			{
 				$parent_ids = $this->getParentIDs($catid, 'categories');
 				$parent_ids = array_diff($parent_ids, array('1'));

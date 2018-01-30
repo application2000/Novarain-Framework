@@ -9,6 +9,8 @@
 
 defined('JPATH_PLATFORM') or die;
 
+JFormHelper::loadFieldClass('list');
+
 class JFormFieldAssignmentSelection extends JFormFieldList
 {
 	/**

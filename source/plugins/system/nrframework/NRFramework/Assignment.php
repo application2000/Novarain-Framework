@@ -222,5 +222,37 @@ class Assignment
 		}
 
 		return Cache::set($hash, $parent_ids);
-	}
+    }
+    
+    /**
+     *  Splits a keyword string on commas and newlines
+     *
+     *  @param string $keywords
+     *  @return array
+     */
+    protected function splitKeywords($keywords)
+    {
+        if (empty($keywords) || !is_string($keywords))
+        {
+            return [];
+        }
+
+        // replace newlines with commas
+        $keywords = str_replace("\r\n", ',', $keywords);
+
+        // split keywords on commas
+        $keywords = explode(',', $keywords);
+        
+        // trim entries
+        $keywords = array_map(function($str)
+        {
+            return trim($str);
+        }, $keywords);
+
+        // filter out empty strings and return the resulting array
+        return array_filter($keywords, function($str)
+        {
+            return !empty($str);
+        });
+    }
 }

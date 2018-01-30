@@ -40,10 +40,27 @@ class WebClient
 	/**
 	 *  Get visitor's Operating System
 	 *
-	 *  @return  array
+	 *  @return  string     Possible values: any of JApplicationWebClient's OS constants (except 'iphone' and 'ipad'), 
+     *                                       'ios', 'chromeos'
 	 */
 	public static function getOS()
 	{
+        // detect iOS and CromeOS (not handled by JApplicationWebClient)
+        $ua = self::getClient()->userAgent;
+
+        $ios_regex = '/iPhone|iPad|iPod/i';
+        if (preg_match($ios_regex, $ua))
+        {
+            return 'ios';
+        }
+
+        $chromeos_regex = '/CrOS/i';
+        if (preg_match($chromeos_regex, $ua))
+        {
+            return 'chromeos';
+        }
+
+        // use JApplicationWebClient for OS detection
 		$platformInt = self::getClient()->platform;
 		$constants   = self::getClientConstants();
 		

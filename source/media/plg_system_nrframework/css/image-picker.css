@@ -1,14 +1,18 @@
-ul.thumbnails.image_picker_selector {
+.image_picker_selector {
+    display:flex;
+    display:-webkit-flex;
+    flex-wrap:wrap; 
+    -webkit-flex-wrap:wrap; 
     list-style:none;
-    margin:-2px -5px -5px -5px;
+    margin:-2px -5px -5px -5px !important;
     padding:0;
     -webkit-user-select: none;
     -moz-user-select: none;
     -ms-user-select: none;
 }
-.thumbnails.image_picker_selector li {
+.image_picker_selector li {
     cursor: pointer;
-    margin: 0;
+    margin: 0 !important;
 }
 .image_picker_selector .thumbnail {
     border: none;
@@ -23,10 +27,6 @@ ul.thumbnails.image_picker_selector {
 }
 .image_picker_selector img {
     border: solid 2px transparent;
-    -webkit-transition: all 250ms ease;
-    -moz-transition: all 250ms ease;
-    -ms-transition: all 250ms ease;
-    -o-transition: all 250ms ease;
     transition: all 250ms ease;  
 }  
 .image_picker_selector .selected {
@@ -50,7 +50,6 @@ ul.thumbnails.image_picker_selector {
 .image_picker_selector .selected p:before {
     content: "\e228";
 }
-
 .image_picker_selector.col-grid-2 li {
     width:50%;
 }

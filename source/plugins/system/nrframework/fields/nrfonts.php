@@ -7,11 +7,11 @@
  */
 
 defined('_JEXEC') or die('Restricted access');
+
 JFormHelper::loadFieldClass('groupedlist');
 
 class JFormFieldNRFonts extends JFormFieldGroupedList
 {
-	
 	/**
 	 * Method to get the field option groups.
 	 *
@@ -21,17 +21,9 @@ class JFormFieldNRFonts extends JFormFieldGroupedList
 	 */
 	protected function getGroups()
 	{
-
-		include_once JPATH_PLUGINS . "/system/nrframework/helpers/fonts.php";
-
-		if (!class_exists("NRFonts"))
-		{
-			return;
-		}
-
 		$groups = array();
 
-		foreach (NRFonts::getFontGroups() as $name => $fontGroup)
+		foreach (NRFramework\Fonts::getFontGroups() as $name => $fontGroup)
 		{
 			// Initialize the group if necessary.
 			if (!isset($groups[$name]))

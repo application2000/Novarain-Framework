@@ -37,7 +37,7 @@ class JFormFieldNR_Block extends NRFormField
      */
     protected function getInput()
     {
-        JFactory::getDocument()->addStylesheet(JURI::root(true) . "/plugins/system/nrframework/assets/css/fields.css");
+        JHtml::stylesheet('plg_system_nrframework/fields.css', false, true);
 
         $title       = $this->get('label');
         $description = $this->get('description');

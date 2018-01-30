@@ -10,7 +10,7 @@
 // No direct access to this file
 defined('_JEXEC') or die;
 
-require_once JPATH_LIBRARIES . '/joomla/form/fields/number.php';
+JFormHelper::loadFieldClass('number');
 
 class JFormFieldNRNumber extends JFormFieldNumber
 {
@@ -25,9 +25,9 @@ class JFormFieldNRNumber extends JFormFieldNumber
 
         if (!empty($addon))
         {
-            $html[] = '<div class="input-append">';
+            $html[] = '<div class="input-append input-group">';
             $html[] = parent::getInput();
-            $html[] = '<span class="add-on">'.JText::_($addon).'</span>';
+            $html[] = '<span class="add-on input-group-addon">'.JText::_($addon).'</span>';
             $html[] = '</div>';
         } else {
             $html[] = parent::getInput();

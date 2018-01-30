@@ -23,6 +23,7 @@ class NR_Wrapper
 	protected $timeout            = 60;
 	protected $options;
 	protected $encode             = true;
+	protected $response_type      = 'json';
 
 	public function __construct()
 	{
@@ -229,10 +230,10 @@ class NR_Wrapper
         	JLog::add(print_r($debug, true), JLog::DEBUG, 'nrframework');
         }
 
-		// Convert body JSON to array
+		// Convert body JSON
 		if (isset($response->body) && !empty($response->body))
 		{
-			$response->body = json_decode($response->body, true);
+			$response->body = $this->convertResponse($response->body);
 		}
 
 		// Format response object to array
@@ -285,5 +286,25 @@ class NR_Wrapper
 		}
 
 		return 418;
+	}
+
+	/**
+	 *  Converts the HTTP Call response to a traversable type
+	 *
+	 *  @param   json|xml  $response  
+	 *
+	 *  @return  array|object 
+	 */
+	protected function convertResponse($response)
+	{
+		switch ($this->response_type) 
+		{
+			case 'json':
+				return  json_decode($response, true);
+			case 'xml':
+				return new SimpleXMLElement($response);
+			case 'text':
+				return $response;
+		}
 	}
 }

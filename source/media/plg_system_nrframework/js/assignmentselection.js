@@ -26,15 +26,14 @@ jQuery(function($) {
 
         // Setup Events
         input.on("change", function() {
-            container.removeClass("alert-success").removeClass("alert-error");
+            container.removeClass("alert-success").removeClass("alert-danger");
 
             if ($(this).val() > 0) {
                 container.find(".assign-options").slideDown("fast");
-                class_ = ($(this).val() == "1") ? "alert-success" : "alert-error";
+                class_ = ($(this).val() == "1") ? "alert-success" : "alert-danger";
                 container.addClass(class_);
             } else {
                 container.find(".assign-options").slideUp("fast");
-                container.removeClass("alert-success").removeClass("alert-error");
             }      
         }).trigger("change"); 
     })

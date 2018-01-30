@@ -3,10 +3,16 @@
  * @link            http://www.tassos.gr
  * @copyright       Copyright © 2017 Tassos Marinos All Rights Reserved
  * @license         GNU GPLv3 <http://www.gnu.org/licenses/gpl.html> or later
- *
- * @TODO This file should be moved to /media/plg_system_nrframework/css/fields/
 */
 
+.nr-well {
+    min-height: 20px;
+    padding: 19px;
+    margin-bottom: 20px;
+    background-color: #F0F0F0;
+    border: 1px solid #F0F0F0;
+    border-radius: 3px;
+}
 .nr-well .well-desc {
 	margin-bottom:25px;
 	color: #555;
@@ -21,9 +27,7 @@
 .nr-well .controls:empty, .nr-well .control-label:empty, .nr-well .control-group:empty {
     display:none;
 }
-/*.control-group + .nr-well {
-	margin-top:-30px;
-}*/
+
 .well-note {
     font-size: 11px;
     line-height: 1.5;

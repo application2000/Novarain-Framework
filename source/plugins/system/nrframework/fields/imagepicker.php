@@ -8,41 +8,34 @@
 */
 
 defined('JPATH_PLATFORM') or die;
-jimport('joomla.form.helper');
 JFormHelper::loadFieldClass('list');
 
 class JFormFieldImagePicker extends JFormFieldList
 {
-	/**
-	 * The form field type.
-	 *
-	 * @var    string
-	 * @since  11.1
-	 */
-	public $type = 'ImagePicker';
-
 	protected function getInput()
 	{	
 		$params = (array) $this->element->attributes();
 		$params = new JRegistry($params["@attributes"]);
 
-		$showlabels = $params->get("showlabels", "true");
-		$hideselect = $params->get("hideselect", "true");
+		$showlabels = $params->get('showlabels', 'true');
+		$hideselect = $params->get('hideselect', 'true');
 		
-		$assetsDir = JURI::root(true)."/plugins/system/nrframework/fields/assets/";
+		JHtml::script('plg_system_nrframework/image-picker.min.js', false, true);
+		JHtml::stylesheet('plg_system_nrframework/image-picker.css', false, true);
 
-		$doc = JFactory::getDocument();
-        $doc->addScript($assetsDir.'image-picker.min.js');
-        $doc->addStyleSheet($assetsDir.'image-picker.css');
-        $doc->addScriptDeclaration('
+        JFactory::getDocument()->addScriptDeclaration('
 			jQuery(function($) {
-				obj = $("#'.$this->id.'");
+				obj = $("#' . $this->id . '");
 				obj.imagepicker({
-					show_label:  '.(string) $showlabels.',
-					hide_select: '.(string) $hideselect.',
+					show_label:  ' . (string) $showlabels . ',
+					hide_select: ' . (string) $hideselect . ',
 					initialized: function() {
-						classes = obj.attr("class");
-						obj.next().addClass(classes);
+						if (classes = obj.attr("class")) {
+							// The custom-select class is added by Joomla 4 and causes styling issues. Needs to be removed.
+							classes = classes.replace("custom-select", ""); 
+
+							obj.next().addClass(classes);
+						}
 					}
 				});
 			});
@@ -50,16 +43,13 @@ class JFormFieldImagePicker extends JFormFieldList
 
         if ($hideselect == "true")
         {
-	        $doc->addStyleDeclaration('
-				#'.$this->id.'_chzn {
+	        JFactory::getDocument()->addStyleDeclaration('
+				#' . $this->id . '_chzn {
 					display:none !important;
 	    		}
 	        ');      	
         }
 
-		$input = parent::getInput();
-		$input = str_replace('onclick="', 'data-img-src="'.JURI::root().'', $input);
-
-		return $input;
+		return str_replace('onclick="', 'data-img-src="' . JURI::root() . '', parent::getInput());
 	}
 }

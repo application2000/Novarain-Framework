@@ -23,6 +23,18 @@ class OS extends Assignment
      */
     function passOS()
     {
+        // backwards compatibility check
+        // replace 'iphone' and 'ipad' selection values with 'ios'
+        $this->selection = array_map(function($os_selection)
+        {
+            if ($os_selection === 'iphone' || $os_selection === 'ipad')
+            {
+                return 'ios';
+            }
+            return $os_selection;
+        },
+        $this->selection);
+
         return $this->passSimple(WebClient::getOS(), $this->selection);
     }
 }

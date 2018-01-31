@@ -71,12 +71,12 @@ class Content extends Assignment
 			return false;
 		}
 
-		$inc_categories = false;
-		$inc_articles   = false;
+		$inc_categories = true;
+		$inc_articles   = true;
 
 		if (isset($this->params->inc))
 		{
-			$this->params->inc = is_array($this->params->inc) ? $this->params->inc : array($this->params->inc);
+			$this->params->inc = is_array($this->params->inc) ? $this->params->inc : $this->splitKeywords($this->params->inc);
 			$inc_categories = in_array('inc_categories', $this->params->inc);
 			$inc_articles   = in_array('inc_articles', $this->params->inc);
 		}

@@ -63,7 +63,7 @@ class URLs extends Assignment
 		// Remove duplicates and invalid selection URLs
 		$this->selection = array_filter(array_unique($this->selection));
 
-		$regex = isset($this->params->regex) ? $this->params->regex : true;
+		$regex = isset($this->params->regex) ? (bool)$this->params->regex : false;
 		$pass  = false;
 
 		foreach ($urls as $url)

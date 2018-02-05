@@ -36,7 +36,7 @@ class Assignments
 		'pageviews|user_pageviews'           => 'Users.Pageviews',
 		'user_id|userid'		             => 'Users.IDs',
 		'menu'                               => 'Menu',
-        'datetime|daterange'                 => 'DateTime.Date',
+        'datetime|daterange|date'            => 'DateTime.Date',
         'days|day'                           => 'DateTime.Days',
         'months|month'                       => 'DateTime.Months',
 		'timerange|time'                     => 'DateTime.TimeRange',

@@ -29,7 +29,7 @@ class Assignments
 		'os'			                     => 'OS',
 		'browsers|browser'		             => 'Browsers',
 		'referrer'                           => 'URLs.Referrer',
-		'lang|language'                      => 'Languages',
+		'lang|language|languages'            => 'Languages',
 		'php'                                => 'PHP',
 		'timeonsite'                         => 'Users.TimeOnSite',
 		'usergroups|usergroup|user_groups'   => 'Users.GroupLevels',

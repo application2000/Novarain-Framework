@@ -72,18 +72,36 @@ class GeoIP extends Assignment
     }
 
     /**
-     * Pass Countries
+     *  Pass Countries
      */
     public function passCountries()
     {
+        // try to convert country names to codes
+        $this->selection = array_map(function($c) {
+            if (strlen($c) > 2)
+            {
+                $c = \NRFramework\Countries::getCode($c);
+            }
+            return $c;
+        }, $this->selection);
+
         return $this->passSimple($this->geo->getCountryCode(), $this->selection);
     }
 
     /**
-     * Pass Continents
+     *  Pass Continents
      */
     public function passContinents()
     {
+        // try to convert continent names to codes
+        $this->selection = array_map(function($c) {
+            if (strlen($c) > 2)
+            {
+                $c = \NRFramework\Continents::getCode($c);
+            }
+            return $c;
+        }, $this->selection);
+
         return $this->passSimple($this->geo->getContinentCode(), $this->selection);
     }
 }

@@ -138,9 +138,9 @@ class Email
             ->addRecipient($email['recipient'])
             ->isHTML(true)
             ->setSubject($email['subject'])
-            ->setBody(nl2br($email['body']));
+            ->setBody($email['body']);
         
-        $mailer->AltBody = nl2br(strip_tags($email['body']));
+        $mailer->AltBody = strip_tags($email['body']);
 
         // Send mail
         $send = $mailer->Send();

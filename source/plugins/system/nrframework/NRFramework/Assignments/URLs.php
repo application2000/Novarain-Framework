@@ -57,11 +57,8 @@ class URLs extends Assignment
 		// Validate Selection
 		if (!is_array($this->selection))
 		{
-			$this->selection = explode('\n', $this->selection);
+			$this->selection = $this->splitKeywords($this->selection);
 		}
-
-		// Remove duplicates and invalid selection URLs
-		$this->selection = array_filter(array_unique($this->selection));
 
 		$regex = isset($this->params->regex) ? (bool)$this->params->regex : false;
 		$pass  = false;

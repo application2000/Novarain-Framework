@@ -18,245 +18,335 @@ jimport('joomla.filesystem.file');
  */
 class Assignments
 {
-	/**
-	 *  Assignment Types
+    /**
+	 *  Assignment Type Aliases
 	 *
 	 *  @var  array
 	 */
-	public $types = array(
-		'devices'         => 'Devices',
-		'urls'            => 'URLs',
-		'os'			  => 'OS',
-		'browsers'		  => 'Browsers',
-		'referrer'        => 'URLs.Referrer',
-		'lang'            => 'Languages',
-		'php'             => 'PHP',
-		'timeonsite'      => 'Users.TimeOnSite',
-		'usergroups'      => 'Users.GroupLevels',
-		'pageviews'		  => 'Users.Pageviews',
-		'user_id'		  => 'Users.IDs',
-		'menu'            => 'Menu',
-		'datetime'        => 'DateTime.Date',
-		'timerange'		  => 'DateTime.TimeRange',
-		'acymailing'      => 'AcyMailing',
-		'akeebasubs'      => 'AkeebaSubs',
-		'contentcats'     => 'Content.Categories',
-		'contentarticles' => 'Content.Articles',
-		'components'	  => 'Components',
-		'convertforms'	  => 'ConvertForms',
-		'geo_country'	  => 'GeoIP.Countries',
-		'geo_continent'	  => 'GeoIP.Continents',
-		'cookiename'	  => 'Cookies.Name',
-        'ip_addresses'	  => 'IP.Range',
-        'k2_items'        => 'K2Item',
-        'k2_cats'         => 'K2Category',
-        'k2_tags'         => 'K2Tag',
-        'k2_pagetypes'    => 'K2Pagetype'
-	);
-
-	/**
-	 *  Pass Check Item's All Assignments
+	public $typeAliases = array(
+		'device|devices'                     => 'Devices',
+		'urls|url'                           => 'URLs',
+		'os'			                     => 'OS',
+		'browsers|browser'		             => 'Browsers',
+		'referrer'                           => 'URLs.Referrer',
+		'lang|language|languages'            => 'Languages',
+		'php'                                => 'PHP',
+		'timeonsite'                         => 'Users.TimeOnSite',
+		'usergroups|usergroup|user_groups'   => 'Users.GroupLevels',
+		'pageviews|user_pageviews'           => 'Users.Pageviews',
+		'user_id|userid'		             => 'Users.IDs',
+		'menu'                               => 'Menu',
+        'datetime|daterange|date'            => 'DateTime.Date',
+        'days|day'                           => 'DateTime.Days',
+        'months|month'                       => 'DateTime.Months',
+		'timerange|time'                     => 'DateTime.TimeRange',
+        'acymailing'                         => 'AcyMailing',
+        'akeebasubs'                         => 'AkeebaSubs',
+        'contentcats|categories|category'    => 'Content.Categories',
+        'contentarticles|articles|article'   => 'Content.Articles',
+        'components|component'	             => 'Components',
+        'convertforms'	                     => 'ConvertForms',
+        'geo_country|country|countries'	     => 'GeoIP.Countries',
+        'geo_continent|continent|continents' => 'GeoIP.Continents',
+        'cookiename|cookie'                  => 'Cookies.Name',
+        'ip_addresses|iprange|ip'            => 'IP.Range'
+    );
+    
+    /**
+	 *  Check all Assignments
 	 *
-	 *  @param   object  $item          The item to be checked
-	 *  @param   string  $match_method  The matching method (and|or)
+	 *  @param   array|object   $assignments_info   Array containing assignment info
+	 *  @param   string         $match_method       The matching method (and|or)
 	 *
-	 *  @return  bool                   True if check passes
+	 *  @return  bool           True if check passes
 	 */
-	function passAll($item, $match_method = 'and')
+	function passAll($assignments_info, $match_method = 'and')
 	{
-		if (!$item)
-		{
-			return true;
-		}
+        if (!$assignments_info)
+        {
+            return true;
+        }
 
-		$assignments = $this->getItemAssignments($item);
+        // convert $assignments_info parameter from object (used by existing extensions)
+        // to array
+        if (is_object($assignments_info))
+        {
+            $assignments_info = $this->prepareAssignmentsInfo($assignments_info);
+        }
 
-		if (!is_array($assignments) || count($assignments) == 0)
-		{
-			return true;
-		}
+        // filter-out invalid assignments and prepare assignment data
+        $assignments = $this->prepareAssignments($assignments_info);
 
-		$pass = (bool) ($match_method == 'and');
+        // main check
+        $pass = (bool) ($match_method == 'and');
 
-		foreach ($this->types as $type)
-		{
-			// Break if not passed and matching method is ALL
-			// Or if passed and matching method is ANY
+        foreach ($assignments as $a)
+        {
+            // Break if not passed and matching method is AND
+			// Or if passed and matching method is OR
 			if (
 				(!$pass && $match_method == 'and')
 				|| ($pass && $match_method == 'or')
 			)
 			{
 				break;
-			}
+            }
 
-			if (!isset($assignments[$type]))
-			{
-				continue;
-			}
+            // Return false if the assignment doesnt exist and the matching method is AND
+            // or continue checking if the the matching method is OR
+            if (is_null($a))
+            {
+                if ($match_method == 'and')
+                {
+                    return false;
+                }
+                else
+                {
+                    continue;
+                }
+            }
+            
+            $assignment = new $a->class($a->options);
+            $pass       = $assignment->{$a->method}();
+            $pass       = $this->passStateCheck($pass, $a->options->assignment_state);
+        }
 
-			$pass = $this->passByType($assignments[$type], $type);
-			$pass = $this->pass($pass, $assignments[$type]->assignment);
-		}
+        return $pass;
+    }
 
-		return $pass;
-	}
+    /**
+     *  Checks if an assignment exists
+     *
+     *  @param  string $assignment Assignment class name or alias
+     *  @return bool
+     */
+    public function exists($assignment)
+    {
+        if (!$assignment)
+        {
+            return false;
+        }
+        $assignment = strtolower($assignment);
 
-	/**
-	 *  Assignment pass check based on the assignment state
-	 *
-	 *  @param   boolean  $pass        
-	 *  @param   string   $assignment  The assignment state
-	 *
-	 *  @return  boolean
-	 */
-	private function pass($pass = true, $assignment = null)
-	{
-		$assignment = $assignment ?: $this->assignment;
-		return $pass ? ($assignment == 'include') : ($assignment == 'exclude');
-	}
+        // search by Assignment name
+        if (array_search($assignment, $this->typeAliases) !== false)
+        {
+            return true;
+        }
 
-	/**
-	 *  Setups an object with item's valid assignments only
-	 *
-	 *  @param   object  $item  The item to be checked
-	 *
-	 *  @return  object
-	 */
-	function getItemAssignments($item)
-	{
-		if (!$item)
+        // search assignment aliases
+        foreach (array_keys($this->typeAliases) as $key)
+        {
+            if (strpos($key, $assignment) !== false)
+            {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
+     *  Returns the classname for a given assignment alias
+     *
+     *  @param  string       $alias
+     *  @return string|void
+     */
+    public function aliasToClassname($alias)
+    {
+        $alias = strtolower($alias);
+        foreach ($this->typeAliases as $aliases => $type)
+        {
+            if (strtolower($type) == $alias)
+            {
+                return $type;
+            }
+
+            $aliases = explode('|', strtolower($aliases));
+            if (in_array($alias, $aliases))
+            {
+                return $type;                
+            }   
+        }
+
+        return null;
+    }
+
+    /**
+    *  Assignment pass check based on the assignment state
+    *
+    *  @param   boolean  $pass        
+    *  @param   string   $assignment_state  The assignment state
+    *
+    *  @return  boolean
+    */
+    private function passStateCheck($pass = true, $assignment_state = null)
+    {
+        $assignment_state = $assignment_state ?: $this->assignment;
+        return $pass ? ($assignment_state == 'include') : ($assignment_state == 'exclude');
+    }
+
+    /**
+     * Checks and prepares the given array of assignment information
+     * 
+     * @return  array of objects
+     */
+    protected function prepareAssignments($assignments_info)
+    {
+        $assignments = array();
+        foreach ($assignments_info as $a)
+        {
+            if (!is_object($a) ||!isset($a->alias) || !isset($a->selection) ||
+                !isset($a->params) || !isset($a->assignment_state))
+            {
+                continue;
+            }
+
+            $assignment = new \stdClass();
+            
+            // check if the assignment type exists
+            if (!$this->exists($a->alias) || !$this->setTypeParams($assignment, $this->aliasToClassname($a->alias)))
+            {
+                $assignment = null;
+            }
+            else
+            {
+                $assignment->options = (object) array(
+                    'selection'         => $a->selection,
+                    'params'            => $a->params,
+                    'assignment_state'  => $this->getAssignmentState($a->assignment_state)
+                );
+            }
+
+            $assignments[] = $assignment;
+        }
+
+        return $assignments;
+    }
+
+    /**
+     * Converts an object of assignment information to an array of objects
+     * Used by existing extensions
+     * @return array of objects
+     */
+    protected function prepareAssignmentsInfo($assignments_info)
+    {
+        if (!isset($assignments_info->params))
+        {
+            return [];
+        }
+
+        $params = json_decode($assignments_info->params);
+
+        if (!is_object($params))
 		{
-			return;
-		}
+			return [];
+        }
 
-		$params = json_decode($item->params);
+        $assignments_info = [];
+        
+        foreach ($this->typeAliases as $aliases => $type)
+        {
+            $aliases = explode('|', $aliases);
 
-		if (!is_object($params))
-		{
-			return;
-		}
+            foreach ($aliases as $alias)
+            {
+                if (!isset($params->{'assign_' . $alias}) || !$params->{'assign_' . $alias})
+                {
+                    continue;
+                }
 
-		$types = array();
-		foreach ($this->types as $id => $type)
-		{
-			if (!isset($params->{'assign_' . $id}) || !$params->{'assign_' . $id})
-			{
-				continue;
-			}
+                // Discover assignment params
+                $assignment_params = new \stdClass();
+                foreach ($params as $key => $value)
+                {
+                    if (strpos($key, "assign_" . $alias . "_param") !== false)
+                    {
+                        $key = str_replace("assign_" . $alias . "_param_", "", $key);
+                        $assignment_params->$key = $value;
+                    }
+                }
 
-			// Discover assignment params
-			$AssignmentParams = new \stdClass();
-			foreach ($params as $key => $value)
-			{
-				if (strpos($key, "assign_" . $id . "_param") !== false)
-				{
-					$AssignmentParams->$key = $value;
-				}
-			}
+                $assignments_info[] = (object) array(
+                    'alias'              => $alias,
+                    'assignment_state'  => $this->getAssignmentState($params->{'assign_' . $alias}),
+                    'selection'         => isset($params->{'assign_' . $alias . '_list'}) ? $params->{'assign_' . $alias . '_list'} : array(),
+                    'params'            => $assignment_params
+                );
+            }
+        }
 
-			$types[$type] = (object) array(
-				'itemid'     => (int) $item->id,
-				'assignment' => $this->getAssignmentState($params->{'assign_' . $id}),
-				'selection'  => array(),
-				'params'     => $AssignmentParams,
-			);
+        return $assignments_info;
+    }
 
-			if (isset($params->{'assign_' . $id . '_list'}))
-			{
-				$selection = $params->{'assign_' . $id . '_list'};
-				$types[$type]->selection = $selection;
-			}
-		}
-
-		return $types;
-	}
-
-	/**
+    /**
 	 *  Returns assignment's state by ID
 	 *  1: Include
 	 *  2: Exclude
 	 *  3, -1: None
 	 *
-	 *  @param   integer  $assignment  Assignment's state ID
+	 *  @param   integer  $state_id     Assignment's state ID
 	 *
-	 *  @return  string                Assignment's state name
+	 *  @return  string                 Assignment's state name
 	 */
-	private function getAssignmentState($assignment)
+	private function getAssignmentState($state_id)
 	{
-		switch ($assignment)
+		switch ($state_id)
 		{
 			case 1:
 			case 'include':
-				$assignment = 'include';
+				$assignment_state = 'include';
 				break;
 			case 2:
 			case 'exclude':
-				$assignment = 'exclude';
+				$assignment_state = 'exclude';
 				break;
 			case 3:
 			case -1:
 			case 'none':
-				$assignment = 'none';
+				$assignment_state = 'none';
 				break;
 			default:
-				$assignment = 'all';
+				$assignment_state = 'all';
 				break;
 		}
 
-		return $assignment;
-	}
-
-	/**
-	 *  Pass check by assignment type
-	 *
-	 *  @param   object  $assignment  The assignment object
-	 *  @param   string  $type        The assignment type
-	 *
-	 *  @return  bool
-	 */
-	protected function passByType($assignment, $type)
-	{
-		$this->initParamsByType($assignment, $type);
-
-		// Validate assignment class and method
-		$class = __NAMESPACE__ . '\\Assignments\\' . $assignment->maintype;
-		$method = 'pass' . $assignment->subtype;
-
-		// Note: class_exists is case-INsensitive and uses autoloading by default
-		if (!class_exists($class) && !method_exists($class, $method))
-		{
-			return false; //
-		}
-
-		// Run Pass Check
-		$pass = false;
-		$cl   = new $class($assignment);
-		$pass = $cl->$method();	
-
-		return $pass;
-	}
-
-	/**
-	 *  Sets propert assignment class and method name
+		return $assignment_state;
+    }
+    
+    /**
+	 *  Sets proper assignment class and method name
 	 *
 	 *  @param   object  &$assignment  The assignment object
 	 *  @param   string  $type         The assignment type
 	 *
 	 *  @return  void
 	 */
-	public function initParamsByType(&$assignment, $type = '')
+	public function setTypeParams(&$assignment, $type = '')
 	{
 		if (strpos($type, '.') === false)
 		{
-			$assignment->maintype = $type;
-			$assignment->subtype  = $type;
+			$class = $type;
+			$method  = $type;
+        }
+        else
+        {
+            $type = explode('.', $type, 2);
+            $class = $type['0'];
+            $method  = $type['1'];
+        }		
 
-			return;
-		}
+        $class      = __NAMESPACE__ . '\\Assignments\\' . $class;
+        $method     = 'pass' . $method;
+        if (!class_exists($class) && !method_exists($class, $method))
+        {
+            return false;
+        }
+        
+        $assignment->class = $class;
+        $assignment->method = $method;
 
-		$type = explode('.', $type, 2);
-		$assignment->maintype = $type['0'];
-		$assignment->subtype  = $type['1'];
+        return true;
 	}
 }
+
+?>

@@ -11,18 +11,51 @@ namespace NRFramework\Assignments;
 defined('_JEXEC') or die;
 
 use NRFramework\Assignment;
+use NRFramework\Cache;
 
 class Users extends Assignment 
 {
+    /**
+     *  md5 hash used for caching the groups map
+     *
+     *  @var [type]
+     */
+    protected $_groupsHash;
+
+    /**
+     *  Constructor
+     *
+     *  @param object $options
+     *  @param object $request
+     *  @param object $date
+     */
+    public function __construct($options, $request = null, $date = null)
+    {
+        parent::__construct($options, $request = null, $date = null);
+
+        $_groupsHash = md5('NRFramework\Assignments\User_groupsHash');
+    }
+    
 	/**
 	 *  Pass Check User Group Levels
 	 *
 	 *  @return  bool
 	 */
-	function passGroupLevels()
+	public function passGroupLevels()
 	{
-		$groups = !empty($this->user->groups) ? array_values($this->user->groups) : $this->user->getAuthorisedGroups();
-    	return $this->passSimple($groups, $this->selection); 
+        $groups = $this->getGroups();
+
+        // replace group names with ids in selection
+        foreach ($this->selection as $key => $id)
+        {
+            if (!is_numeric($id))
+            {
+                $this->selection[$key] = array_search(strtolower($id), $groups);
+            }
+        }
+
+		$usergroups = !empty($this->user->groups) ? array_values($this->user->groups) : $this->user->getAuthorisedGroups();
+    	return $this->passSimple($usergroups, $this->selection); 
 	}
 
 	/**
@@ -30,7 +63,7 @@ class Users extends Assignment
 	 *
 	 *  @return  bool
 	 */
-	function passTimeOnSite()
+	public function passTimeOnSite()
 	{
 		$pass = false;
 
@@ -59,29 +92,30 @@ class Users extends Assignment
 	 */
 	public function passPageviews()
 	{
-		$pass = false;
+		if (is_null($this->params->views) || !is_numeric($this->params->views))
+		{
+			return;
+		}
 
-		$session = \JFactory::getSession();
-		$visits = $session->get('session.counter', 0);
-
-		$pageviews_param = intval($this->params->assign_pageviews_param_views);
+		$pageviews = intval($this->params->views);
+		$visits    = \JFactory::getSession()->get('session.counter', 0);
+		$pass      = false;
 
 		switch ($this->selection)
 		{
-			case 'exactly':
-				$pass = $visits === $pageviews_param;
-				break;
 			case 'fewer':
-				$pass = $visits < $pageviews_param;
+				$pass = $visits < $pageviews;
 				break;
 			case 'greater':
-				$pass = $visits > $pageviews_param;
+				$pass = $visits > $pageviews;
+				break;
+			default: // 'exactly'
+				$pass = $visits === $pageviews;
 				break;
 		}
 
 		return $pass;
 	}
-
 
 	/**
 	 * Check User ID
@@ -90,8 +124,10 @@ class Users extends Assignment
 	 */
 	public function passIDs()
 	{
+		$this->selection = is_array($this->selection) ? $this->selection : explode(',', $this->selection);
+
 		// prepare an array(of ints) from the supplied IDs(string)		
-		$ids = array_map('intval', array_map('trim', explode(',', $this->selection)));
+		$ids = array_map('intval', array_map('trim', $this->selection));
 
 		if (in_array($this->user->id, $ids))
 		{
@@ -115,5 +151,36 @@ class Users extends Assignment
         }
 
         return $session->get($var);
+    }
+
+    /**
+     *  Returns User Groups map (ID => Name)
+     *
+     *  @return array
+     */
+    protected function getGroups()
+    {
+        if (Cache::has($this->_groupsHash))
+        {
+            return Cache::get($this->_groupsHash);
+        }
+
+        $db = \JFactory::getDBO();
+        $query = $db->getQuery(true);
+
+        $query
+            ->select('id, title')
+            ->from('#__usergroups');
+        $db->setQuery($query);
+        
+        $res = $db->loadObjectList();
+        $groups = [];
+        foreach ($res as $r)
+        {
+            $groups[$r->id] = strtolower($r->title);
+        }
+        Cache::set($this->_groupsHash, $groups);
+
+        return $groups;
     }
 }

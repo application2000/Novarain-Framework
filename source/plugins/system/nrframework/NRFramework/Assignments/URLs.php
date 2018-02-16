@@ -16,81 +16,65 @@ use NRFramework\Assignment;
 class URLs extends Assignment 
 {
    	/**
-   	 *  Pass Check Domain Referrer
+   	 *  Pass Referrer URL. 
    	 *
-   	 *  @return  bool
+   	 *  @return  bool   Returns true if the Referrer URL contains any of the selection URLs 
    	 */
    	function passReferrer()
    	{
-   		// Check if we have valid selection list
-		$referrers = array_filter(array_unique(explode("\n", $this->selection)));
+   		// Make sure the referer server variable is available
+   		if (!isset($_SERVER['HTTP_REFERER']))
+   		{
+   			return;
+   		}
 
-		if (!is_array($referrers) || !count($referrers))
-		{
-			return false;
-		}
-
-		// Remove new line characters
-		foreach ($referrers as $key => $referrer)
-		{ 
-			$referrer = str_replace(array("\n", "\r"), "", $referrer); 
-			$referrers[$key] = $referrer; 
-		}
-
-		// Check if we have a valid referer
-		$referer = isset($_SERVER['HTTP_REFERER']) ? parse_url($_SERVER['HTTP_REFERER'], PHP_URL_HOST) : false;
-
-		if (!$referer)
-		{
-			return false;
-		}
-
-		$domainReferrer = str_ireplace("www.", "", $referer); 
-
-		return in_array($domainReferrer, $referrers);
+		return $this->passURLs($_SERVER['HTTP_REFERER']);
    	}
-
+   	
    	/**
    	 *  Pass Check URLs
    	 *
-   	 *  @return  bool
+   	 *  @param   mixed  $url    If null, the current URL will be used. Otherwise we need a valid absolute URL.
+   	 *
+   	 *  @return  bool   		Returns true if the URL contains any of the selection URLs 
    	 */
-	function passURLs()
+	function passURLs($url = null)
 	{
-		$regex = isset($this->params->assign_urls_param_regex) ? $this->params->assign_urls_param_regex : true;
+		// Get the current URL if none is passed
+		$url = is_null($url) ? \JURI::getInstance()->toString() : $url;
 
-		if (!is_array($this->selection))
-		{
-			$this->selection = explode("\n", $this->selection);
-		}
-
-		if (count($this->selection) == 1)
-		{
-			$this->selection = explode("\n", $this->selection['0']);
-		}
-
-		$url = \JURI::getInstance();
-		$url = $url->toString();
-
+		// Create an array with all possible values of the URL
 		$urls = array(
 			html_entity_decode(urldecode($url), ENT_COMPAT, 'UTF-8'),
 			urldecode($url),
 			html_entity_decode($url, ENT_COMPAT, 'UTF-8'),
 			$url
 		);
-		$urls = array_unique($urls);
 
-		$pass = false;
+		// Remove duplicates and invalid URLs
+		$urls = array_filter(array_unique($urls));
+
+		// Validate Selection
+		if (!is_array($this->selection))
+		{
+			$this->selection = $this->splitKeywords($this->selection);
+		}
+
+		$regex = isset($this->params->regex) ? (bool)$this->params->regex : false;
+		$pass  = false;
+
 		foreach ($urls as $url)
 		{
 			foreach ($this->selection as $s)
 			{
+				// Skip empty selection URLs
 				$s = trim($s);
-				if ($s == '')
+				if (empty($s))
 				{
 					continue;
 				}
 
+				// Regular expression check
 				if ($regex)
 				{
 					$url_part = str_replace(array('#', '&amp;'), array('\#', '(&amp;|&)'), $s);
@@ -104,6 +88,7 @@ class URLs extends Assignment
 					continue;
 				}
 
+				// String check
 				if (strpos($url, $s) !== false)
 				{
 					$pass = true;

@@ -399,7 +399,7 @@ class Functions
         }
 
         // Check if date has a prepending date syntax: 00-00-00 ...
-        // If so, add :00 (seconds)
+        // If so, add 00:00:00 (hours:mins;secs)
         if (preg_match('#^([0-9]+-[0-9]+-[0-9]+)#', $date, $match))
         {
             $date = $match['1'] . ' 00:00:00';

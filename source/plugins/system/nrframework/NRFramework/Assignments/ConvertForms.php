@@ -34,12 +34,13 @@ class ConvertForms extends Assignment
      */
 	private function getCampaigns()
 	{
-		if (!@include_once(JPATH_ADMINISTRATOR . '/components/com_convertforms/helpers/convertforms.php'))
+		@include_once JPATH_ADMINISTRATOR . '/components/com_convertforms/helpers/convertforms.php';
+
+		if (!class_exists('ConvertFormsHelper'))
 		{
-			return false;
+			return;
 		}
 
 		return \ConvertFormsHelper::getVisitorCampaigns();
 	}
-
 }

@@ -21,10 +21,10 @@ class Continents
      *  @param  string $cont
      *  @return string|void
      */
-    static public function getCode($cont)
+    public static function getCode($cont)
     {
         $cont = \ucwords(strtolower($cont));
-        foreach (self::MAP as $key => $value)
+        foreach (self::$map as $key => $value)
         {
             if (strpos($value, $cont) !== false)
             {
@@ -39,7 +39,7 @@ class Continents
 	 *
 	 *  @var  array
 	 */
-	const MAP = [
+    public static $map = [
 		'AF' => 'Africa',
 		'AS' => 'Asia',
 		'EU' => 'Europe',

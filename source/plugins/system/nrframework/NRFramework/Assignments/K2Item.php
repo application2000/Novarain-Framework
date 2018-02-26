@@ -45,15 +45,15 @@ class K2Item extends K2
             $pass = $this->passSimple($id, $this->selection);
         }
         // check items's text
-        if (!empty($this->params->assign_k2_items_param_cont_keywords))
+        if (!empty($this->params->cont_keywords))
         {
-            $keywords = $this->splitKeywords($this->params->assign_k2_items_param_cont_keywords);                
+            $keywords = $this->splitKeywords($this->params->cont_keywords);                
             $pass     = $this->passContentKeywords($keywords);
         }
         // check item's metakeywords
-        if (!empty($this->params->assign_k2_items_param_meta_keywords))
+        if (!empty($this->params->meta_keywords))
         {
-            $meta = $this->splitKeywords($this->params->assign_k2_items_param_meta_keywords);
+            $meta = $this->splitKeywords($this->params->meta_keywords);
             $pass = $this->passMetaKeywords($meta);
         }
 

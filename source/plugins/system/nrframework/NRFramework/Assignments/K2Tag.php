@@ -34,7 +34,8 @@ class K2Tag extends K2
             return false;
         }
 
-        $q      = $this->db->getQuery(true);
+        $q = $this->db->getQuery(true);
+        
 
         $q = $this->db->getQuery(true)
             ->select('t.id')

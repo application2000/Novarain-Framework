@@ -40,12 +40,12 @@ class K2Category extends K2
 
 		$inc_categories = false;
 		$inc_items      = false;
-		$inc_children   = $this->params->assign_k2_cats_param_inc_children;
+		$inc_children   = $this->params->inc_children;
 
-		if (isset($this->params->assign_k2_cats_param_inc) && is_array($this->params->assign_k2_cats_param_inc))
+		if (isset($this->params->inc) && is_array($this->params->inc))
 		{
-			$inc_categories = in_array('inc_categories', $this->params->assign_k2_cats_param_inc);
-			$inc_items      = in_array('inc_items', $this->params->assign_k2_cats_param_inc);
+			$inc_categories = in_array('inc_categories', $this->params->inc);
+			$inc_items      = in_array('inc_items', $this->params->inc);
 		}
 
 		// Check if we are in a valid context
@@ -68,14 +68,14 @@ class K2Category extends K2
 			$pass = in_array($catid, $this->selection);
 
 			// Pass check on child items only
-			if ($pass && $this->params->assign_k2_cats_param_inc_children == 2)
+			if ($pass && $this->params->inc_children == 2)
 			{
 				$pass = false;
 				continue;
 			}
 
 			// Pass check for child items
-			if (!$pass && $this->params->assign_k2_cats_param_inc_children)
+			if (!$pass && $this->params->inc_children)
 			{
 				$parent_ids = $this->getParentIDs($catid, 'k2_categories', 'parent');
 				foreach ($parent_ids as $id)

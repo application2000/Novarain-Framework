@@ -78,14 +78,20 @@ class Assignments
             $assignments_info = $this->prepareAssignmentsInfo($assignments_info);
         }
 
-        // filter-out invalid assignments and prepare assignment data
+        // filter-out invalid assignments and prepare assignment data (new method - added for Restrict Content)
         $assignments = $this->prepareAssignments($assignments_info);
 
-        // main check
+        // initialize $pass based on the matching method
         $pass = (bool) ($match_method == 'and');
 
         foreach ($assignments as $a)
         {
+            // Return false if any of the assignments doesnt exist
+            if (is_null($a))
+            {
+                return false;
+            }
+
             // Break if not passed and matching method is AND
 			// Or if passed and matching method is OR
 			if (
@@ -94,20 +100,6 @@ class Assignments
 			)
 			{
 				break;
-            }
-
-            // Return false if the assignment doesnt exist and the matching method is AND
-            // or continue checking if the the matching method is OR
-            if (is_null($a))
-            {
-                if ($match_method == 'and')
-                {
-                    return false;
-                }
-                else
-                {
-                    continue;
-                }
             }
             
             $assignment = new $a->class($a->options);

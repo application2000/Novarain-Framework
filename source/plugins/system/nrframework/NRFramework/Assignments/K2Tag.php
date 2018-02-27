@@ -23,26 +23,19 @@ class K2Tag extends K2
      */
     public function passK2Tag()
     {
-        if (empty($this->selection) || !$this->passContext() || $this->request->view != 'item')
+        // Check we are on the right context and we have a valid Item ID
+        if (empty($this->selection) || !$this->passContext() || !$id = $this->getItemID())
         {
             return false;
         }
-
-        $id = $this->getItemID();
-        if (!$id)
-        {
-            return false;
-        }
-
-        $q = $this->db->getQuery(true);
         
-
         $q = $this->db->getQuery(true)
             ->select('t.id')
             ->from('#__k2_tags_xref AS tx')
             ->join('LEFT', '#__k2_tags AS t ON t.id = tx.tagID')
             ->where('tx.itemID = ' . $id)
             ->where('t.published = 1');
+
 		$this->db->setQuery($q);
         $tags = $this->db->loadColumn();
         

@@ -23,24 +23,16 @@ class K2Category extends K2
      */
     public function passK2Category()
     {
-        if(!$this->passContext())
+        if (empty($this->selection) || !$this->passContext())
         {
             return false;
         }
 
-        // Check if we have a valid selection
-		if (empty($this->selection))
-		{
-			return false;
-		}
-
-		$is_category = ($this->request->view == 'itemlist' && $this->request->task == 'category') || $this->request->view == 'latest';
-		$is_item     = $this->request->view == 'item';
-
-
-		$inc_categories = false;
-		$inc_items      = false;
+		$inc_categories = true;
+		$inc_items      = true;
 		$inc_children   = $this->params->inc_children;
+		$is_category    = $this->isCategory();
+		$is_item        = $this->isItem();
 
 		if (isset($this->params->inc) && is_array($this->params->inc))
 		{
@@ -55,8 +47,7 @@ class K2Category extends K2
 		}
 
 		$pass = false;
-
-		$catids = $this->getCategoryIds($is_category);
+		$catids = $this->getCategoryIds();
 
 		foreach ($catids as $catid)
 		{
@@ -91,31 +82,29 @@ class K2Category extends K2
 		}
 
 		return $pass;
-
     }
 
     /**
 	 *  Returns category IDs based on the active K2 view
 	 *
-	 *  @param   boolean  $is_category  The current view is a category view
-	 *
 	 *  @return  array                  The IDs
 	 */
-	protected function getCategoryIds($is_category = false)
+	protected function getCategoryIds()
 	{
 		// If we are in category view return category's id
-		if ($is_category)
+		if ($this->isCategory())
 		{
-			return (array) $this->getItemID();
+			// Note: If the category alias starts with a number then we end up with a wrong result
+			$catid = (int) $this->request->id;
+			return (array) $catid;
 		}
 
 		// If we are in article view return article's category id
-		if ($this->request->view == 'item')
+		if ($item = $this->getK2Item())
 		{
-            $res = $this->getK2Item();
-            if ($res && isset($res->catid))
+            if (isset($item->catid))
             {
-                return (array) $res->catid;
+                return (array) $item->catid;
             }
 		}
 

@@ -23,33 +23,22 @@ class K2Item extends K2
      */
     public function passK2Item()
     {
-        // return false if we are not viewing a K2 item
-        if (!$this->request->id || 
-            !$this->passContext() || 
-            $this->request->view != 'item')
-		{
-			return false;
-        }
-
-        $id = $this->getItemID();
-        if (!$id)
+        // Check we are on the right context and we have a valid Item ID
+        if (!$this->passContext() || !$id = $this->getItemID())
         {
             return false;
         }
-        
-        $pass = false;
 
         // check item's id
-        if (!empty($this->selection))
-        {
-            $pass = $this->passSimple($id, $this->selection);
-        }
+        $pass = $this->passSimple($id, $this->selection);
+
         // check items's text
         if (!empty($this->params->cont_keywords))
         {
-            $keywords = $this->splitKeywords($this->params->cont_keywords);                
+            $keywords = $this->splitKeywords($this->params->cont_keywords);
             $pass     = $this->passContentKeywords($keywords);
         }
+        
         // check item's metakeywords
         if (!empty($this->params->meta_keywords))
         {
@@ -83,6 +72,7 @@ class K2Item extends K2
             {
                 return false;
             }
+
             $text = trim($text . ' ' . $item->{$field});
         }
 
@@ -93,11 +83,12 @@ class K2Item extends K2
 
         foreach ($keywords as $k)
         {
-            $regex = '/'. preg_quote($k) .'/';
+            $regex = '/' . preg_quote($k) . '/';
             if (!preg_match($regex, $text))
             {
                 continue;
             }
+
             return true;
         }
 
@@ -119,8 +110,8 @@ class K2Item extends K2
         {
             return false;
         }
-        $keywords = $item->metakey;
 
+        $keywords = $item->metakey;
         if (!is_string($keywords))
         {
             return false;
@@ -132,13 +123,16 @@ class K2Item extends K2
             {
                 continue;
             }
-            $regex = '/'. preg_quote($pk) .'/';
+
+            $regex = '/' . preg_quote($pk) . '/';
             if (!preg_match($regex, $keywords))
             {
                 continue;
             }
+
             return true;
         }
+
         return false;
     }
 }

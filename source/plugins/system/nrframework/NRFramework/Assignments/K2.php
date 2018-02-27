@@ -12,28 +12,10 @@ namespace NRFramework\Assignments;
 defined('_JEXEC') or die;
 
 use NRFramework\Assignment;
+use NRFramework\Cache;
 
 abstract class K2 extends Assignment
 {
-
-    /**
-     * K2 model object
-     *
-     * @var object
-     */
-    protected $model;
-
-    /**
-	 *  Class constructor
-	 *
-	 *  @param  object  $assignment
-	 */
-	public function __construct($assignment)
-	{
-		parent::__construct($assignment);
-		$this->model = \JModelLegacy::getInstance('Item', 'K2Model');
-    }
-    
     /**
      *  Gets K2 item's id using K2Model
      *
@@ -41,13 +23,17 @@ abstract class K2 extends Assignment
      */
     protected function getItemID()
     {
-        $item  = $this->getK2Item();
+        if (!$this->isItem())
+        {
+            return;
+        }
+
+        $item = $this->getK2Item();
+
         if (is_object($item) && isset($item->id))
 		{
 			return (int) $item->id;
         }
-
-        return null;
     }
 
     /**
@@ -57,9 +43,36 @@ abstract class K2 extends Assignment
      */
     protected function getK2Item()
     {
-        return $this->model->getData();
+        $hash = md5('k2assitem');
+
+        if (Cache::has($hash))
+        {
+            return Cache::get($hash);
+        }
+
+        return Cache::set($hash, \JModelLegacy::getInstance('Item', 'K2Model')->getData());
     }   
-    
+
+    /**
+     *  Indicates whether the page is a K2 Category page
+     *
+     *  @return  boolean
+     */
+    protected function isCategory()
+    {
+        return ($this->request->layout == 'category' || $this->request->task == 'category' || $this->request->view == 'latest');
+    }
+
+    /**
+     *  Indicates whether the page is a K2 Category page
+     *
+     *  @return  boolean
+     */
+    protected function isItem()
+    {
+        return ($this->request->view == 'item' && $this->request->id);
+    }
+
     /**
      *  Check if we are in correct context
      *

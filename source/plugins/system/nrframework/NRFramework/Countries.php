@@ -21,10 +21,10 @@ class Countries
      *  @param  string $country
      *  @return string|void
      */
-    static public function getCode($country)
+    public static function getCode($country)
     {
         $country = \ucwords(strtolower($country));
-        foreach (self::MAP as $key => $value)
+        foreach (self::$map as $key => $value)
         {
             if (strpos($value, $country) !== false)
             {
@@ -39,7 +39,7 @@ class Countries
 	 *
 	 *  @const  array
 	 */
-    const MAP = [
+    public static  $map = [
 		'AF' => "Afghanistan",
 		'AX' => "Aland Islands",
 		'AL' => "Albania",

@@ -19,11 +19,11 @@ class JFormFieldNR_Geo extends NRFormFieldList
 		switch ($this->get('geo'))
 		{
 			case 'continents':
-				$this->list = \NRFramework\Continents::MAP;
+				$this->list = \NRFramework\Continents::$map;
 				$selectLabel = 'NR_SELECT_CONTINENT';
 				break;
-			default:
-				$this->list = \NRFramework\Countries::MAP;
+            default:
+				$this->list = \NRFramework\Countries::$map;
 				$selectLabel = 'NR_SELECT_COUNTRY';
 				break;
 		}

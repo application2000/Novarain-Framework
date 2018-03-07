@@ -78,7 +78,6 @@ class DateTime extends Assignment
         // do comparison using time only
 		$up   = is_null($this->params->publish_up)   ? null : \JFactory::getDate()->setTimezone($this->tz)->setTime($up_hours, $up_mins);
 		$down = is_null($this->params->publish_down) ? null : \JFactory::getDate()->setTimezone($this->tz)->setTime($down_hours, $down_mins);
-
 		return $this->checkRange($up, $down);
     }
     
@@ -158,6 +157,11 @@ class DateTime extends Assignment
 	 */
 	private function checkRange(&$up_date, &$down_date)
 	{
+        if (!$up_date && !$down_date)
+        {
+            return false;
+        }
+
 		$now = $this->date->getTimestamp();
 
 		if (((bool)$up_date   && $up_date->getTimestamp() > $now) ||

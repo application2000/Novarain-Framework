@@ -64,7 +64,7 @@ class Assignments
 	 *
 	 *  @return  bool           True if check passes
 	 */
-	function passAll($assignments_info, $match_method = 'and')
+	function passAll($assignments_info, $match_method = 'and', $info = false)
 	{
         if (!$assignments_info)
         {
@@ -75,39 +75,59 @@ class Assignments
         // to array
         if (is_object($assignments_info))
         {
-            $assignments_info = $this->prepareAssignmentsInfo($assignments_info);
+            $assignments_info = $this->prepareAssignmentsInfoFromObject($assignments_info);
         }
 
-        // filter-out invalid assignments and prepare assignment data (new method - added for Restrict Content)
+        // prepare assignment data (new method - added for Restrict Content)
         $assignments = $this->prepareAssignments($assignments_info);
 
         // initialize $pass based on the matching method
         $pass = (bool) ($match_method == 'and');
 
-        foreach ($assignments as $a)
-        {
-            // Return false if any of the assignments doesnt exist
-            if (is_null($a))
+        $invalid  = false;
+        $aInfo    = [];
+        // check if the assignments pass
+        $pass = \array_reduce($assignments, function($acc, $a) use ($invalid, $match_method, $info, &$aInfo) {
+            // store assignment information
+            if($info)
             {
-                return false;
+                $ai = $a;
+                if (!$a->class)
+                {
+                    $invalid = true;
+                    $ai->pass = null;
+                    $ai->name = 'Unkown Assignment';
+                    return false;
+                }
+                // when returning extra info we still need to check each asssignment even if the shortcode is invalid
+                $pTemp = $this->passStateCheck((new $a->class($a->options))->{$a->method}(), $a->options->assignment_state);
+                $ai->pass = $pTemp;
+                $ai->name = \preg_replace('/.*\\\\(.*)$/', "$1", $ai->class) . "." . \str_replace('pass', '', $ai->method);
+                unset($ai->class); unset($ai->method);
+                $aInfo[] = $ai;
+
+                // always set accumulator to false if the shortcode is invalid
+                if ($invalid)
+                {
+                    return false;
+                }
+            }
+            // normal assignment check, always false if the shortcode is invalid
+            else
+            {
+                if ($invalid || !$a->class)
+                {
+                    $invalid = true;
+                    return false;
+                }
+                $pTemp = $this->passStateCheck((new $a->class($a->options))->{$a->method}(), $a->options->assignment_state);
             }
 
-            // Break if not passed and matching method is AND
-			// Or if passed and matching method is OR
-			if (
-				(!$pass && $match_method == 'and')
-				|| ($pass && $match_method == 'or')
-			)
-			{
-				break;
-            }
-            
-            $assignment = new $a->class($a->options);
-            $pass       = $assignment->{$a->method}();
-            $pass       = $this->passStateCheck($pass, $a->options->assignment_state);
-        }
+            // return bitwise result based on the match_method
+            return ($match_method == 'and') ? $acc & $pTemp : $acc | $pTemp;
+        }, $pass);
 
-        return $pass;
+        return $info ? [$pass, $aInfo] : $pass;
     }
 
     /**
@@ -182,17 +202,17 @@ class Assignments
     }
 
     /**
-     * Checks and prepares the given array of assignment information
+     *  Checks and prepares the given array of assignment information
      * 
-     * @return  array of objects
+     *  @return  array of objects
      */
     protected function prepareAssignments($assignments_info)
     {
         $assignments = array();
         foreach ($assignments_info as $a)
         {
-            if (!is_object($a) ||!isset($a->alias) || !isset($a->selection) ||
-                !isset($a->params) || !isset($a->assignment_state))
+            // check if the object has the required properties
+            if (!is_object($a) ||!isset($a->alias) || !isset($a->selection) || !isset($a->assignment_state))
             {
                 continue;
             }
@@ -202,17 +222,14 @@ class Assignments
             // check if the assignment type exists
             if (!$this->exists($a->alias) || !$this->setTypeParams($assignment, $this->aliasToClassname($a->alias)))
             {
-                $assignment = null;
+                $assignment->class = $assignment->method = null;
             }
-            else
-            {
-                $assignment->options = (object) array(
-                    'selection'         => $a->selection,
-                    'params'            => $a->params,
-                    'assignment_state'  => $this->getAssignmentState($a->assignment_state)
-                );
-            }
-
+            $assignment->options = (object) array(
+                'alias'             => $a->alias,
+                'selection'         => $a->selection,
+                'params'            => isset($a->params) ? $a->params : new \stdClass(),
+                'assignment_state'  => $this->getAssignmentState($a->assignment_state)
+            );
             $assignments[] = $assignment;
         }
 
@@ -220,11 +237,13 @@ class Assignments
     }
 
     /**
-     * Converts an object of assignment information to an array of objects
-     * Used by existing extensions
-     * @return array of objects
+     *  Converts an object of assignment information to an array of objects
+     *  Used by existing extensions
+     * 
+     *  @var    object $assignments_info
+     *  @return array of objects
      */
-    protected function prepareAssignmentsInfo($assignments_info)
+    protected function prepareAssignmentsInfoFromObject($assignments_info)
     {
         if (!isset($assignments_info->params))
         {

@@ -29,10 +29,7 @@ class JFormFieldAcymailing extends JFormFieldList
      */
     protected function getOptions() 
     {
-
-        $lists = $this->getList();
-
-        if (!count($lists))
+        if (!$lists = $this->getList())
         {
             return;
         }
@@ -44,8 +41,7 @@ class JFormFieldAcymailing extends JFormFieldList
             $options[] = JHTML::_('select.option', $option->listid, $option->name);
         }
 
-        $options = array_merge(parent::getOptions(), $options);
-        return $options;
+        return array_merge(parent::getOptions(), $options);
     }
 
     /**
@@ -55,9 +51,9 @@ class JFormFieldAcymailing extends JFormFieldList
      */
     private function getList()
     {
-        if (!@include_once(JPATH_ADMINISTRATOR . "/components/com_acymailing/helpers/helper.php"))
+        if (!@include_once(JPATH_ADMINISTRATOR . '/components/com_acymailing/helpers/helper.php'))
         {
-            return false;
+            return;
         }
          
         $listClass = acymailing_get('class.list');

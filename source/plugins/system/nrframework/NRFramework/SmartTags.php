@@ -134,18 +134,43 @@ class SmartTags
 	}
 
 	/**
-	 *  Adds custom tags to list
+	 *  Adds Custom Tags to list
 	 *
-	 *  @param  array  $array  Tags array in key value pairs
+	 *  @param  array  $tags  Tags array in key value pairs
 	 */
-	public function add($array)
+	
+	/**
+	 *  Adds Custom Tags to the list
+	 *
+	 *  @param  Mixed   $tags    Tags list (Array or Object)
+	 *  @param  String  $prefix  A string to prefix all keys
+	 */
+	public function add($tags, $prefix = null)
 	{
-		if (!is_array($array) || !count($array))
+		// Convert Object to array
+		if (is_object($tags))
+		{
+			$tags = (array) $tags;
+		}
+
+		if (!is_array($tags) || !count($tags))
 		{
 			return;
 		}
 
-		$this->tags = array_merge($this->tags, $array);
+		// Add Prefix to keys
+		if ($prefix)
+		{
+			foreach ($tags as $key => $value)
+			{
+		        $newKey = $prefix . $key;
+		        $tags[$newKey] = $value;
+		        unset($tags[$key]);
+			}
+		}
+
+		$this->tags = array_merge($this->tags, $tags);
+
 		return $this;
 	}
 

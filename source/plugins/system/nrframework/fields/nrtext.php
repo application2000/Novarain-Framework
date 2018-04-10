@@ -22,14 +22,18 @@ class JFormFieldNRText extends JFormFieldText
     function getInput()
     {   
         // Adds an extra info label next to input
-        $addon = (string) $this->element['addon'];
+        $addon  = (string) $this->element['addon'];
+        $parent = parent::getInput();
 
         if (!empty($addon))
         {
-            $html[] = '<div class="input-append input-group">';
-            $html[] = parent::getInput();
-            $html[] = '<span class="add-on input-group-addon">'.JText::_($addon).'</span>';
-            $html[] = '</div>';
+            $html[] = '
+                <div class="input-append input-group">
+                    ' . $parent . '
+                    <spa$n class="add-on input-group-append">
+                        <span class="input-group-text" style="font-size:inherit;">' . JText::_($addon) . '</span>
+                    </span>
+                </div>';
         } else
         {
             $html[] = parent::getInput();
@@ -55,7 +59,7 @@ class JFormFieldNRText extends JFormFieldText
             $html[] = '<a ' . $attributes . ' class="' . $class . '" style="margin-left:10px;" href="' . $url . '" target="' . $target . '">' . JText::_($text) . '</a>';
         }
 
-        return implode(" ", $html);
+        return implode('', $html);
     }
 
     private function addPopupScript()

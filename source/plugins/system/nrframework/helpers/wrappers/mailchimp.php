@@ -69,7 +69,8 @@ class NR_MailChimp extends NR_Wrapper
 		{
 			foreach ($merge_fields as $merge_field_key => $merge_field_value) 
 			{
-				$data["merge_fields"][$merge_field_key] = (is_array($merge_field_value)) ? implode(',', $merge_field_value) : $merge_field_value;
+				$value = is_array($merge_field_value) ? implode(',', $merge_field_value) : (string) $merge_field_value;
+				$data['merge_fields'][$merge_field_key] = $value;
 			}
 		}
 

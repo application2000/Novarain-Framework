@@ -3,7 +3,7 @@
 /**
  * @author          Tassos Marinos <info@tassos.gr>
  * @link            http://www.tassos.gr
- * @copyright       Copyright © 2017 Tassos Marinos All Rights Reserved
+ * @copyright       Copyright © 2018 Tassos Marinos All Rights Reserved
  * @license         GNU GPLv3 <http://www.gnu.org/licenses/gpl.html> or later
  */
 
@@ -37,7 +37,7 @@ class NR_ReCaptcha extends NR_Wrapper
 
 		if (!array_key_exists('secret', $options))
 		{
-			$this->setError('Invalid secret key');
+			$this->setError('NR_RECAPTCHA_INVALID_SECRET_KEY');
 			throw new Exception($this->getLastError());
 		}
 
@@ -56,7 +56,7 @@ class NR_ReCaptcha extends NR_Wrapper
 	{
 		if (empty($response) || is_null($response))
 		{
-			return $this->setError('Please validate');
+			return $this->setError('NR_RECAPTCHA_PLEASE_VALIDATE');
 		}
 
 		$data = array(
@@ -83,15 +83,20 @@ class NR_ReCaptcha extends NR_Wrapper
 
 		if ($body['success'] == false && array_key_exists('error-codes', $body) && count($body['error-codes']) > 0)
 		{
-			$success = $this->setError(implode(", ", $body['error-codes']));
+			$success = $this->setError(implode(', ', $body['error-codes']));
 		}
 
 		return ($this->request_successful = $success);
 	}
 
+	/**
+	 *  Set wrapper error text
+	 *
+	 *  @param  String  $error  The error message to display
+	 */
 	private function setError($error)
 	{
-		$this->last_error = 'ReCaptcha: ' . $error;
+		$this->last_error = JText::_('NR_RECAPTCHA') . ': ' . JText::_($error);
 		return false;
 	}
 }

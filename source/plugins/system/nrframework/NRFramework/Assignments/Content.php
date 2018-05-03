@@ -173,16 +173,16 @@ class Content extends Assignment
 			return false;
 		}
 
-		if (!class_exists('ContentModelArticle'))
+		// Setup model
+		if (defined('nrJ4'))
+		{	
+			$model = new \Joomla\Component\Content\Site\Model\ArticleModel(['ignore_request' => true]);
+			$model->setState('article.id', $this->request->id);
+			$model->setState('params', $this->app->getParams());
+		} else 
 		{
 			require_once JPATH_SITE . '/components/com_content/models/article.php';
-		}
-
-		$model = \JModelLegacy::getInstance('article', 'contentModel');
-
-		if (!method_exists($model, 'getItem'))
-		{
-			return null;
+			$model = \JModelLegacy::getInstance('Article', 'ContentModel');
 		}
 
 		try

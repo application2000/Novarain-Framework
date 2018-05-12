@@ -26,9 +26,9 @@ class DateTime extends Assignment
 	 *
 	 *  @param  object  $assignment
 	 */
-	public function __construct($assignment)
+	public function __construct($assignment, $request = null, $date = null, $factory)
 	{
-		parent::__construct($assignment);
+		parent::__construct($assignment,  $request, $date, $factory);
 
 		$this->tz = new \DateTimeZone($this->app->getCfg('offset'));
 	}

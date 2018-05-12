@@ -79,7 +79,12 @@ class Assignment
 	 *
 	 *  @var  string
 	 */
-	public $assignment;
+    public $assignment;
+    
+    /**
+     *  Framework factory object
+     */
+    public $factory;
 
 	/**
 	 *  Class constructor
@@ -88,13 +93,16 @@ class Assignment
 	 *  @param  object  $request     
 	 *  @param  object  $date        
 	 */
-	public function __construct($options, $request = null, $date = null)
+	public function __construct($options, $request = null, $date = null, $factory)
 	{
+        // Save the factory object
+        $this->factory = $factory;
+
 		// Set General Joomla Objects
-		$this->db   = \JFactory::getDbo();
-		$this->app  = \JFactory::getApplication();
-		$this->doc  = \JFactory::getDocument();
-		$this->user = \JFactory::getUser();
+		$this->db   = $factory->getDbo();
+		$this->app  = $factory->getApplication();
+		$this->doc  = $factory->getDocument();
+		$this->user = $factory->getUser();
 
 		// Set Assignment Options
 		$this->params           = $options->params;
@@ -120,7 +128,7 @@ class Assignment
 		if (is_null($date))
 		{
 			$tz   = new \DateTimeZone($this->app->getCfg('offset'));
-			$date = \JFactory::getDate()->setTimeZone($tz);
+			$date = $factory->getDate()->setTimeZone($tz);
 		}
 
 		$this->date = $date;

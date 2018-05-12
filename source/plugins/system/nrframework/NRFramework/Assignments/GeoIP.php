@@ -36,7 +36,7 @@ class GeoIP extends Assignment
      *  @param  object  $request     
      *  @param  object  $date        
      */
-    public function __construct($assignment, $request = null, $date = null)
+    public function __construct($assignment, $request = null, $date = null, $factory)
     {
         $this->loadGeo();
 
@@ -45,7 +45,7 @@ class GeoIP extends Assignment
             return false;
         }
 
-        parent::__construct($assignment, $request, $date);
+        parent::__construct($assignment, $request, $date, $factory);
     }
 
     /**

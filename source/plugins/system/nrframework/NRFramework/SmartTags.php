@@ -91,6 +91,7 @@ class SmartTags
 			'client.useragent' => WebClient::getClient()->userAgent,
 			
 			// Other
+			'time'			=> \JFactory::getDate()->format('H:i'),
 			'date'			=> \JFactory::getDate()->format('Y-m-d H:i:s'),
 			'randomid'		=> bin2hex(\JCrypt::genRandomBytes(8))
 		);

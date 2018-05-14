@@ -1,0 +1,33 @@
+{
+  "name": "gulp-start",
+  "version": "1.0.0",
+  "description": "Responsive Scroll Triggered Box",
+  "main": " ",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": ""
+  },
+  "author": "Tassos Marinos",
+  "license": "MIT",
+  "bugs": {
+    "url": ""
+  },
+  "devDependencies": {
+    "bulma": "^0.6.2",
+    "gulp": "*",
+    "gulp-autoprefixer": "*",
+    "gulp-concat": "^2.6.1",
+    "gulp-group-css-media-queries": "*",
+    "gulp-jshint": "^2.0.4",
+    "gulp-livereload": "^3.8.1",
+    "gulp-plumber": "*",
+    "gulp-rename": "*",
+    "gulp-sass": "^3.1.0",
+    "gulp-sourcemaps": "^2.4.0",
+    "gulp-uglify": "*",
+    "jshint": "^2.9.4"
+  }
+}

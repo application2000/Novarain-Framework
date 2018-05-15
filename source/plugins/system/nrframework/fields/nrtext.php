@@ -21,6 +21,9 @@ class JFormFieldNRText extends JFormFieldText
      */
     function getInput()
     {   
+        // This line added to help us support the K2 Items and Joomla! Articles dropdown listbox array values
+        $this->value = is_array($this->value) ? implode(',', $this->value) : $this->value;
+
         // Adds an extra info label next to input
         $addon  = (string) $this->element['addon'];
         $parent = parent::getInput();

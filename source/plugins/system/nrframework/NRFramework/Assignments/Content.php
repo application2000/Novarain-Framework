@@ -45,7 +45,8 @@ class Content extends Assignment
 			return false;
 		}
 
-		return $this->passSimple($this->request->id, $this->selection);
+		$selection = is_array($this->selection) ? $this->selection : $this->splitKeywords($this->selection);
+		return $this->passSimple($this->request->id, $selection);
 	}
 
 	/**

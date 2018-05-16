@@ -83,35 +83,33 @@ class HTML
 		$html[] = '<div class="nr_treeselect" id="' . $id . '">';
 		$html[] = '
 			<div class="form-inline nr_treeselect-controls">
-				<span class="small">' . \JText::_('JSELECT') . ':
+
+				<span class="nr_treeselect_control">' . \JText::_('JSELECT') . ':
 					<a class="nr_treeselect-checkall" href="javascript:;">' . \JText::_('JALL') . '</a>,
 					<a class="nr_treeselect-uncheckall" href="javascript:;">' . \JText::_('JNONE') . '</a>,
 					<a class="nr_treeselect-toggleall" href="javascript:;">' . \JText::_('NR_TOGGLE') . '</a>
 				</span>
-				<span class="width-20">|</span>
-				<span class="small">' . \JText::_('NR_EXPAND') . ':
+				
+				<span class="nr_treeselect_control">' . \JText::_('NR_EXPAND') . ':
 					<a class="nr_treeselect-expandall" href="javascript:;">' . \JText::_('JALL') . '</a>,
 					<a class="nr_treeselect-collapseall" href="javascript:;">' . \JText::_('JNONE') . '</a>
 				</span>
-				<span class="width-20">|</span>
-				<span class="small">' . \JText::_('JSHOW') . ':
+				
+				<span class="nr_treeselect_control">' . \JText::_('JSHOW') . ':
 					<a class="nr_treeselect-showall" href="javascript:;">' . \JText::_('JALL') . '</a>,
 					<a class="nr_treeselect-showselected" href="javascript:;">' . \JText::_('NR_SELECTED') . '</a>
 				</span>
-				<span class="nr_treeselect-maxmin">
-				<span class="width-20">|</span>
-				<span class="small">
+
+				<span class="nr_treeselect_control nr_no_border">
 					<a class="nr_treeselect-maximize" href="javascript:;">' . \JText::_('NR_MAXIMIZE') . '</a>
 					<a class="nr_treeselect-minimize" style="display:none;" href="javascript:;">' . \JText::_('NR_MINIMIZE') . '</a>
 				</span>
-				</span>
-				<input type="text" name="nr_treeselect-filter" class="nr_treeselect-filter input-medium search-query pull-right" size="16"
+
+				<span class="nr_treeselect_control nr_treeselect-filter right">
+					<input type="text" name="nr_treeselect-filter" class="search-query" size="16"
 					autocomplete="off" placeholder="' . \JText::_('JSEARCH_FILTER') . '" aria-invalid="false" tabindex="-1">
-			</div>
-
-			<div class="clearfix"></div>
-
-			<hr class="hr-condensed">';
+				</span>
+			</div>';
 
 		$o = array();
 		foreach ($options as $option)
@@ -185,15 +183,23 @@ class HTML
 			<div style="display:none;" class="nr_treeselect-menu-block">
 				<div class="pull-left nav-hover nr_treeselect-menu">
 					<div class="btn-group">
-						<a href="#" data-toggle="dropdown" class="dropdown-toggle btn btn-micro">
+						<a href="#" data-toggle="dropdown" class="dropdown-toggle btn btn-secondary">
 							<span class="caret"></span>
 						</a>
 						<ul class="dropdown-menu">
 							<li class="nav-header">' . \JText::_('COM_MODULES_SUBITEMS') . '</li>
 							<li class="divider"></li>
-							<li class=""><a class="checkall" href="javascript:;"><span class="icon-checkbox"></span> ' . \JText::_('JSELECT') . '</a>
+							<li>
+								<a class="checkall" href="javascript:;">
+									<span class="icon-checkbox"></span> 
+									' . \JText::_('JSELECT') . '
+								</a>
 							</li>
-							<li><a class="uncheckall" href="javascript:;"><span class="icon-checkbox-unchecked"></span> ' . \JText::_('COM_MODULES_DESELECT') . '</a>
+							<li>
+								<a class="uncheckall" href="javascript:;">
+									<span class="icon-checkbox-unchecked"></span>
+									' . \JText::_('COM_MODULES_DESELECT') . '
+								</a>
 							</li>
 							<div class="nr_treeselect-menu-expand">
 								<li class="divider"></li>

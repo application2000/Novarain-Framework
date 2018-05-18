@@ -46,6 +46,16 @@ class GeoIP extends Assignment
         }
 
         parent::__construct($assignment, $request, $date);
+
+        // convert a comma/newline separated selection string into an array
+        if (!is_array($this->selection))
+        {
+            $this->selection = $this->splitKeywords($this->selection);
+        }
+        else
+        {
+            $this->selection = $this->splitKeywords($this->selection[0]);
+        }
     }
 
     /**
@@ -103,5 +113,24 @@ class GeoIP extends Assignment
         }, $this->selection);
 
         return $this->passSimple($this->geo->getContinentCode(), $this->selection);
+    }
+
+    /**
+     *  Pass Cities
+     */
+    public function passCities()
+    {
+        return $this->passSimple($this->geo->getCity(), $this->selection);
+    }
+
+    /**
+     *  Pass Regions
+     *
+     *  Input($this->selection) should be a comma/newline separated list of ISO 3611 country-region codes, i.e.GR-I (Greece - Attica)
+     */
+    public function passRegions()
+    {
+        $countryRegionCode = $this->geo->getCountryCode() . '-' . $this->geo->getRegionCode();
+        return $this->passSimple($countryRegionCode, $this->selection);
     }
 }

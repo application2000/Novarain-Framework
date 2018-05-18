@@ -26,12 +26,21 @@ jQuery(function($) {
 
         // Setup Events
         input.on("change", function() {
-            container.removeClass("alert-success").removeClass("alert-danger");
+
+            container.removeClass("alert-success alert-danger");
+
+            // Joomla 4
+            input.removeClass("custom-select-color-state custom-select-success custom-select-danger");
 
             if ($(this).val() > 0) {
                 container.find(".assign-options").slideDown("fast");
+
                 class_ = ($(this).val() == "1") ? "alert-success" : "alert-danger";
                 container.addClass(class_);
+
+                // Joomla 4
+                input.addClass("custom-select-color-state").addClass(($(this).val() == "1") ? "custom-select-success" : "custom-select-danger");
+                
             } else {
                 container.find(".assign-options").slideUp("fast");
             }      

@@ -12,6 +12,7 @@
     background-color: #F0F0F0;
     border: 1px solid #F0F0F0;
     border-radius: 3px;
+    position:relative;
 }
 .nr-well .well-desc {
 	margin-bottom:25px;
@@ -27,12 +28,20 @@
 .nr-well .controls:empty, .nr-well .control-label:empty, .nr-well .control-group:empty {
     display:none;
 }
+.nr-well .wellbtn {
+    position:absolute;
+    top:0;
+    right:0;
+    margin:19px;
+}
+.nr-well .wellbtn span {
+    margin:0;
+}
 
 .well-note {
     font-size: 11px;
     line-height: 1.5;
-    opacity: 0.8;
-    text-indent: -5px;
+    opacity: .7;
 }
 
 /* Field: nr_inline */
@@ -42,10 +51,11 @@
     flex-wrap: wrap;
     margin: -5px;
 }
-.inline-control-group label, .inline-control-group input {
+
+/*.inline-control-group label, .inline-control-group input {
 	margin:0 !important;
 	padding:0;
-}
+}*/
 .inline-control-group .controls {
     margin-left: 0 !important;
     line-height: 1;
@@ -63,12 +73,18 @@
 }
 
 /* Field: nr_inline - Timetable */
-.inline-control-group.timetable .control-group {
-	width: 100px;
+.inline-control-group.timetable {
+    margin: -7px -5px;
+}
+.inline-control-group.timetable input[type="checkbox"], .inline-control-group.timetable label, .inline-control-group.timetable .form-check {
+    margin:0;
+    padding:0;
+    position:static;
 }
 .inline-control-group.timetable .control-group:nth-child(2) .control-label {
     order: 1;
     padding-left: 7px !important;
+    width:90px;
 }
 
 /* General Field Classes */

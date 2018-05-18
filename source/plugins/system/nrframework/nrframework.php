@@ -9,6 +9,8 @@
 
 defined( '_JEXEC' ) or die( 'Restricted access' );
 
+use Joomla\String\StringHelper;
+
 // Initialize Novarain Library
 require_once __DIR__ . '/autoload.php';
 
@@ -83,7 +85,7 @@ class plgSystemNRFramework extends JPlugin
 	 */
 	public function onInstallerBeforePackageDownload(&$url, &$headers)
 	{
-		$isOurExtension = JString::strrpos($url, "tassos.gr/update");
+		$isOurExtension = StringHelper::strrpos($url, 'tassos.gr/update');
 
 		if (!$isOurExtension)
 		{
@@ -92,7 +94,7 @@ class plgSystemNRFramework extends JPlugin
 
 		preg_match("/dlid=.+/", $url, $hasDownloadKey);
 
-		$isFree         = JString::strrpos($url, "free");
+		$isFree         = StringHelper::strrpos($url, "free");
 		$hasDownloadKey = (count($hasDownloadKey) > 0) ? true : false;
 
 		if ($hasDownloadKey || $isFree)

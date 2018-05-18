@@ -21,15 +21,22 @@ class JFormFieldNRText extends JFormFieldText
      */
     function getInput()
     {   
+        // This line added to help us support the K2 Items and Joomla! Articles dropdown listbox array values
+        $this->value = is_array($this->value) ? implode(',', $this->value) : $this->value;
+
         // Adds an extra info label next to input
-        $addon = (string) $this->element['addon'];
+        $addon  = (string) $this->element['addon'];
+        $parent = parent::getInput();
 
         if (!empty($addon))
         {
-            $html[] = '<div class="input-append input-group">';
-            $html[] = parent::getInput();
-            $html[] = '<span class="add-on input-group-addon">'.JText::_($addon).'</span>';
-            $html[] = '</div>';
+            $html[] = '
+                <div class="input-append input-group">
+                    ' . $parent . '
+                    <spa$n class="add-on input-group-append">
+                        <span class="input-group-text" style="font-size:inherit;">' . JText::_($addon) . '</span>
+                    </span>
+                </div>';
         } else
         {
             $html[] = parent::getInput();
@@ -55,7 +62,7 @@ class JFormFieldNRText extends JFormFieldText
             $html[] = '<a ' . $attributes . ' class="' . $class . '" style="margin-left:10px;" href="' . $url . '" target="' . $target . '">' . JText::_($text) . '</a>';
         }
 
-        return implode(" ", $html);
+        return implode('', $html);
     }
 
     private function addPopupScript()

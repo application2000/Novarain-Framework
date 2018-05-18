@@ -37,6 +37,11 @@ class NR_ZohoCRM extends NR_Wrapper
 	{
 		parent::__construct();
 		$this->setKey($options['authenticationToken']);
+
+		if (isset($options['datacenter']) && !is_null($options['datacenter']) && !empty($options['datacenter']))
+		{
+			$this->datacenter = $options['datacenter'];
+		}
 	}
 	
 	/**

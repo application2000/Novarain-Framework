@@ -48,6 +48,8 @@ class Assignments
         'convertforms'	                     => 'ConvertForms',
         'geo_country|country|countries'	     => 'GeoIP.Countries',
         'geo_continent|continent|continents' => 'GeoIP.Continents',
+        'geo_city|city|cities'               => 'GeoIP.Cities',
+        'geo_region|region|regions'          => 'GeoIP.Regions',
         'cookiename|cookie'                  => 'Cookies.Name',
         'ip_addresses|iprange|ip'            => 'IP.Range',
         'k2_items'                           => 'K2Item',

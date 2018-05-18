@@ -14,13 +14,6 @@ require_once dirname(__DIR__) . '/helpers/field.php';
 class JFormFieldNR_Gmap extends NRFormField
 {
 	/**
-	 * The form field type.
-	 *
-	 * @var    string
-	 */
-	public $type = 'nr_gmap';
-
-	/**
 	 *  The default Google Maps API Key
 	 *
 	 *  @var  string
@@ -34,7 +27,6 @@ class JFormFieldNR_Gmap extends NRFormField
 	 */
 	public function getInput()
 	{
-
 		// Setup properties
 		$this->width    = $this->get('width', '500px');
 		$this->height   = $this->get('height', '400px');
@@ -46,21 +38,21 @@ class JFormFieldNR_Gmap extends NRFormField
 
 		// Add scripts to DOM
 		JHtml::_('jquery.framework');
+		JHtml::script('//maps.googleapis.com/maps/api/js?key=' . $this->getAPIKey());
+		JHtml::script('plg_system_nrframework/field.gmap.js', false, true);
+
 		Jtext::script('NR_WRONG_COORDINATES');
 
-		$this->doc->addScript('//maps.googleapis.com/maps/api/js?key=' . $this->getAPIKey());
-		NRFrameworkFunctions::addMedia("field.gmap.js");
-
 		// Add styles to DOM
-		$style = '#' . $this->id . '_map { '
-			. 'height: ' . $this->height . ';'
-			. 'width: ' .  $this->width . ';'
-			. 'margin: ' . $this->margin . ';'
-		. '}';
+		$this->doc->addStyleDeclaration('
+			#' . $this->id . '_map { 
+				height: ' . $this->height . ';
+				width:  ' . $this->width  . ';
+				margin: ' . $this->margin . ';
+			}
+		');
 
-		$this->doc->addStyleDeclaration($style);
-
-		return '<div id="' . $this->id . '_map"></div><input type="text" name="' . $this->name . '" class="' . $this->class . ' nr_gmap input-xlarge" id="' . $this->id . '" value="' . $this->value . '" placeholder="' . $this->hint . '" data-zoom="' . $this->zoom . '" ' . $this->readonly . '/>';
+		return '<div id="' . $this->id . '_map"></div><input type="text" name="' . $this->name . '" class="form-control ' . $this->class . ' nr_gmap input-xlarge" id="' . $this->id . '" value="' . $this->value . '" placeholder="' . $this->hint . '" data-zoom="' . $this->zoom . '" ' . $this->readonly . '/>';
 	}
 
 	/**

@@ -130,7 +130,7 @@ class Assignment
 	 *  Makes a simple assignment check
 	 *
 	 *  @param   mixed   $values     Current state
-	 *  @param   string  $selection  User's selection
+	 *  @param   array  $selection   User's selection
 	 *
 	 *  @return  bool
 	 */

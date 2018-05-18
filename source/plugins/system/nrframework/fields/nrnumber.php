@@ -21,20 +21,21 @@ class JFormFieldNRNumber extends JFormFieldNumber
      */
     function getInput()
     {   
-        $addon = (string) $this->element['addon'];
+        $parent = parent::getInput();
+        $addon  = (string) $this->element['addon'];
 
-        if (!empty($addon))
+        if (empty($addon))
         {
-            $html[] = '<div class="input-append input-group">';
-            $html[] = parent::getInput();
-            $html[] = '<span class="add-on input-group-addon">'.JText::_($addon).'</span>';
-            $html[] = '</div>';
-        } else {
-            $html[] = parent::getInput();
+            return $parent;
         }
 
-        return implode(" ", $html);
+        return '
+            <div class="input-append input-group">
+                ' . $parent . '
+                <spa$n class="add-on input-group-append">
+                    <span class="input-group-text" style="font-size:inherit;">' . JText::_($addon) . '</span>
+                </span>
+            </div>
+        ';
     }
-
-
 }

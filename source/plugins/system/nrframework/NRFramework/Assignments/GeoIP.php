@@ -16,9 +16,9 @@ use NRFramework\Assignment;
 /**
  *  IP addresses sample
  *
- *  Greece:  94.67.238.3
- *  Belgium: 37.62.255.255
- *  USA:     72.229.28.185
+ *  Greece / Dodecanese:  94.67.238.3
+ *  Belgium / Flanders:   37.62.255.255
+ *  USA / New York:       72.229.28.185
  */
 class GeoIP extends Assignment
 {
@@ -33,12 +33,14 @@ class GeoIP extends Assignment
      *  Class constructor
      *
      *  @param  object  $assignment
-     *  @param  object  $request     
-     *  @param  object  $date        
+     *  @param  object  $request
+     *  @param  object  $date
      */
     public function __construct($assignment, $request = null, $date = null)
     {
-        $this->loadGeo();
+        // Load Geo Class
+        $ip = isset($assignment->ip) ? $assignment->ip : null;
+        $this->loadGeo($ip);
 
         if (!$this->geo)
         {
@@ -47,42 +49,15 @@ class GeoIP extends Assignment
 
         parent::__construct($assignment, $request, $date);
 
-        // convert a comma/newline separated selection string into an array
-        if (!is_array($this->selection))
-        {
-            $this->selection = $this->splitKeywords($this->selection);
-        }
-        else
-        {
-            $this->selection = $this->splitKeywords($this->selection[0]);
-        }
-    }
-
-    /**
-     *  Load GeoIP Classes
-     *
-     *  @return  void
-     */
-    private function loadGeo()
-    {
-        if (!class_exists('TGeoIP'))
-        {
-            $path = JPATH_PLUGINS . '/system/tgeoip';
-
-            if (@file_exists($path . '/helper/tgeoip.php'))
-            {
-                if (@include_once($path . '/vendor/autoload.php'))
-                {
-                    @include_once $path . '/helper/tgeoip.php';
-                }
-            }
-        }
-
-        $this->geo = new \TGeoIP();
+        // Convert a comma/newline separated selection string into an array
+        $selection = is_array($this->selection) ? $this->selection[0] : $this->selection;
+        $this->selection = $this->splitKeywords($selection);
     }
 
     /**
      *  Pass Countries
+     * 
+     *  @return bool
      */
     public function passCountries()
     {
@@ -100,6 +75,8 @@ class GeoIP extends Assignment
 
     /**
      *  Pass Continents
+     * 
+     *  @return bool
      */
     public function passContinents()
     {
@@ -116,7 +93,9 @@ class GeoIP extends Assignment
     }
 
     /**
-     *  Pass Cities
+     * Pass City Name
+     *
+     * @return bool
      */
     public function passCities()
     {
@@ -124,13 +103,67 @@ class GeoIP extends Assignment
     }
 
     /**
-     *  Pass Regions
+     *  Pass Region Code
      *
      *  Input($this->selection) should be a comma/newline separated list of ISO 3611 country-region codes, i.e.GR-I (Greece - Attica)
+     * 
+     *  @return bool
      */
     public function passRegions()
     {
-        $countryRegionCode = $this->geo->getCountryCode() . '-' . $this->geo->getRegionCode();
-        return $this->passSimple($countryRegionCode, $this->selection);
+        return array_intersect($this->selection, $this->getRegionCodes());
+    }
+
+    /**
+     *  Get list of all ISO 3611 Country Region Codes
+     *
+     *  @return array
+     */
+    private function getRegionCodes()
+    {
+        $regionCodes = [];
+		$record = $this->geo->getRecord();
+
+		if ($record === false || is_null($record))
+		{
+			return $regionCodes;
+		}
+
+        // Skip if no regions found
+        if (!$regions = $record->subdivisions)
+        {
+            return $regionCodes;
+        }
+        
+        foreach ($regions as $key => $region)
+        {
+            // Prepend country isocode to the region code
+            $regionCodes[] = $record->country->isoCode . '-' . $region->isoCode;
+        }
+
+        return $regionCodes;
+    }
+
+    /**
+     *  Load GeoIP Classes
+     *
+     *  @return  void
+     */
+    private function loadGeo($ip)
+    {
+        if (!class_exists('TGeoIP'))
+        {
+            $path = JPATH_PLUGINS . '/system/tgeoip';
+
+            if (@file_exists($path . '/helper/tgeoip.php'))
+            {
+                if (@include_once($path . '/vendor/autoload.php'))
+                {
+                    @include_once $path . '/helper/tgeoip.php';
+                }
+            }
+        }
+
+        $this->geo = new \TGeoIP($ip);
     }
 }

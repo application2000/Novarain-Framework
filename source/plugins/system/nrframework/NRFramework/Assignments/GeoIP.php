@@ -39,7 +39,7 @@ class GeoIP extends Assignment
     public function __construct($assignment, $request = null, $date = null)
     {
         // Load Geo Class
-        $ip = isset($assignment->ip) ? $assignment->ip : null;
+        $ip = isset($assignment->params->ip) ? $assignment->ip : null;
         $this->loadGeo($ip);
 
         if (!$this->geo)

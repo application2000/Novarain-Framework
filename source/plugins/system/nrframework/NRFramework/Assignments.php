@@ -104,7 +104,9 @@ class Assignments
 				break;
             }
             
-            $assignment = new $a->class($a->options);
+
+            $factory    = new \NRFramework\Factory();
+            $assignment = new $a->class($a->options, null, null, $factory);
             $pass       = $assignment->{$a->method}();
             $pass       = $this->passStateCheck($pass, $a->options->assignment_state);
         }

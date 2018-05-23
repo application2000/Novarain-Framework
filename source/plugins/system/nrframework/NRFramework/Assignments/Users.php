@@ -29,9 +29,9 @@ class Users extends Assignment
      *  @param object $request
      *  @param object $date
      */
-    public function __construct($options, $request = null, $date = null)
+    public function __construct($options, $request = null, $date = null, $factory)
     {
-        parent::__construct($options, $request = null, $date = null);
+        parent::__construct($options, $request, $date, $factory);
 
         $_groupsHash = md5('NRFramework\Assignments\User_groupsHash');
     }

@@ -33,10 +33,11 @@ class NR_SalesForce extends NR_Wrapper
 	 * @param string $organizationID Your SalesForce Organization ID
 	 * @throws \Exception
 	 */
-	public function __construct($organizationID)
+	public function __construct($organization_id)
 	{
 		parent::__construct();
-		$this->setKey($organizationID);
+		$organization_id = is_array($organization_id) ? $organization_id['api'] : $organization_id;
+		$this->setKey($organization_id);
 		$this->options->set('headers.Content-Type', 'application/x-www-form-urlencoded');
 	}
 

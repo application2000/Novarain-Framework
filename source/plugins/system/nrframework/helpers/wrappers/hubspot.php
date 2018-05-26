@@ -19,10 +19,11 @@ class NR_HubSpot extends NR_Wrapper
 	 * @param string $key Your HubSpot API key
 	 * @throws \Exception
 	 */
-	public function __construct($key)
+	public function __construct($options)
 	{
 		parent::__construct();
-		$this->setKey($key);
+
+		$this->setKey(is_array($options) ? $options['api'] : $options);
 		$this->setEndpoint('https://api.hubapi.com');
 	}
 
@@ -71,8 +72,18 @@ class NR_HubSpot extends NR_Wrapper
 			$message = $body['message'];
 		}
 
-		return $message;
+		if (isset($body['validationResults']) && is_array($body['validationResults']) && count($body['validationResults']))
+		{	
+			foreach ($body['validationResults'] as $key => $validation)
+			{
+				if ($validation['isValid'] === false)
+				{
+					$message .= ' - ' . $validation['message'];
+				}
+			}	
+		}
 
+		return $message;
 	}
 
 	/**
@@ -126,5 +137,4 @@ class NR_HubSpot extends NR_Wrapper
 
 		return $fields;
 	}
-
 }

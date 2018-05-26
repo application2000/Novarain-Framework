@@ -59,11 +59,11 @@ class NR_ActiveCampaign extends NR_Wrapper
 			"tags"                 => $tags,
 			"status[1]"            => 1,
 			"instantresponders[1]" => 1,
-			"ip4"                  => $_SERVER['REMOTE_ADDR']
+			"ip4"                  => isset($_SERVER['REMOTE_ADDR']) ? $_SERVER['REMOTE_ADDR'] : ''	
 		);
 
 		$data = array_merge($data, $customFields);
-
+		
 		$this->post('', $data);
 	}
 

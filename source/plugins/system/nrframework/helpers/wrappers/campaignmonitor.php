@@ -136,14 +136,14 @@ class NR_CampaignMonitor extends NR_Wrapper
 
 		$message = '';
 
-		if (isset($body['Code']))
+		if (isset($body['Message']))
 		{
 			$message = $body['Message'];
 		}
 
-		if (isset($body['ResultData']['FailureDetails']['Message']))
+		if (isset($body['ResultData']['FailureDetails'][0]['Message']))
 		{
-			$message .= ' - ' . $body['ResultData']['FailureDetails']['Message'];
+			$message .= ' - ' . $body['ResultData']['FailureDetails'][0]['Message'];
 		}
 
 		return $message;

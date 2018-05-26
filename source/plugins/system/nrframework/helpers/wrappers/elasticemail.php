@@ -51,7 +51,7 @@ class NR_ElasticEmail extends NR_Wrapper
 			'publicAccountID'	=> $publicAccountID,
 			'publicListID'		=> $list,
 			'sendActivation' 	=> $double_optin ? 'true' : 'false',
-			'consentIP'			=> $_SERVER['REMOTE_ADDR']
+			'consentIP'			=> isset($_SERVER['REMOTE_ADDR']) ? $_SERVER['REMOTE_ADDR'] : ''
 		);
 
 		if (is_array($params) && count($params))

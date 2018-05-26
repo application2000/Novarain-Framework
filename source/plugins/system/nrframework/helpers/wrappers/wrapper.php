@@ -231,10 +231,7 @@ class NR_Wrapper
         }
 
 		// Convert body JSON
-		if (isset($response->body) && !empty($response->body))
-		{
-			$response->body = $this->convertResponse($response->body);
-		}
+		$response->body = $this->convertResponse($response->body);
 
 		// Format response object to array
 		$this->last_response = (array) $response;

@@ -24,7 +24,8 @@ class NR_ConvertKit extends NR_Wrapper
 	public function __construct($api_key)
 	{
 		parent::__construct();
-		$this->setKey($api_key);
+
+		$this->setKey(is_array($api_key) ? $api_key['api'] : $api_key);
 		$this->setEndpoint('https://api.convertkit.com/v3');
 		$this->options->set('headers.Accept', 'application/json; charset=utf-8');
 		$this->options->set('headers.Content-Type', 'application/json');
@@ -155,7 +156,7 @@ class NR_ConvertKit extends NR_Wrapper
 
 		if (isset($body['message']) && !empty($body['message']))
 		{
-			$message .= '<br>' . $body['message'];
+			$message .= ' - ' . $body['message'];
 		}
 
 		return $message;

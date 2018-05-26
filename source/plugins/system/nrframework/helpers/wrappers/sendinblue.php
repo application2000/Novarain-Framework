@@ -111,7 +111,5 @@ class NR_SendInBlue extends NR_Wrapper
 		}
 
 		return $message;
-
 	}
-
 }

@@ -78,7 +78,6 @@ class DateTime extends Assignment
         // do comparison using time only
 		$up   = is_null($this->params->publish_up)   ? null : \JFactory::getDate()->setTimezone($this->tz)->setTime($up_hours, $up_mins);
 		$down = is_null($this->params->publish_down) ? null : \JFactory::getDate()->setTimezone($this->tz)->setTime($down_hours, $down_mins);
-
 		return $this->checkRange($up, $down);
     }
     
@@ -91,6 +90,9 @@ class DateTime extends Assignment
     {
         if (is_array($this->selection) && !empty($this->selection))
         {
+            // convert selection values to lowercase
+            $this->selection = array_map("strtolower", $this->selection);
+
             // convert 'weekdays' and 'weekend' values to day ids
             foreach ($this->selection as $d)
             {
@@ -109,12 +111,14 @@ class DateTime extends Assignment
 
             // 'N' -> week day
             // 'l' -> fulltext week day
+            // 'D' -> Abbreviated day name (Mon to Sun) 
             // http://php.net/manual/en/function.date.php
-            $today      = $this->date->format('N');
-            $todayText  = $this->date->format('l');
-
+            $today          = $this->date->format('N');
+            $todayText      = strtolower($this->date->format('l'));
+            $todayTextAbbrv = strtolower($this->date->format('D'));
             if (in_array($today, $this->selection) ||
-                in_array($todayText, $this->selection))
+                in_array($todayText, $this->selection) ||
+                in_array($todayTextAbbrv, $this->selection))
             {
                 return true;
             }
@@ -132,14 +136,19 @@ class DateTime extends Assignment
     {
         if (is_array($this->selection) && !empty($this->selection))
         {
+            // convert selection values to lowercase
+            $this->selection = array_map("strtolower", $this->selection);
+
             // 'n' -> month number (1 to 12)
             // 'F' -> full-text month name
+            // 'M' -> Abbreviated month name (Jan to Dec) 
             // http://php.net/manual/en/function.date.php
-            $month      = $this->date->format('n');
-            $monthText  = $this->date->format('F');
-
+            $month          = $this->date->format('n');
+            $monthText      = strtolower($this->date->format('F'));
+            $monthTextAbbrv = strtolower($this->date->format('M'));
             if (in_array($month, $this->selection) ||
-                in_array($monthText, $this->selection))
+                in_array($monthText, $this->selection) ||
+                in_array($monthTextAbbrv, $this->selection))
             {
                 return true;
             }
@@ -158,6 +167,11 @@ class DateTime extends Assignment
 	 */
 	private function checkRange(&$up_date, &$down_date)
 	{
+        if (!$up_date && !$down_date)
+        {
+            return false;
+        }
+
 		$now = $this->date->getTimestamp();
 
 		if (((bool)$up_date   && $up_date->getTimestamp() > $now) ||

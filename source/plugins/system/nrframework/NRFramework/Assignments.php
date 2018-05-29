@@ -61,12 +61,14 @@ class Assignments
     /**
 	 *  Check all Assignments
 	 *
-	 *  @param   array|object   $assignments_info   Array containing assignment info
+	 *  @param   array|object   $assignments_info   Array/Object containing assignment info
 	 *  @param   string         $match_method       The matching method (and|or)
-	 *
-	 *  @return  bool           True if check passes
+	 *  @param   bool           $debug              Set to true to request additional debug information about assignments
+     * 
+	 *  @return  bool|array                         True if check passes. If $debug is set to true an array will be returned with
+     *                                              the result in the first element and debug info in the second.
 	 */
-	function passAll($assignments_info, $match_method = 'and')
+	function passAll($assignments_info, $match_method = 'and', $debug = false)
 	{
         if (!$assignments_info)
         {
@@ -77,11 +79,17 @@ class Assignments
         // to array
         if (is_object($assignments_info))
         {
-            $assignments_info = $this->prepareAssignmentsInfo($assignments_info);
+            $assignments_info = $this->prepareAssignmentsInfoFromObject($assignments_info);
         }
 
-        // filter-out invalid assignments and prepare assignment data (new method - added for Restrict Content)
+        // prepare assignment data (new method - added for Restrict Content)
         $assignments = $this->prepareAssignments($assignments_info);
+
+        $debug_info = [];
+        if ($debug)
+        {
+            $debug_info = $this->generateDebugInfo($assignments);
+        }
 
         // initialize $pass based on the matching method
         $pass = (bool) ($match_method == 'and');
@@ -89,17 +97,16 @@ class Assignments
         foreach ($assignments as $a)
         {
             // Return false if any of the assignments doesnt exist
-            if (is_null($a))
+            if (is_null($a) || !\property_exists($a, 'class') || is_null($a->class))
             {
-                return false;
+                $pass = false;
+                break;
             }
 
             // Break if not passed and matching method is AND
 			// Or if passed and matching method is OR
-			if (
-				(!$pass && $match_method == 'and')
-				|| ($pass && $match_method == 'or')
-			)
+			if ((!$pass && $match_method == 'and')
+				|| ($pass && $match_method == 'or'))
 			{
 				break;
             }
@@ -111,7 +118,7 @@ class Assignments
             $pass       = $this->passStateCheck($pass, $a->options->assignment_state);
         }
 
-        return $pass;
+        return $debug ? [$pass, $debug_info] : $pass;
     }
 
     /**
@@ -186,17 +193,17 @@ class Assignments
     }
 
     /**
-     * Checks and prepares the given array of assignment information
+     *  Checks and prepares the given array of assignment information
      * 
-     * @return  array of objects
+     *  @return  array of objects
      */
     protected function prepareAssignments($assignments_info)
     {
         $assignments = array();
         foreach ($assignments_info as $a)
         {
-            if (!is_object($a) ||!isset($a->alias) || !isset($a->selection) ||
-                !isset($a->params) || !isset($a->assignment_state))
+            // check if the object has the required properties
+            if (!is_object($a) ||!isset($a->alias) || !isset($a->selection) || !isset($a->assignment_state))
             {
                 continue;
             }
@@ -206,17 +213,14 @@ class Assignments
             // check if the assignment type exists
             if (!$this->exists($a->alias) || !$this->setTypeParams($assignment, $this->aliasToClassname($a->alias)))
             {
-                $assignment = null;
+                $assignment->class = $assignment->method = null;
             }
-            else
-            {
-                $assignment->options = (object) array(
-                    'selection'         => $a->selection,
-                    'params'            => $a->params,
-                    'assignment_state'  => $this->getAssignmentState($a->assignment_state)
-                );
-            }
-
+            $assignment->options = (object) array(
+                'alias'             => $a->alias,
+                'selection'         => $a->selection,
+                'params'            => isset($a->params) ? $a->params : new \stdClass(),
+                'assignment_state'  => $this->getAssignmentState($a->assignment_state)
+            );
             $assignments[] = $assignment;
         }
 
@@ -224,11 +228,14 @@ class Assignments
     }
 
     /**
-     * Converts an object of assignment information to an array of objects
-     * Used by existing extensions
-     * @return array of objects
+     *  Converts an object of assignment information to an array of objects
+     *  Used by existing extensions
+     * 
+     *  @var    object $assignments_info
+     * 
+     *  @return array of objects
      */
-    protected function prepareAssignmentsInfo($assignments_info)
+    protected function prepareAssignmentsInfoFromObject($assignments_info)
     {
         if (!isset($assignments_info->params))
         {
@@ -319,13 +326,13 @@ class Assignments
 	 *  @param   object  &$assignment  The assignment object
 	 *  @param   string  $type         The assignment type
 	 *
-	 *  @return  void
+	 *  @return  bool                   True if the class and method exist, false otherwise 
 	 */
 	public function setTypeParams(&$assignment, $type = '')
 	{
 		if (strpos($type, '.') === false)
 		{
-			$class = $type;
+			$class   = $type;
 			$method  = $type;
         }
         else
@@ -335,18 +342,49 @@ class Assignments
             $method  = $type['1'];
         }		
 
-        $class      = __NAMESPACE__ . '\\Assignments\\' . $class;
-        $method     = 'pass' . $method;
+        $class  = __NAMESPACE__ . '\\Assignments\\' . $class;
+        $method = 'pass' . $method;
         if (!class_exists($class) && !method_exists($class, $method))
         {
             return false;
         }
         
-        $assignment->class = $class;
+        $assignment->class  = $class;
         $assignment->method = $method;
 
         return true;
-	}
-}
+    }
+    
+    /**
+     *  Checks assignments and returns debug information
+     * 
+     *  @param  array $assignments
+     * 
+     *  @return array 
+     */
+    protected function generateDebugInfo($assignments)
+    {
+        $debug_info = [];
+        foreach ($assignments as $assignment)
+        {
+            if (!property_exists($assignment, 'class') || is_null($assignment->class))
+            {
+                $assignment->pass = null;
+                $assignment->name = 'Unknown Assignment';
+            }
+            else
+            {
+                $assignment->pass = $this->passStateCheck(
+                    (new $assignment->class($assignment->options))->{$assignment->method}(),
+                    $assignment->options->assignment_state
+                );
 
-?>
+                $assignment->name = \preg_replace('/.*\\\\(.*)$/', "$1", $assignment->class) . 
+                                    "." . \str_replace('pass', '', $assignment->method);
+            }
+            $debug_info[] = $assignment;
+        }
+
+        return $debug_info;
+    }
+}

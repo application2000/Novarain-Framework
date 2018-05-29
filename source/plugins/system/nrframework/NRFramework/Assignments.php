@@ -61,12 +61,14 @@ class Assignments
     /**
 	 *  Check all Assignments
 	 *
-	 *  @param   array|object   $assignments_info   Array containing assignment info
+	 *  @param   array|object   $assignments_info   Array/Object containing assignment info
 	 *  @param   string         $match_method       The matching method (and|or)
-	 *
-	 *  @return  bool           True if check passes
+	 *  @param   bool           $debug              Set to true to request additional debug information about assignments
+     * 
+	 *  @return  bool|array                         True if check passes. If $debug is set to true an array will be returned with
+     *                                              the result in the first element and debug info in the second.
 	 */
-	function passAll($assignments_info, $match_method = 'and', $info = false)
+	function passAll($assignments_info, $match_method = 'and', $debug = false)
 	{
         if (!$assignments_info)
         {
@@ -83,53 +85,38 @@ class Assignments
         // prepare assignment data (new method - added for Restrict Content)
         $assignments = $this->prepareAssignments($assignments_info);
 
+        $debug_info = [];
+        if ($debug)
+        {
+            $debug_info = $this->generateDebugInfo($assignments);
+        }
+
         // initialize $pass based on the matching method
         $pass = (bool) ($match_method == 'and');
 
-        $invalid  = false;
-        $aInfo    = [];
-        // check if the assignments pass
-        $pass = \array_reduce($assignments, function($acc, $a) use ($invalid, $match_method, $info, &$aInfo) {
-            // store assignment information
-            if($info)
+        foreach ($assignments as $a)
+        {
+            // Return false if any of the assignments doesnt exist
+            if (is_null($a) || !\property_exists($a, 'class') || is_null($a->class))
             {
-                $ai = $a;
-                if (!$a->class)
-                {
-                    $invalid = true;
-                    $ai->pass = null;
-                    $ai->name = 'Unkown Assignment';
-                    return false;
-                }
-                // when returning extra info we still need to check each asssignment even if the shortcode is invalid
-                $pTemp = $this->passStateCheck((new $a->class($a->options))->{$a->method}(), $a->options->assignment_state);
-                $ai->pass = $pTemp;
-                $ai->name = \preg_replace('/.*\\\\(.*)$/', "$1", $ai->class) . "." . \str_replace('pass', '', $ai->method);
-                unset($ai->class); unset($ai->method);
-                $aInfo[] = $ai;
-
-                // always set accumulator to false if the shortcode is invalid
-                if ($invalid)
-                {
-                    return false;
-                }
-            }
-            // normal assignment check, always false if the shortcode is invalid
-            else
-            {
-                if ($invalid || !$a->class)
-                {
-                    $invalid = true;
-                    return false;
-                }
-                $pTemp = $this->passStateCheck((new $a->class($a->options))->{$a->method}(), $a->options->assignment_state);
+                $pass = false;
+                break;
             }
 
-            // return bitwise result based on the match_method
-            return ($match_method == 'and') ? $acc & $pTemp : $acc | $pTemp;
-        }, $pass);
+            // Break if not passed and matching method is AND
+			// Or if passed and matching method is OR
+			if ((!$pass && $match_method == 'and')
+				|| ($pass && $match_method == 'or'))
+			{
+				break;
+            }
+            
+            $assignment = new $a->class($a->options);
+            $pass       = $assignment->{$a->method}();
+            $pass       = $this->passStateCheck($pass, $a->options->assignment_state);
+        }
 
-        return $info ? [$pass, $aInfo] : $pass;
+        return $debug ? [$pass, $debug_info] : $pass;
     }
 
     /**
@@ -243,6 +230,7 @@ class Assignments
      *  Used by existing extensions
      * 
      *  @var    object $assignments_info
+     * 
      *  @return array of objects
      */
     protected function prepareAssignmentsInfoFromObject($assignments_info)
@@ -336,13 +324,13 @@ class Assignments
 	 *  @param   object  &$assignment  The assignment object
 	 *  @param   string  $type         The assignment type
 	 *
-	 *  @return  void
+	 *  @return  bool                   True if the class and method exist, false otherwise 
 	 */
 	public function setTypeParams(&$assignment, $type = '')
 	{
 		if (strpos($type, '.') === false)
 		{
-			$class = $type;
+			$class   = $type;
 			$method  = $type;
         }
         else
@@ -352,18 +340,49 @@ class Assignments
             $method  = $type['1'];
         }		
 
-        $class      = __NAMESPACE__ . '\\Assignments\\' . $class;
-        $method     = 'pass' . $method;
+        $class  = __NAMESPACE__ . '\\Assignments\\' . $class;
+        $method = 'pass' . $method;
         if (!class_exists($class) && !method_exists($class, $method))
         {
             return false;
         }
         
-        $assignment->class = $class;
+        $assignment->class  = $class;
         $assignment->method = $method;
 
         return true;
-	}
-}
+    }
+    
+    /**
+     *  Checks assignments and returns debug information
+     * 
+     *  @param  array $assignments
+     * 
+     *  @return array 
+     */
+    protected function generateDebugInfo($assignments)
+    {
+        $debug_info = [];
+        foreach ($assignments as $assignment)
+        {
+            if (!property_exists($assignment, 'class') || is_null($assignment->class))
+            {
+                $assignment->pass = null;
+                $assignment->name = 'Unknown Assignment';
+            }
+            else
+            {
+                $assignment->pass = $this->passStateCheck(
+                    (new $assignment->class($assignment->options))->{$assignment->method}(),
+                    $assignment->options->assignment_state
+                );
 
-?>
+                $assignment->name = \preg_replace('/.*\\\\(.*)$/', "$1", $assignment->class) . 
+                                    "." . \str_replace('pass', '', $assignment->method);
+            }
+            $debug_info[] = $assignment;
+        }
+
+        return $debug_info;
+    }
+}

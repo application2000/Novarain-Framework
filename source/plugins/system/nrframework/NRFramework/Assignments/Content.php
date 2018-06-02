@@ -23,14 +23,27 @@ class Content extends Assignment
 	private $article;
 
 	/**
+	 *  Request information
+	 * 
+	 *  @var object
+	 */
+	protected $request;
+
+	/**
 	 *  Class constructor
 	 *
 	 *  @param  object  $assignment
 	 */
-	public function __construct($assignment)
+	public function __construct($assignment, $factory)
 	{
-		parent::__construct($assignment);
+		parent::__construct($assignment, $factory);
 		$this->getItem();
+
+		$request = new \stdClass;
+		$request->view   = $this->app->input->get("view");
+		$request->option = $this->app->input->get("option");
+		$request->id     = $this->app->input->get("id");
+		$this->request = $request;
 	}
 
 	/**

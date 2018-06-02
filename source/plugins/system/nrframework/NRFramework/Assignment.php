@@ -93,7 +93,7 @@ class Assignment
 	 *  @param  object  $request     
 	 *  @param  object  $date        
 	 */
-	public function __construct($options, $request = null, $date = null, $factory)
+	public function __construct($options, $factory)
 	{
         // Save the factory object
         $this->factory = $factory;
@@ -108,30 +108,6 @@ class Assignment
 		$this->params           = $options->params;
 		$this->selection        = $options->selection;
 		$this->assignment_state = $options->assignment_state;
-
-		// Set Request object
-		if (is_null($request))
-		{
-			$request = new \stdClass;
-
-			$request->view   = $this->app->input->get("view");
-			$request->task   = $this->app->input->get("task");
-			$request->option = $this->app->input->get("option");
-			$request->layout = $this->app->input->get('layout', '', 'string');
-			$request->id     = $this->app->input->get("id");
-			$request->Itemid = $this->app->input->getInt('Itemid', 0);
-		}
-
-		$this->request = $request;
-
-		// Set date object
-		if (is_null($date))
-		{
-			$tz   = new \DateTimeZone($this->app->getCfg('offset'));
-			$date = $factory->getDate()->setTimeZone($tz);
-		}
-
-		$this->date = $date;
 	}
 
 	/**
@@ -202,11 +178,12 @@ class Assignment
 			return [];
 		}
 
-		$hash = md5('getParentIds_' . $id . '_' . $table . '_' . $parent . '_' . $child);
+		$cache = $this->factory->getCache(); 
+		$hash  = md5('getParentIds_' . $id . '_' . $table . '_' . $parent . '_' . $child);
 
-		if (Cache::has($hash))
+		if ($cache->has($hash))
 		{
-			return Cache::get($hash);
+			return $cache->get($hash);
 		}
 
 		$parent_ids = array();
@@ -229,7 +206,7 @@ class Assignment
 			$parent_ids[] = $id;
 		}
 
-		return Cache::set($hash, $parent_ids);
+		return $cache->set($hash, $parent_ids);
     }
     
     /**

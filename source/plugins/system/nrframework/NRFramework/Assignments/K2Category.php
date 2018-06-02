@@ -95,7 +95,7 @@ class K2Category extends K2
 		if ($this->isCategory())
 		{
 			// Note: If the category alias starts with a number then we end up with a wrong result
-			$catid = (int) $this->request->id;
+			$catid = (int) $this->app->input->get("id");
 			return (array) $catid;
 		}
 

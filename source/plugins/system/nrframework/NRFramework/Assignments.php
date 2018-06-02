@@ -57,6 +57,27 @@ class Assignments
         'k2_tags'                            => 'K2Tag',
         'k2_pagetypes'                       => 'K2Pagetype'
     );
+
+    /**
+     *  Factory object 
+     * 
+     *  @var \NRFramework\Factory
+     */
+    protected $factory;
+
+    /**
+     *  ctor
+     */
+    public function __construct($factory = null)
+    {
+        if (!$factory)
+        {
+            $factory = new \NRFramework\Factory();
+        }
+
+        $this->factory = $factory;
+        
+    }
     
     /**
 	 *  Check all Assignments
@@ -110,10 +131,8 @@ class Assignments
 			{
 				break;
             }
-            
 
-            $factory    = new \NRFramework\Factory();
-            $assignment = new $a->class($a->options, null, null, $factory);
+            $assignment = new $a->class($a->options, $this->factory);
             $pass       = $assignment->{$a->method}();
             $pass       = $this->passStateCheck($pass, $a->options->assignment_state);
         }
@@ -375,7 +394,7 @@ class Assignments
             else
             {
                 $assignment->pass = $this->passStateCheck(
-                    (new $assignment->class($assignment->options))->{$assignment->method}(),
+                    (new $assignment->class($assignment->options, $this->factory))->{$assignment->method}(),
                     $assignment->options->assignment_state
                 );
 

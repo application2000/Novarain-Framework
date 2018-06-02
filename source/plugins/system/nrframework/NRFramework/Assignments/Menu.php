@@ -15,6 +15,13 @@ use NRFramework\Assignment;
 
 class Menu extends Assignment 
 {
+	protected $itemID = null;
+
+	public function __construct($options, $factory)
+	{
+		parent::__construct($options, $factory);
+		$this->itemID = $this->app->input->getInt('Itemid', 0);
+	}
 	/**
 	 *  Pass check for menu items
 	 *
@@ -25,7 +32,7 @@ class Menu extends Assignment
 		$includeChildren = isset($this->params->inc_children) ? $this->params->inc_children : false;
     	$includeNoItemID = isset($this->params->noitem) ? $this->params->noitem : false;
     	// Pass if selection is empty or the itemid is missing
-    	if (!$this->request->Itemid || empty($this->selection))
+    	if (!$this->itemID || empty($this->selection))
         {
         	return $includeNoItemID;
         }
@@ -38,7 +45,7 @@ class Menu extends Assignment
 		}
 
 		// return true if menu is in selection and we are not including child items only
-		if (in_array($this->request->Itemid, $this->selection))
+		if (in_array($this->itemID, $this->selection))
 		{
 			return ($includeChildren != 2);
 		}
@@ -51,7 +58,7 @@ class Menu extends Assignment
 		}
 
 		// Get menu item parents
-		$parent_ids = $this->getParentIds($this->request->Itemid);
+		$parent_ids = $this->getParentIds($this->itemID);
 		$parent_ids = array_diff($parent_ids, array('1'));
 
 		foreach ($parent_ids as $id)
@@ -74,12 +81,12 @@ class Menu extends Assignment
 	 */
 	private function getMenuType()
 	{
-		if (empty($this->request->Itemid))
+		if (empty($this->itemID))
 		{
 			return;
 		}
 
-		$menu = $this->app->getMenu()->getItem((int) $this->request->Itemid);
+		$menu = $this->app->getMenu()->getItem((int) $this->itemID);
 
 		return isset($menu->menutype) ? $menu->menutype : false;
 	}

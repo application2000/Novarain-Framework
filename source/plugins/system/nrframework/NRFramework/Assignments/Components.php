@@ -17,6 +17,6 @@ class Components extends Assignment
 {
     public function passComponents()
     {
-        return $this->passSimple($this->request->option, $this->selection);
+        return $this->passSimple($this->app->input->get("option"), $this->selection);
     }
 }

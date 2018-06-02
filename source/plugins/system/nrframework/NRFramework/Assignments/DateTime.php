@@ -26,11 +26,12 @@ class DateTime extends Assignment
 	 *
 	 *  @param  object  $assignment
 	 */
-	public function __construct($assignment, $request = null, $date = null, $factory)
+	public function __construct($assignment, $factory)
 	{
-		parent::__construct($assignment,  $request, $date, $factory);
+		parent::__construct($assignment, $factory);
 
-		$this->tz = new \DateTimeZone($this->app->getCfg('offset'));
+        $this->tz   = new \DateTimeZone($this->app->getCfg('offset'));
+        $this->date = $factory->getDate()->setTimeZone($this->tz);
 	}
 	/**
 	 *  Checks if current date passes the date range
@@ -52,8 +53,8 @@ class DateTime extends Assignment
 		\NRFramework\Functions::fixDate($up);
 		\NRFramework\Functions::fixDate($down);
 
-		$up   = $up   ? \JDate::createFromFormat($format, $up, $this->tz) : null;
-		$down = $down ? \JDate::createFromFormat($format, $down, $this->tz) : null;
+		$up   = $up   ? $this->factory->getDateFromformat($format, $up, $this->tz) : null;
+		$down = $down ? $this->factory->getDateFromformat($format, $down, $this->tz) : null;
 
         return $this->checkRange($up, $down);
 	}
@@ -76,8 +77,8 @@ class DateTime extends Assignment
         }
 
         // do comparison using time only
-		$up   = is_null($this->params->publish_up)   ? null : \JFactory::getDate()->setTimezone($this->tz)->setTime($up_hours, $up_mins);
-		$down = is_null($this->params->publish_down) ? null : \JFactory::getDate()->setTimezone($this->tz)->setTime($down_hours, $down_mins);
+		$up   = is_null($this->params->publish_up)   ? null : $this->factory->getDate()->setTimezone($this->tz)->setTime($up_hours, $up_mins);
+		$down = is_null($this->params->publish_down) ? null : $this->factory->getDate()->setTimezone($this->tz)->setTime($down_hours, $down_mins);
 		return $this->checkRange($up, $down);
     }
     

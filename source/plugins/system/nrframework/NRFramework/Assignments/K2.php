@@ -12,10 +12,29 @@ namespace NRFramework\Assignments;
 defined('_JEXEC') or die;
 
 use NRFramework\Assignment;
-use NRFramework\Cache;
 
 abstract class K2 extends Assignment
 {
+    /**
+     *  Request information
+     */
+    protected $request = null;
+
+    public function __construct($options, $factory)
+	{
+		parent::__construct($options, $factory);
+        
+        $request = new \stdClass;
+
+        $request->view   = $this->app->input->get("view");
+        $request->task   = $this->app->input->get("task");
+        $request->option = $this->app->input->get("option");
+        $request->layout = $this->app->input->get('layout', '', 'string');
+        $request->id     = $this->app->input->get("id");
+
+        $this->request = $request;
+    }
+    
     /**
      *  Gets K2 item's id using K2Model
      *
@@ -43,14 +62,15 @@ abstract class K2 extends Assignment
      */
     protected function getK2Item()
     {
-        $hash = md5('k2assitem');
+        $cache = $this->factory->getcache();
+        $hash  = md5('k2assitem');
 
-        if (Cache::has($hash))
+        if ($cache->has($hash))
         {
-            return Cache::get($hash);
+            return $cache->get($hash);
         }
 
-        return Cache::set($hash, \JModelLegacy::getInstance('Item', 'K2Model')->getData());
+        return $cache->set($hash, \JModelLegacy::getInstance('Item', 'K2Model')->getData());
     }   
 
     /**

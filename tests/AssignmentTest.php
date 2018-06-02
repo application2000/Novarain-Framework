@@ -20,14 +20,14 @@ class AssignmentTest extends PHPUnit\Framework\TestCase
             'assignment_state' => null
         ];
 
-        $this->assignment = new Assignment($options, null, null, $this->factoryStub);
+        $this->assignment = new Assignment($options, $this->factoryStub);
     }
 
     public function passSimpleProvider()
     {
         return [
             [null, null, false],
-            ['desktop', 'DESKTOP', true]
+            ['desktop', ['DESKTOP'], true]
         ];
     }
    
@@ -37,6 +37,6 @@ class AssignmentTest extends PHPUnit\Framework\TestCase
      */
     public function testPassSimple($values, $selection, $expected)
     {
-        $this->assertEquals($this->assignment->passSimple($values, $selection));
+        $this->assertEquals($expected, $this->assignment->passSimple($values, $selection));
     }
 }

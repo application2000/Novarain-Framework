@@ -33,7 +33,7 @@ class JFormFieldNRText extends JFormFieldText
             $html[] = '
                 <div class="input-append input-group">
                     ' . $parent . '
-                    <spa$n class="add-on input-group-append">
+                    <span class="add-on input-group-append">
                         <span class="input-group-text" style="font-size:inherit;">' . JText::_($addon) . '</span>
                     </span>
                 </div>';

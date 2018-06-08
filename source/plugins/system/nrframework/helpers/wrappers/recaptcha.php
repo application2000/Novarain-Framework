@@ -78,8 +78,7 @@ class NR_ReCaptcha extends NR_Wrapper
 	protected function determineSuccess()
 	{
 		$success = parent::determineSuccess();
-
-		$body = $this->last_response['body'];
+		$body    = $this->last_response->body;
 
 		if ($body['success'] == false && array_key_exists('error-codes', $body) && count($body['error-codes']) > 0)
 		{

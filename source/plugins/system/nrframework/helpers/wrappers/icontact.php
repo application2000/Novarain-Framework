@@ -163,7 +163,7 @@ class NR_iContact extends NR_Wrapper
 
 		if (!$this->success())
 		{
-			throw new Exception($this->getLastError());
+			return;
 		}
 
 		$lists = array();
@@ -192,8 +192,7 @@ class NR_iContact extends NR_Wrapper
 	 */
 	public function getLastError()
 	{
-		$body = $this->last_response['body'];
-
+		$body    = $this->last_response->body;
 		$message = '';
 
 		if (isset($body['errors']))

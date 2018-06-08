@@ -112,7 +112,7 @@ class NR_ZohoCRM extends NR_Wrapper
 	 */
 	public function getLastError()
 	{
-		$body = $this->last_response['body'];
+		$body = $this->last_response->body;
 
 		if (isset($body->error))
 		{
@@ -134,7 +134,7 @@ class NR_ZohoCRM extends NR_Wrapper
 	 */
 	public function determineSuccess()
 	{
-		$status = $this->findHTTPStatus();
+		$status  = $this->last_response->code;
 		$success = ($status >= 200 && $status <= 299) ? true : false;
 
 		if (!$success) 
@@ -142,7 +142,7 @@ class NR_ZohoCRM extends NR_Wrapper
 			return false;
 		}
 
-		$body = $this->last_response['body'];
+		$body = $this->last_response->body;
 
 		if (!isset($body->result->row->success)) 
 		{

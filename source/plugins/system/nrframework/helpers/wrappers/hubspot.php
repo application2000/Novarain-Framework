@@ -16,8 +16,8 @@ class NR_HubSpot extends NR_Wrapper
 {
 	/**
 	 * Create a new instance
+	 * 
 	 * @param string $key Your HubSpot API key
-	 * @throws \Exception
 	 */
 	public function __construct($options)
 	{
@@ -63,7 +63,7 @@ class NR_HubSpot extends NR_Wrapper
 	 */
 	public function getLastError()
 	{
-		$body = $this->last_response['body'];
+		$body = $this->last_response->body;
 
 		$message = '';
 

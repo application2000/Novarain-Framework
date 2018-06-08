@@ -18,7 +18,6 @@ class NR_CostantContact extends NR_Wrapper
 	 * Create a new instance
 	 * @param string $key Your App key
 	 * @param string $access_token The Access Token
-	 * @throws \Exception
 	 */
 	public function __construct($key, $access_token)
 	{

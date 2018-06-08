@@ -83,7 +83,7 @@ class NR_ZoHo extends NR_Wrapper
 
 		if (!$this->success())
 		{
-			throw new Exception($this->getLastError());
+			return;
 		}
 
 		$lists = array();
@@ -111,7 +111,7 @@ class NR_ZoHo extends NR_Wrapper
 	 */
 	public function getLastError()
 	{
-		$body = $this->last_response['body'];
+		$body = $this->last_response->body;
 
 		if (isset($body['message']))
 		{
@@ -131,7 +131,7 @@ class NR_ZoHo extends NR_Wrapper
 		$status = $this->findHTTPStatus();
 
 		// check if the status is equal to the arbitrary success codes of ZoHo
-		if (in_array($status, array(0,200,6101,6201)))
+		if (in_array($status, array(0, 200, 6101, 6201)))
 		{
 			return ($this->request_successful = true);
 		}
@@ -146,8 +146,10 @@ class NR_ZoHo extends NR_Wrapper
 	 */
 	protected function findHTTPStatus()
 	{
-		// First check for common network problems
-		if (parent::findHTTPStatus() == 418) 
+		$status  = $this->last_response->code;
+		$success = ($status >= 200 && $status <= 299) ? true : false;
+
+		if (!$success)
 		{
 			return 418;
 		}
@@ -155,8 +157,7 @@ class NR_ZoHo extends NR_Wrapper
 		// ZoHo sometimes uses "Code" instead of "code"
 		// also they don't use HTTP status codes
 		// instead they store their own status code inside the response body
-
-		$data = array_change_key_case($this->last_response['body']);
+		$data = array_change_key_case($this->last_response->body);
 		
 		if (isset($data['code']))
 		{

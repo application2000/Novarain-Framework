@@ -23,7 +23,7 @@ class NR_ElasticEmail extends NR_Wrapper
 	public function __construct($options)
 	{
 		parent::__construct();
-		$this->setKey($options['api']);
+		$this->setKey($options);
 		$this->endpoint = 'https://api.elasticemail.com/v2';
 	}
 
@@ -76,7 +76,6 @@ class NR_ElasticEmail extends NR_Wrapper
 		{
 			$this->get('/contact/add', $data);
 		}
-		
 
 		return true;
 	}
@@ -94,7 +93,7 @@ class NR_ElasticEmail extends NR_Wrapper
 
 		if (!$this->success())
 		{
-			throw new Exception($this->getLastError());
+			return;
 		}
 
 		$lists = array();
@@ -144,7 +143,6 @@ class NR_ElasticEmail extends NR_Wrapper
 		}
 
 		throw new Exception(JText::_('PLG_CONVERTFORMS_ELASTICEMAIL_UNRETRIEVABLE_PUBLICACCOUNTID'), 1);
-		
 	}
 	
 	/**
@@ -154,13 +152,12 @@ class NR_ElasticEmail extends NR_Wrapper
 	 */
 	public function getLastError()
 	{
-		$body = $this->last_response['body'];
+		$body = $this->last_response->body;
 
 		if (isset($body['error']))
 		{
 			return $body['error'];
 		}
-
 	}
 
 	/**
@@ -170,11 +167,10 @@ class NR_ElasticEmail extends NR_Wrapper
 	 */
 	protected function determineSuccess()
 	{
-		$status = $this->findHTTPStatus();
+		$code = $this->last_response->code;
+		$body = $this->last_response->body;
 
-		$body = $this->last_response['body'];
-
-		if ($status >= 200 && $status <= 299 && !isset($body['error']))
+		if ($code >= 200 && $code <= 299 && !isset($body['error']))
 		{
 			return ($this->request_successful = true);
 		}
@@ -182,5 +178,4 @@ class NR_ElasticEmail extends NR_Wrapper
 		$this->last_error = 'Unknown error, call getLastResponse() to find out what happened.';
 		return false;
 	}
-
 }

@@ -16,8 +16,8 @@ class NR_Drip extends NR_Wrapper
 {
 	/**
 	 * Create a new instance
+	 * 
 	 * @param string $key Your Drip API key
-	 * @throws \Exception
 	 */
 	public function __construct($key)
 	{

@@ -28,7 +28,6 @@ class NR_Wrapper
 	public function __construct()
 	{
 		$this->options       = new JRegistry;
-		$this->last_response = array('headers' => null, 'body' => null);
 		$this->options->set('timeout', $this->timeout);
 		$this->options->set('headers.Accept', 'application/json');
 		$this->options->set('headers.Content-Type', 'application/json');
@@ -36,19 +35,19 @@ class NR_Wrapper
 
 	/**
 	 * Setter method for the API Key or Access Token
-	 * @param string $key 
-	 * @throws \Exception 
+	 *
+	 * @param string $apiKey 
 	 */
-	public function setKey($key)
+	public function setKey($apiKey)
 	{
-		if (!empty($key))
+		$apiKey = is_array($apiKey) && isset($apiKey['api']) ? $apiKey['api'] : $apiKey;
+
+		if (empty($apiKey) || is_null($apiKey))
 		{
-			$this->key = trim($key);
+			throw new \Exception("Invalid Key `{$apiKey}` supplied.");
 		}
-		else
-		{
-			throw new \Exception("Invalid Key `{$key}` supplied.");
-		}
+
+		$this->key = trim($apiKey);
 	}
 
 	/**
@@ -217,28 +216,15 @@ class NR_Wrapper
 				$response = $http->put($url, $this->last_request['body']);
 				break;
 		}
-
-        // Log debug message
-        if (JDEBUG)
-        {
-        	$debug = array(
-        		'wrapper'  => get_called_class(),
-        		'request'  => $this->last_request,
-        		'response' => $response
-        	);
-
-        	JLog::add(print_r($debug, true), JLog::DEBUG, 'nrframework');
-        }
-
-		// Convert body JSON
+		
+		// Convert body JSON - Do we really need this line?
 		$response->body = $this->convertResponse($response->body);
 
 		// Format response object to array
-		$this->last_response = (array) $response;
-
+		$this->last_response = $response;
 		$this->determineSuccess();
 
-		return $this->last_response["body"];
+		return $this->last_response->body;
 	}
 
 	/**
@@ -264,25 +250,10 @@ class NR_Wrapper
 	 */
 	protected function determineSuccess()
 	{
-		$status = $this->findHTTPStatus();
+		$status  = $this->last_response->code;
 		$success = ($status >= 200 && $status <= 299) ? true : false;
 
 		return ($this->request_successful = $success);
-	}
-
-	/**
-	 * Find the HTTP status code from the headers or API response body
-	 * 
-	 * @return int  HTTP status code
-	 */
-	protected function findHTTPStatus()
-	{
-		if (!empty($this->last_response['code']) && isset($this->last_response['code']))
-		{
-			return (int) $this->last_response['code'];
-		}
-
-		return 418;
 	}
 
 	/**

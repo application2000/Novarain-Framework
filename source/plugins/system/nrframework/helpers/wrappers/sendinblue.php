@@ -101,8 +101,7 @@ class NR_SendInBlue extends NR_Wrapper
 	 */
 	public function getLastError()
 	{
-		$body = $this->last_response['body'];
-
+		$body    = $this->last_response->body;
 		$message = '';
 
 		if (isset($body['code']) && ($body['code'] == 'failure'))

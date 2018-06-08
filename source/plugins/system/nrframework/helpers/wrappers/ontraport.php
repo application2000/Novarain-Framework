@@ -30,23 +30,4 @@ class NR_OntraPort extends NR_Wrapper
 		$this->options->set('headers.Api-Appid', $this->appID);
 		$this->options->set('headers.Api-Key', $this->key);
 	}
-
-	/**
-	 * Setter method for the API Key and the App ID
-	 * @param string $key
-	 * @param string $appID
-	 * @throws \Exception
-	 */
-	public function setKey($key, $appID)
-	{
-		if (!empty($key) && !empty($appID))
-		{
-			$this->key   = $key;
-			$this->appID = $appID;
-		}
-		else
-		{
-			throw new \Exception("Both an Api Key and an App ID need to be supplied.");
-		}
-	}
 }

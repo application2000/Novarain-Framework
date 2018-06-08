@@ -17,15 +17,14 @@ class NR_GetResponse extends NR_Wrapper
 
 	/**
 	 * Create a new instance
+	 * 
 	 * @param array $options The service's required options
-	 * @throws \Exception
 	 */
 	public function __construct($options)
 	{
 		parent::__construct();
-		$this->setKey($options['api']);
+		$this->setKey($options);
 		$this->endpoint = 'https://api.getresponse.com/v3';
-		$this->options->set('headers.Content-Type', 'application/json');
 		$this->options->set('headers.X-Auth-Token', 'api-key ' . $this->key);
 		$this->options->set('headers.Accept-Encoding', 'gzip,deflate');
 	}
@@ -48,17 +47,17 @@ class NR_GetResponse extends NR_Wrapper
 	public function subscribe($email, $name, $campaign, $customFields, $update_existing)
 	{
 		$data = array(
-			"email" 			=> $email,
-			"name"				=> $name,
-			"dayOfCycle"		=> 0,
-			"campaign" 			=> array("campaignId" => $campaign),
-			"customFieldValues"	=> $this->validateCustomFields($customFields),
-			"ipAddress" 		=> $_SERVER['REMOTE_ADDR']
+			'"email' 			=> $email,
+			'name'				=> $name,
+			'dayOfCycle'		=> 0,
+			'campaign' 			=> ['campaignId' => $campaign],
+			'customFieldValues'	=> $this->validateCustomFields($customFields),
+			'ipAddress' 		=> isset($_SERVER['REMOTE_ADDR']) ? $_SERVER['REMOTE_ADDR'] : '';
 		);
 
 		if (empty($name) || is_null($name))
 		{
-			unset($data["name"]);
+			unset($data['name']);
 		}
 
 		if ($update_existing) 
@@ -90,7 +89,7 @@ class NR_GetResponse extends NR_Wrapper
 			return $fields;
 		}
 
-		$accountCustomFields = $this->get("custom-fields");
+		$accountCustomFields = $this->get('custom-fields');
 
 		if (!$this->request_successful)
 		{
@@ -99,14 +98,14 @@ class NR_GetResponse extends NR_Wrapper
 
 		foreach ($accountCustomFields as $key => $customField)
 		{
-			if (!isset($customFields[$customField["name"]]))
+			if (!isset($customFields[$customField['name']]))
 			{
 				continue;
 			}
 				
 			$fields[] = array(
-				"customFieldId" => $customField["customFieldId"],
-				"value"			=> array($customFields[$customField["name"]])
+				'customFieldId' => $customField['customFieldId'],
+				'value'			=> array($customFields[$customField['name']])
 			);
 		}
 
@@ -121,7 +120,7 @@ class NR_GetResponse extends NR_Wrapper
 	 */
 	public function getLastError()
 	{
-		$body = $this->last_response['body'];
+		$body = $this->last_response->body;
 		
 		if (!isset($body['context']) || !isset($body['context'][0]))
 		{
@@ -149,11 +148,11 @@ class NR_GetResponse extends NR_Wrapper
 	 */
 	public function getLists()
 	{
-		$data = $this->get("campaigns");
+		$data = $this->get('campaigns');
 
 		if (!$this->success())
 		{
-			throw new Exception($this->getLastError());
+			return;
 		}
 
 		if (!is_array($data) || !count($data))
@@ -166,8 +165,8 @@ class NR_GetResponse extends NR_Wrapper
 		foreach ($data as $key => $list)
 		{
 			$lists[] = array(
-				"id"   => $list["campaignId"],
-				"name" => $list["name"]
+				'id'   => $list['campaignId'],
+				'name' => $list['name']
 			);
 		}
 

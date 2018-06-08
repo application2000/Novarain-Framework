@@ -17,12 +17,11 @@ class NR_ActiveCampaign extends NR_Wrapper
 	/**
 	 * Create a new instance
 	 * @param array $options The service's required options
-	 * @throws \Exception
 	 */
 	public function __construct($options)
 	{
 		parent::__construct();
-		$this->setKey($options['api']);
+		$this->setKey($options);
 		$this->setEndpoint($options['endpoint']);
 		$this->options->set('headers.Content-Type', 'application/x-www-form-urlencoded');
 		$this->options->set('follow_location', true);
@@ -51,15 +50,15 @@ class NR_ActiveCampaign extends NR_Wrapper
 		$apiAction = ($updateexisting) ? 'contact_sync' : 'contact_add';
 
 		$data = array(
-			"api_action"           => $apiAction,
-			"email"                => $email,
-			"first_name"           => isset($name[0]) ? $name[0] : null,
-			"last_name"            => isset($name[1]) ? $name[1] : null,
-			"p[" . $list . "]"     => $list,
-			"tags"                 => $tags,
-			"status[1]"            => 1,
-			"instantresponders[1]" => 1,
-			"ip4"                  => isset($_SERVER['REMOTE_ADDR']) ? $_SERVER['REMOTE_ADDR'] : ''	
+			'api_action'           => $apiAction,
+			'email'                => $email,
+			'first_name'           => isset($name[0]) ? $name[0] : null,
+			'last_name'            => isset($name[1]) ? $name[1] : null,
+			'p[' . $list . ']'     => $list,
+			'tags'                 => $tags,
+			'status[1]'            => 1,
+			'instantresponders[1]' => 1,
+			'ip4'                  => isset($_SERVER['REMOTE_ADDR']) ? $_SERVER['REMOTE_ADDR'] : ''	
 		);
 
 		$data = array_merge($data, $customFields);
@@ -87,8 +86,8 @@ class NR_ActiveCampaign extends NR_Wrapper
 		foreach ($data as $list)
 		{
 			$lists[] = array(
-				"id"   => $list["id"],
-				"name" => $list["name"]
+				'id'   => $list['id'],
+				'name' => $list['name']
 			);
 		}
 
@@ -163,19 +162,17 @@ class NR_ActiveCampaign extends NR_Wrapper
 	 */
 	protected function determineSuccess()
 	{
-		$serviceStatus = $this->findHTTPStatus();
-
 		// Find Active Campaign true application status
-		$body              = $this->last_response['body'];
+		$body              = $this->last_response->body;
 		$applicationStatus = (bool) isset($body['result_code']) ? $body['result_code'] : false;
 
-		if (($serviceStatus >= 200 && $serviceStatus <= 299) && $applicationStatus)
+		if (($this->last_response->code >= 200 && $this->last_response->code <= 299) && $applicationStatus)
 		{
 			return ($this->request_successful = true);
 		}
 
 		// Request Failed - Set the last error
-		$this->last_error = isset($body["result_message"]) ? $body["result_message"] : "";
+		$this->last_error = isset($body['result_message']) ? $body['result_message'] : '';
 	}
 
 	/**

@@ -17,33 +17,16 @@ class NR_CampaignMonitor extends NR_Wrapper
 
 	/**
 	 * Create a new instance
+	 * 
 	 * @param array $options The service's required options
-	 * @throws \Exception
 	 */
 	public function __construct($options)
 	{
 		parent::__construct();
-		$this->setKey($options['api']);
+		$this->setKey($options);
 		$this->setEndpoint('https://api.createsend.com/api/v3.1');
 		$this->options->set('userauth', $this->key);
 		$this->options->set('passwordauth', 'nopass');
-	}
-
-	/**
-	 *  Set the API Key
-	 *
-	 *  @param  string
-	 */
-	public function setKey($key)
-	{
-		if (!empty($key))
-		{
-			$this->key = $key;
-		}
-		else
-		{
-			throw new \Exception("Invalid Campaign Monitor key `{$key}` supplied.");
-		}
 	}
 
 	/**
@@ -117,8 +100,8 @@ class NR_CampaignMonitor extends NR_Wrapper
 			}
 
 			$fields[] = array(
-				"Key"   => $listCustomField['FieldName'],
-				"Value" => $formCustomFields[$listCustomField['FieldName']],
+				'Key'   => $listCustomField['FieldName'],
+				'Value' => $formCustomFields[$listCustomField['FieldName']],
 			);
 		}
 
@@ -132,8 +115,7 @@ class NR_CampaignMonitor extends NR_Wrapper
 	 */
 	public function getLastError()
 	{
-		$body = $this->last_response['body'];
-
+		$body    = $this->last_response->body;
 		$message = '';
 
 		if (isset($body['Message']))
@@ -169,12 +151,12 @@ class NR_CampaignMonitor extends NR_Wrapper
 
 		foreach ($clients as $key => $client)
 		{
-			if (!isset($client["ClientID"]))
+			if (!isset($client['ClientID']))
 			{
 				continue;
 			}
 
-			$clientLists = $this->get("/clients/".$client["ClientID"]."/lists.json");
+			$clientLists = $this->get('/clients/' . $client['ClientID'] . '/lists.json');
 
 			if (!is_array($clientLists))
 			{
@@ -184,8 +166,8 @@ class NR_CampaignMonitor extends NR_Wrapper
 			foreach ($clientLists as $key => $clientList)
 			{
 				$lists[] = array(
-					"id"   => $clientList["ListID"],
-					"name" => $clientList["Name"]
+					'id'   => $clientList['ListID'],
+					'name' => $clientList['Name']
 				);
 			}
 		}
@@ -198,15 +180,15 @@ class NR_CampaignMonitor extends NR_Wrapper
 	 *
 	 *  https://www.campaignmonitor.com/api/account/
 	 *
-	 *  @return  mixed   Array on success, Exception on fail
+	 *  @return  mixed   Array on success, Null on fail
 	 */
 	private function getClients()
 	{
-		$clients = $this->get("/clients.json");
+		$clients = $this->get('/clients.json');
 
 		if (!$this->success())
 		{
-			throw new Exception($this->getLastError());
+			return;
 		}
 
 		return $clients;

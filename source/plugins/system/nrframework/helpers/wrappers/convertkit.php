@@ -18,17 +18,15 @@ class NR_ConvertKit extends NR_Wrapper
 {
 	/**
 	 * Create a new instance
+	 * 
 	 * @param string $api_key Your ConvertKit API Key
-	 * @throws \Exception
 	 */
 	public function __construct($api_key)
 	{
 		parent::__construct();
 
-		$this->setKey(is_array($api_key) ? $api_key['api'] : $api_key);
+		$this->setKey($api_key);
 		$this->setEndpoint('https://api.convertkit.com/v3');
-		$this->options->set('headers.Accept', 'application/json; charset=utf-8');
-		$this->options->set('headers.Content-Type', 'application/json');
 	}
 
 	/**
@@ -145,8 +143,7 @@ class NR_ConvertKit extends NR_Wrapper
 	 */
 	public function getLastError()
 	{
-		$body = $this->last_response['body'];
-
+		$body    = $this->last_response->body;
 		$message = '';
 
 		if (isset($body['error']) && !empty($body['error']))

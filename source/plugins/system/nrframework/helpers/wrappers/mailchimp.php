@@ -31,15 +31,11 @@ class NR_MailChimp extends NR_Wrapper
 	{
 		parent::__construct();
 
-		// This line ensures backwards compatibility with other extensions such as MailChimp Auto-Subscribe
-		$apiKey = is_array($options) ? $options['api'] : $options;
-		$this->setKey($apiKey);
+		$this->setKey($options);
 
 		list(, $data_center) = explode('-', $this->key);
 		$this->endpoint  = str_replace('<dc>', $data_center, $this->endpoint);
 
-		$this->options->set('headers.Accept', 'application/vnd.api+json');
-		$this->options->set('headers.Content-Type', 'application/vnd.api+json');
 		$this->options->set('headers.Authorization', 'apikey ' . $this->key);
 	}
 
@@ -61,8 +57,8 @@ class NR_MailChimp extends NR_Wrapper
 	public function subscribe($email, $list, $merge_fields = array(), $update_existing = true, $double_optin = false)
 	{
 		$data = array(
-			"email_address" => $email,
-			"status" 		=> $double_optin ? "pending" : "subscribed"
+			'email_address' => $email,
+			'status' 		=> $double_optin ? 'pending' : 'subscribed'
 		);
 
 		if (is_array($merge_fields) && count($merge_fields))
@@ -102,25 +98,25 @@ class NR_MailChimp extends NR_Wrapper
 	 */
 	public function getLists()
 	{
-		$data = $this->get("/lists");
+		$data = $this->get('/lists');
 
 		if (!$this->success())
 		{
-			throw new Exception($this->getLastError());
+			return;
 		}
 
-		$lists = array();
-
-		if (!isset($data["lists"]) || !is_array($data["lists"]))
+		if (!isset($data['lists']) || !is_array($data['lists']))
 		{
-			return $lists;
+			return;
 		}
 
-		foreach ($data["lists"] as $key => $list)
+		$lists = [];
+
+		foreach ($data['lists'] as $key => $list)
 		{
 			$lists[] = array(
-				"id"   => $list["id"],
-				"name" => $list["name"]
+				'id'   => $list['id'],
+				'name' => $list['name']
 			);
 		}
 
@@ -138,19 +134,19 @@ class NR_MailChimp extends NR_Wrapper
 	{
 		if (!$listID) 
 		{
-			return array();
+			return;
 		}
 
 		$data = $this->get('/lists/' . $listID . '/interest-categories');
 
 		if (!$this->success())
 		{
-			throw new Exception($this->getLastError());
+			return;
 		}
 
 		if (isset($data['total_items']) && $data['total_items'] == 0) 
 		{
-			return array();
+			return;
 		}
 
 		return $data['categories'];
@@ -192,7 +188,6 @@ class NR_MailChimp extends NR_Wrapper
 	 */
 	public function validateInterestCategories($listID, $params)
 	{
-
 		if (!$params || !$listID) 
 		{
 			return array();
@@ -200,7 +195,7 @@ class NR_MailChimp extends NR_Wrapper
 
 		$interestCategories = $this->getInterestCategories($listID);
 
-		if (empty($interestCategories)) 
+		if (!$interestCategories) 
 		{
 			return array();
 		}
@@ -254,33 +249,17 @@ class NR_MailChimp extends NR_Wrapper
 	 */
 	public function getLastError()
 	{
-		$body = $this->last_response['body'];
+		$body = $this->last_response->body;
 
-		if (isset($body["errors"]))
+		if (isset($body['errors']))
 		{
-			$error = $body["errors"][0];
-			return $error["field"] . ": " . $error["message"];
+			$error = $body['errors'][0];
+			return $error['field'] . ': ' . $error['message'];
 		}
 
-		if (isset($body["detail"]))
+		if (isset($body['detail']))
 		{
-			return $body["detail"];
-		}
-	}
-
-	/**
-	 *  Set the API Key
-	 *
-	 *  @param  string
-	 */
-	public function setKey($key)
-	{
-		if ((!empty($key)) && (!strpos($key, '-') === false))
-		{
-			$this->key = $key;
-		} else
-		{
-			throw new \Exception("Invalid MailChimp key `{$key}` supplied.");
+			return $body['detail'];
 		}
 	}
 

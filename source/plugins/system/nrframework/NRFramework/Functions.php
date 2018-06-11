@@ -463,22 +463,6 @@ class Functions
 
         return Cache::set($hash, new Registry($result));
     }
-
-    public static function loadReCaptcha()
-    {
-        \JHtml::_(
-            'script', 
-            'plg_system_nrframework/recaptcha.js', 
-            array('version' => 'auto', 'relative' => true)
-        );
-
-        \JHtml::_(
-            'script', 
-            '//www.google.com/recaptcha/api.js?onload=NRInitReCaptcha&render=explicit&hl=' . \JFactory::getLanguage()->getTag(), 
-            array(), 
-            array('async' => true, 'defer' => true)
-        );
-    }
 }
 
 ?>

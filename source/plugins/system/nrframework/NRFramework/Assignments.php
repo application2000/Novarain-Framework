@@ -24,34 +24,34 @@ class Assignments
 	 *  @var  array
 	 */
 	public $typeAliases = array(
-		'device|devices'                     => 'Devices',
-		'urls|url'                           => 'URLs',
+		'device|devices'                     => 'Device',
+		'urls|url'                           => 'URL',
 		'os'			                     => 'OS',
-		'browsers|browser'		             => 'Browsers',
-		'referrer'                           => 'URLs.Referrer',
-		'lang|language|languages'            => 'Languages',
+		'browsers|browser'		             => 'Browser',
+		'referrer'                           => 'Referrer',
+		'lang|language|languages'            => 'Language',
 		'php'                                => 'PHP',
-		'timeonsite'                         => 'Users.TimeOnSite',
-		'usergroups|usergroup|user_groups'   => 'Users.GroupLevels',
-		'pageviews|user_pageviews'           => 'Users.Pageviews',
-		'user_id|userid'		             => 'Users.IDs',
+		'timeonsite'                         => 'TimeOnSite',
+		'usergroups|usergroup|user_groups'   => 'GroupLevel',
+		'pageviews|user_pageviews'           => 'Pageviews',
+		'user_id|userid'		             => 'UserID',
 		'menu'                               => 'Menu',
-        'datetime|daterange|date'            => 'DateTime.Date',
-        'days|day'                           => 'DateTime.Days',
-        'months|month'                       => 'DateTime.Months',
-		'timerange|time'                     => 'DateTime.TimeRange',
+        'datetime|daterange|date'            => 'Date',
+        'days|day'                           => 'Day',
+        'months|month'                       => 'Month',
+		'timerange|time'                     => 'TimeRange',
         'acymailing'                         => 'AcyMailing',
         'akeebasubs'                         => 'AkeebaSubs',
-        'contentcats|categories|category'    => 'Content.Categories',
-        'contentarticles|articles|article'   => 'Content.Articles',
-        'components|component'	             => 'Components',
+        'contentcats|categories|category'    => 'ContentCategory',
+        'contentarticles|articles|article'   => 'ContentArticle',
+        'components|component'	             => 'Component',
         'convertforms'	                     => 'ConvertForms',
-        'geo_country|country|countries'	     => 'GeoIP.Countries',
-        'geo_continent|continent|continents' => 'GeoIP.Continents',
-        'geo_city|city|cities'               => 'GeoIP.Cities',
-        'geo_region|region|regions'          => 'GeoIP.Regions',
-        'cookiename|cookie'                  => 'Cookies.Name',
-        'ip_addresses|iprange|ip'            => 'IP.Range',
+        'geo_country|country|countries'	     => 'Country',
+        'geo_continent|continent|continents' => 'Continent',
+        'geo_city|city|cities'               => 'City',
+        'geo_region|region|regions'          => 'Region',
+        'cookiename|cookie'                  => 'Cookie',
+        'ip_addresses|iprange|ip'            => 'IP',
         'k2_items'                           => 'K2Item',
         'k2_cats'                            => 'K2Category',
         'k2_tags'                            => 'K2Tag',
@@ -75,8 +75,7 @@ class Assignments
             $factory = new \NRFramework\Factory();
         }
 
-        $this->factory = $factory;
-        
+        $this->factory = $factory;        
     }
     
     /**
@@ -133,7 +132,7 @@ class Assignments
             }
 
             $assignment = new $a->class($a->options, $this->factory);
-            $pass       = $assignment->{$a->method}();
+            $pass       = $assignment->pass();
             $pass       = $this->passStateCheck($pass, $a->options->assignment_state);
         }
 
@@ -232,7 +231,7 @@ class Assignments
             // check if the assignment type exists
             if (!$this->exists($a->alias) || !$this->setTypeParams($assignment, $this->aliasToClassname($a->alias)))
             {
-                $assignment->class = $assignment->method = null;
+                $assignment->class = null;
             }
             $assignment->options = (object) array(
                 'alias'             => $a->alias,
@@ -349,27 +348,13 @@ class Assignments
 	 */
 	public function setTypeParams(&$assignment, $type = '')
 	{
-		if (strpos($type, '.') === false)
-		{
-			$class   = $type;
-			$method  = $type;
-        }
-        else
-        {
-            $type = explode('.', $type, 2);
-            $class = $type['0'];
-            $method  = $type['1'];
-        }		
-
-        $class  = __NAMESPACE__ . '\\Assignments\\' . $class;
-        $method = 'pass' . $method;
-        if (!class_exists($class) && !method_exists($class, $method))
+        $class  = __NAMESPACE__ . '\\Assignments\\' . $type;
+        if (!class_exists($class))
         {
             return false;
         }
         
         $assignment->class  = $class;
-        $assignment->method = $method;
 
         return true;
     }
@@ -393,13 +378,13 @@ class Assignments
             }
             else
             {
+                $inst = new $assignment->class($assignment->options, $this->factory);
                 $assignment->pass = $this->passStateCheck(
-                    (new $assignment->class($assignment->options, $this->factory))->{$assignment->method}(),
+                    $inst->pass(),
                     $assignment->options->assignment_state
                 );
-
-                $assignment->name = \preg_replace('/.*\\\\(.*)$/', "$1", $assignment->class) . 
-                                    "." . \str_replace('pass', '', $assignment->method);
+                $assignment->value = $inst->value();
+                $assignment->name = \preg_replace('/.*\\\\(.*)$/', "$1", $assignment->class);
             }
             $debug_info[] = $assignment;
         }

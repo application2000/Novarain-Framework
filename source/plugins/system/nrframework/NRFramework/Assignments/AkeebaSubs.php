@@ -20,9 +20,19 @@ class AkeebaSubs extends Assignment
 	 *
 	 *  @return  bool
 	 */
-	function passAkeebaSubs()
+	public function pass()
 	{
     	return $this->passSimple($this->getLevels(), $this->selection);
+	}
+
+	/**
+	 *  Returns the assignment's value
+	 * 
+	 *  @return  array   Akeeba Subscriptions
+	 */
+	public function value()
+	{
+		return $this->getlevels();
 	}
 
 	/**

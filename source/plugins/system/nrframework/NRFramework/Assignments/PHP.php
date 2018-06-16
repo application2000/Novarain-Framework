@@ -98,4 +98,10 @@ class PHP extends Assignment
 
 		return $pass;
 	}
+
+	
+	public function value()
+	{
+		return null;
+	}
 }

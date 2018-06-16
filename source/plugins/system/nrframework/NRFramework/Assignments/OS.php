@@ -21,7 +21,7 @@ class OS extends Assignment
      *
      *  @return bool
      */
-    function passOS()
+    function pass()
     {
         // backwards compatibility check
         // replace 'iphone' and 'ipad' selection values with 'ios'
@@ -37,4 +37,14 @@ class OS extends Assignment
 
         return $this->passSimple(WebClient::getOS(), $this->selection);
     }
+
+    /**
+     *  Returns the assignment's value
+     * 
+     *  @return string OS name
+     */
+	public function value()
+	{
+		return WebClient::getOS();
+	}
 }

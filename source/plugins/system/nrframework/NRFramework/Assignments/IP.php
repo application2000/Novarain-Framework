@@ -19,7 +19,7 @@ class IP extends Assignment
      *
      * @return bool
      */
-    public function passRange()
+    public function pass()
     {
         // get the user's ip address
         $user_ip = $this->app->input->server->get('REMOTE_ADDR');
@@ -35,6 +35,16 @@ class IP extends Assignment
         }
         return false;
     }
+
+    /**
+     *  Returns the assignment's value
+     * 
+     *  @return string User IP
+     */
+	public function value()
+	{
+		return $this->app->input->server->get('REMOTE_ADDR');
+	}
 
     /**
      * Prepare an array of IP addresses/ranges

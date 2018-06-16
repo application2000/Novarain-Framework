@@ -21,14 +21,36 @@ class K2Tag extends K2
      *
      *  @return bool
      */
-    public function passK2Tag()
+    public function pass()
     {
         // Check we are on the right context and we have a valid Item ID
         if (empty($this->selection) || !$this->passContext() || !$id = $this->getItemID())
         {
             return false;
         }
-        
+
+        return $this->passSimple($this->getK2tags($id), $this->selection);
+    }
+
+    /**
+     *  Returns the assignment's value
+     * 
+     *  @return array K2 item tags
+     */
+	public function value()
+	{
+		return $this->getK2tags($this->getItemID());
+	}
+
+    /**
+     *  Return tags of a K2 item
+     * 
+     *  @param int $id K2 item ID
+     * 
+     *  @return array
+     */
+    public function getK2tags($id)
+    {
         $q = $this->db->getQuery(true)
             ->select('t.id')
             ->from('#__k2_tags_xref AS tx')
@@ -37,8 +59,6 @@ class K2Tag extends K2
             ->where('t.published = 1');
 
 		$this->db->setQuery($q);
-        $tags = $this->db->loadColumn();
-        
-        return $this->passSimple($tags, $this->selection);
+        return $this->db->loadColumn();
     }
 }

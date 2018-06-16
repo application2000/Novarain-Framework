@@ -11,7 +11,6 @@ namespace NRFramework\Assignments;
 
 defined('_JEXEC') or die;
 
-use NRFramework\Assignment;
 use NRFramework\Assignments\K2;
 
 class K2Category extends K2
@@ -21,7 +20,7 @@ class K2Category extends K2
      *
      *  @return bool
      */
-    public function passK2Category()
+    public function pass()
     {
         if (empty($this->selection) || !$this->passContext())
         {
@@ -82,7 +81,26 @@ class K2Category extends K2
 		}
 
 		return $pass;
-    }
+	}
+	
+	/**
+     *  Returns the assignment's value
+     * 
+     *  @return array K2 category IDs
+     */
+	public function value()
+	{
+		$ids = $this->getCategoryIds();
+
+		if ($this->params->inc_children)
+		{
+			foreach ($ids as $catid)
+			{
+				$ids[] = $this->getParentIDs($catid, 'k2_categories', 'parent');
+			}			 
+		}
+		return $ids;
+	}
 
     /**
 	 *  Returns category IDs based on the active K2 view

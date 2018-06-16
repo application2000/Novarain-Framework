@@ -14,15 +14,25 @@ defined('_JEXEC') or die;
 use NRFramework\Assignment;
 use NRFramework\WebClient;
 
-class Browsers extends Assignment
+class Browser extends Assignment
 {
     /**
      *  Check the client's browser
      *
      *  @return bool
      */
-    function passBrowsers()
+    function pass()
     {
         return $this->passSimple(WebClient::getBrowser()['name'], $this->selection);
+    }
+
+    /**
+	 *  Returns the assignment's value
+	 * 
+	 *  @return string Browser name
+	 */
+	public function value()
+	{
+        return WebClient::getBrowser()['name'];
     }
 }

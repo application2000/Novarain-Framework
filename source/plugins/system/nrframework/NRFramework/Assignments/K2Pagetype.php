@@ -11,7 +11,6 @@ namespace NRFramework\Assignments;
 
 defined('_JEXEC') or die;
 
-use NRFramework\Assignment;
 use NRFramework\Assignments\K2;
 
 class K2Pagetype extends K2
@@ -21,17 +20,31 @@ class K2Pagetype extends K2
      *
      *  @return bool
      */
-    public function passK2Pagetype()
+    public function pass()
     {
-        $view   = $this->app->input->get("view");
-        $layout = $this->app->input->get('layout', '', 'string');
-
         if (empty($this->selection) || !$this->passContext())
         {
             return false;
         }
 
-        $pagetype = $view . '_' . ($layout !== '' ? $layout : $view);
-        return $this->passSimple($pagetype, $this->selection);
+        return $this->passSimple($this->getPagetype(), $this->selection);
+    }
+
+    /**
+     *  Returns the assignment's value
+     * 
+     *  @return string Pagetype
+     */
+	public function value()
+	{
+		return $this->getLanguage();
+    }
+    
+    public function getPagetype()
+    {
+        $view   = $this->app->input->get("view");
+        $layout = $this->app->input->get('layout', '', 'string');
+        
+        return $view . '_' . ($layout !== '' ? $layout : $view);
     }
 }

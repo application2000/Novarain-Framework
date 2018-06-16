@@ -14,15 +14,35 @@ defined('_JEXEC') or die;
 use NRFramework\Assignment;
 use NRFramework\WebClient;
 
-class Devices extends Assignment
+class Device extends Assignment
 {
     /**
      *  Checks client's device type
      *
      *  @return  bool
      */
-	function passDevices()
+	function pass()
 	{
-    	return $this->passSimple(WebClient::getDeviceType(), $this->selection);
+    	return $this->passSimple($this->getDevice(), $this->selection);
+    }
+
+    /**
+     *  Returns the assignment's value
+     * 
+     *  @return string Device type
+     */
+	public function value()
+	{
+		return $this->getDevice();
 	}
+    
+    /**
+     *  Gets client's device type
+     * 
+     *  @return string
+     */
+    public function getDevice()
+    {
+        return WebClient::getDeviceType();
+    }
 }

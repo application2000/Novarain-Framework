@@ -27,7 +27,7 @@ class Menu extends Assignment
 	 *
 	 *  @return  bool
 	 */
-	function passMenu()
+	function pass()
 	{
 		$includeChildren = isset($this->params->inc_children) ? $this->params->inc_children : false;
     	$includeNoItemID = isset($this->params->noitem) ? $this->params->noitem : false;
@@ -72,6 +72,16 @@ class Menu extends Assignment
 		}
 
 		return false;
+	}
+
+	/**
+     *  Returns the assignment's value
+     * 
+     *  @return integer Menu ID
+     */
+	public function value()
+	{
+		return $this->itemID;
 	}
 
 	/**

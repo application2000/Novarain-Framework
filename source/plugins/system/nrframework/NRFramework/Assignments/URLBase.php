@@ -13,32 +13,16 @@ defined('_JEXEC') or die;
 
 use NRFramework\Assignment;
 
-class URLs extends Assignment 
-{
+class URLBase extends Assignment 
+{   	
    	/**
-   	 *  Pass Referrer URL. 
-   	 *
-   	 *  @return  bool   Returns true if the Referrer URL contains any of the selection URLs 
-   	 */
-   	function passReferrer()
-   	{
-   		// Make sure the referer server variable is available
-   		if (!isset($_SERVER['HTTP_REFERER']))
-   		{
-   			return;
-   		}
-
-		return $this->passURLs($_SERVER['HTTP_REFERER']);
-   	}
-   	
-   	/**
-   	 *  Pass Check URLs
+   	 *  Check URL
    	 *
    	 *  @param   mixed  $url    If null, the current URL will be used. Otherwise we need a valid absolute URL.
    	 *
    	 *  @return  bool   		Returns true if the URL contains any of the selection URLs 
    	 */
-	function passURLs($url = null)
+	function checkURL($url = null)
 	{
 		// Get the current URL if none is passed
 		$url = is_null($url) ? $this->factory->getURL() : $url;

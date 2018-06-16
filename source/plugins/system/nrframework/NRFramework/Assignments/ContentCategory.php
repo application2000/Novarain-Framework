@@ -1,9 +1,9 @@
 <?php
 
 /**
- * @author          Tassos Marinos <info@tassos.gr>
+ * @author          Tassos.gr <info@tassos.gr>
  * @link            http://www.tassos.gr
- * @copyright       Copyright © 2017 Tassos Marinos All Rights Reserved
+ * @copyright       Copyright © 2018 Tassos Marinos All Rights Reserved
  * @license         GNU GPLv3 <http://www.gnu.org/licenses/gpl.html> or later
  */
 
@@ -11,63 +11,35 @@ namespace NRFramework\Assignments;
 
 defined('_JEXEC') or die;
 
-use NRFramework\Assignment;
+use NRFramework\Assignments\ContentBase;
 
-class Content extends Assignment
+class ContentCategory extends ContentBase
 {
-	/**
+    /**
 	 *  Article Object
 	 *
 	 *  @var  object
 	 */
-	private $article;
-
-	/**
-	 *  Request information
-	 * 
-	 *  @var object
-	 */
-	protected $request;
-
-	/**
+    private $article;
+    
+    /**
 	 *  Class constructor
 	 *
 	 *  @param  object  $assignment
+	 *  @param  object  $factory
 	 */
 	public function __construct($assignment, $factory)
 	{
 		parent::__construct($assignment, $factory);
 		$this->getItem();
-
-		$request = new \stdClass;
-		$request->view   = $this->app->input->get("view");
-		$request->option = $this->app->input->get("option");
-		$request->id     = $this->app->input->get("id");
-		$this->request = $request;
-	}
-
-	/**
-	 *  Pass check for Joomla! Articles
-	 *
-	 *  @return  bool
-	 */
-	public function passArticles()
-	{
-		if (!$this->request->id || !(($this->request->option == 'com_content' && $this->request->view == 'article')))
-		{
-			return false;
-		}
-
-		$selection = is_array($this->selection) ? $this->selection : $this->splitKeywords($this->selection);
-		return $this->passSimple($this->request->id, $selection);
-	}
-
-	/**
+    }
+    
+    /**
 	 *  Pass check for Joomla! Categories
 	 *
 	 *  @return  bool
 	 */
-	public function passCategories()
+	public function pass()
 	{
 		$is_content  = $this->request->option == 'com_content' ? true : false;
 		$is_category = $this->request->view == 'category' ? true : false;
@@ -143,9 +115,32 @@ class Content extends Assignment
 		}
 
 		return $pass;
-	}
+    }
 
-	/**
+    /**
+     *  Returns the assignment's value
+     * 
+     *  @return array Category IDs
+     */
+    public function value()
+    {
+        $is_category = $this->request->view == 'category' ? true : false;
+        $inc_children = isset($this->params->inc_children) ? $this->params->inc_children : false;
+
+        $ids = $this->getCategoryIds($is_category);
+
+        if ($inc_children) 
+        {
+            foreach ($ids as $catid)
+            {
+                $ids[] = $this->getParentIDs($catid, 'categories');
+            }
+        }
+
+        return $ids;
+    }
+    
+    /**
 	 *  Returns category IDs based on active view
 	 *
 	 *  @param   boolean  $is_category  The current view is a category view

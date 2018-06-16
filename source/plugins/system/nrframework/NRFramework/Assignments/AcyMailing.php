@@ -20,9 +20,19 @@ class AcyMailing extends Assignment
 	 *
 	 *  @return  bool
 	 */
-	function passAcyMailing()
+	public function pass()
 	{
     	return $this->passSimple($this->getSubscribedLists(), $this->selection);
+	}
+
+	/**
+	 *  Returns the assignment's value
+	 * 
+	 *  @return  array  AcyMailing lists
+	 */
+	public function value()
+	{
+		return $this->getSubscribedLists();
 	}
 
 	/**

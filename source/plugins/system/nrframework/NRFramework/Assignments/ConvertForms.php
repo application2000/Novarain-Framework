@@ -20,9 +20,20 @@ class ConvertForms extends Assignment
 	 *
 	 *  @return  bool
 	 */
-	function passConvertForms()
+	function pass()
 	{
     	return $this->passSimple($this->getCampaigns(), $this->selection);
+	}
+
+
+    /**
+     *  Returns the assignment's value
+     * 
+     *  @return array List of campaign IDs
+     */
+	public function value()
+	{
+		return $this->getCampaigns();
 	}
 
     /**

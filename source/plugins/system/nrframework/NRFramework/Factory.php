@@ -64,4 +64,9 @@
      {
         return \JFactory::getLanguage();
      }
+
+     public function getSession()
+     {
+        return \JFactory::getSession();
+     }
  }

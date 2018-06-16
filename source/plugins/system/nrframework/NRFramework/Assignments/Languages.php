@@ -13,17 +13,28 @@ defined('_JEXEC') or die;
 
 use NRFramework\Assignment;
 
-class Languages extends Assignment
+class Language extends Assignment
 {
-	/**
-	 *  Pass check language
-	 *
-	 *  @return  bool
-	 */
-	function passLanguages()
+	function pass()
 	{
-        $lang_strings 	= $factory->getLanguage()->getLocale();
-        $lang_strings[] = $factory->getLanguage()->getTag();
-        return $this->passSimple($lang_strings, $this->selection); 
+        return $this->passSimple($this->getLanguage(), $this->selection); 
+	}
+
+	/**
+     *  Returns the assignment's value
+     * 
+     *  @return array Language strings
+     */
+	public function value()
+	{
+		return $this->getLanguage();
+	}
+
+	public function getLanguage()
+	{
+		$lang_strings 	= $this->factory->getLanguage()->getLocale();
+		$lang_strings[] = $this->factory->getLanguage()->getTag();
+		
+		return $lang_strings;
 	}
 }

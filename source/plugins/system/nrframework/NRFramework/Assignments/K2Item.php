@@ -11,7 +11,6 @@ namespace NRFramework\Assignments;
 
 defined('_JEXEC') or die;
 
-use NRFramework\Assignment;
 use NRFramework\Assignments\K2;
 
 class K2Item extends K2
@@ -21,7 +20,7 @@ class K2Item extends K2
      *
      *  @return bool
      */
-    public function passK2Item()
+    public function pass()
     {
         // Check we are on the right context and we have a valid Item ID
         if (!$this->passContext() || !$id = $this->getItemID())
@@ -51,8 +50,18 @@ class K2Item extends K2
     }
 
     /**
+     *  Returns the assignment's value
+     * 
+     *  @return int K2 item ID
+     */
+	public function value()
+	{
+		return $this->getItemID();
+	}
+
+    /**
      *  Checks item's content for keywords.
-     *  Used by passItems
+     *  Used by pass()
      *  
      *  @param  string $keywords
      *  @return bool
@@ -98,7 +107,7 @@ class K2Item extends K2
 
     /**
      *  Checks item's meta keyywords.
-     *  Used by passItems
+     *  Used by pass()
      *
      *  @param  string $param_keywords
      *  @return bool

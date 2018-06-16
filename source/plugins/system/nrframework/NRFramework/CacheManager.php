@@ -18,7 +18,6 @@ defined('_JEXEC') or die;
  */
 class CacheManager
 {
-
 	/**
 	 *  'static' cache array
 	 *   @var  array

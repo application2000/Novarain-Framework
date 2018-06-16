@@ -27,7 +27,8 @@ class AssignmentTest extends PHPUnit\Framework\TestCase
     {
         return [
             [null, null, false],
-            ['desktop', ['DESKTOP'], true]
+            ['desktop', ['DESKTOP', 'mobile'], true],
+            [null, [], false]
         ];
     }
    

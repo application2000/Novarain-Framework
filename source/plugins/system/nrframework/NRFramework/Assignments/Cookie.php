@@ -12,9 +12,9 @@ defined('_JEXEC') or die;
 
 use NRFramework\Assignment;
 
-class Cookies extends Assignment
+class Cookie extends Assignment
 {
-    public function passName()
+    public function pass()
     {
         $pass = false;
         $input_cookie       = $this->app->input->cookie;
@@ -59,4 +59,14 @@ class Cookies extends Assignment
 
         return $pass;
     }
+
+    /**
+     *  Returns the assignment's value
+     * 
+     *  @return string Cookie data
+     */
+	public function value()
+	{
+		return $this->app->input->cookie->get($this->params->name);
+	}
 }

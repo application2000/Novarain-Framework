@@ -22,8 +22,8 @@ class Languages extends Assignment
 	 */
 	function passLanguages()
 	{
-        $lang_strings = \JFactory::getLanguage()->getLocale();
-        $lang_strings[] = \JFactory::getLanguage()->getTag();
+        $lang_strings 	= $factory->getLanguage()->getLocale();
+        $lang_strings[] = $factory->getLanguage()->getTag();
         return $this->passSimple($lang_strings, $this->selection); 
 	}
 }

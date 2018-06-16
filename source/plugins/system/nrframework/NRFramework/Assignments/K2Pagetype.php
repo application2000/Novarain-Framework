@@ -23,12 +23,15 @@ class K2Pagetype extends K2
      */
     public function passK2Pagetype()
     {
+        $view   = $this->app->input->get("view");
+        $layout = $this->app->input->get('layout', '', 'string');
+
         if (empty($this->selection) || !$this->passContext())
         {
             return false;
         }
 
-        $pagetype = $this->request->view . '_' . ($this->request->layout !== '' ? $this->request->layout : $this->request->view);
+        $pagetype = $view . '_' . ($layout !== '' ? $layout : $view);
         return $this->passSimple($pagetype, $this->selection);
     }
 }

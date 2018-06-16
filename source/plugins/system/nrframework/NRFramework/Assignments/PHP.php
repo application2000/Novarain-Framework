@@ -42,7 +42,7 @@ class PHP extends Assignment
 
 			if (!isset($Itemid))
 			{
-				$Itemid = $this->request->Itemid;
+				$Itemid = $this->app->input->getInt('Itemid', 0);
 			}
 
 			if (!isset($mainframe))

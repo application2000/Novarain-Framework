@@ -41,7 +41,7 @@ class URLs extends Assignment
 	function passURLs($url = null)
 	{
 		// Get the current URL if none is passed
-		$url = is_null($url) ? \JURI::getInstance()->toString() : $url;
+		$url = is_null($url) ? $this->factory->getURL() : $url;
 
 		// Create an array with all possible values of the URL
 		$urls = array(

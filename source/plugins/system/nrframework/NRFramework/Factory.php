@@ -11,6 +11,13 @@
 
  defined('_JEXEC') or die;
 
+ /**
+  *  Factory
+  *  
+  *  Used to decouple the framework from it's dependencies and
+  *  make unit testing easier.
+  */
+
  class Factory
  {
      public function getDbo()
@@ -35,11 +42,26 @@
 
      public function getCache()
      {
-
+        return \NRFramework\CacheManager::getInstance(\JFactory::getCache('novarain', ''));
      }
 
      public function getDate()
      {
         return \JFactory::getDate();
+     }
+
+     public function getDatefromFormat($format, $date, $timezone)
+     {
+         return \JDate::createFromFormat($format, $date, $timezone);
+     }
+
+     public function getURL()
+     {
+         return \JURI::getInstance()->toString();
+     }
+
+     public function getLanguage()
+     {
+        return \JFactory::getLanguage();
      }
  }

@@ -19,7 +19,7 @@ class Day extends DateTimeBase
      *
      * @return bool
      */
-    public function passDays()
+    public function pass()
     {
         if (is_array($this->selection) && !empty($this->selection))
         {

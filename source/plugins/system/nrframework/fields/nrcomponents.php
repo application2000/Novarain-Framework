@@ -8,17 +8,28 @@
 
 defined('_JEXEC') or die('Restricted access');
 
-require_once JPATH_PLUGINS . '/system/nrframework/helpers/fieldlist.php';
-
 jimport('joomla.filesystem.folder');
 jimport('joomla.filesystem.file');
 
-class JFormFieldNRComponents extends NRFormFieldList
+class JFormFieldNRComponents extends JFormFieldList
 {
     protected function getOptions()
     {
         return array_merge(parent::getOptions(), $this->getInstalledComponents());
     }
+
+	/**
+	 *  Method to get field parameters
+	 *
+	 *  @param   string  $val      Field parameter
+	 *  @param   string  $default  The default value
+	 *
+	 *  @return  string
+	 */
+	public function get($val, $default = '')
+	{
+		return (isset($this->element[$val]) && (string) $this->element[$val] != '') ? (string) $this->element[$val] : $default;
+	}
     
     /**
      *  Creates a list of installed components
@@ -28,13 +39,13 @@ class JFormFieldNRComponents extends NRFormFieldList
     protected function getInstalledComponents()
     {
         $lang = JFactory::getLanguage();
-        $db = $this->db;
+        $db   = JFactory::getDbo();
 
         $components = $db->setQuery(
             $db->getQuery(true)
                 ->select('name, element')
                 ->from('#__extensions')
-                ->where('type = ' . $this->db->quote('component'))
+                ->where('type = ' . $db->quote('component'))
                 ->where('name != ""')
                 ->where('element != ""')
                 ->where('enabled = 1')
@@ -61,7 +72,7 @@ class JFormFieldNRComponents extends NRFormFieldList
                     continue;
                 }
 
-                if (!\JFolder::exists($component_folder . '/views') && ! \JFolder::exists($component_folder . '/view'))
+                if (!\JFolder::exists($component_folder . '/views') && !\JFolder::exists($component_folder . '/View'))
                 {
                     continue;
                 }

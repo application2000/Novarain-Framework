@@ -95,6 +95,16 @@ class SmartTags
 			'date'			=> \JFactory::getDate()->format('Y-m-d H:i:s'),
 			'randomid'		=> bin2hex(\JCrypt::genRandomBytes(8))
 		);
+
+		// Add Query Parameters
+		$query = \JUri::getInstance()->getQuery(true);
+		if (!empty($query))
+		{
+			foreach ($query as $key => $value)
+			{
+				$this->tags['querystring.' . strtolower($key)] = $value;
+			}
+		}
 	}
 
 	/**
@@ -171,7 +181,7 @@ class SmartTags
 		}
 
 		$this->tags = array_merge($this->tags, $tags);
-
+		
 		return $this;
 	}
 
@@ -204,7 +214,6 @@ class SmartTags
 
 			// Revert object back to its original state
 			$data = is_object($obj) ? (object) $data : $data;
-
 	   		return $data;
     	}
 

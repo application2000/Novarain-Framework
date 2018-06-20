@@ -45,7 +45,7 @@ class JFormFieldNR_Time extends NRFormField
         	');
 
 			// Increase the font-size a little bit on Joomla 4
-			if (defined('J4'))
+			if (defined('nrJ4'))
 			{
 				$this->doc->addStyleDeclaration('
 			      	.clockpicker-popover {
@@ -55,7 +55,7 @@ class JFormFieldNR_Time extends NRFormField
 			}
 
 			// Fix a CSS conflict caused by the template.css on Joomla 3
-			if (!defined('J4'))
+			if (!defined('nrJ4'))
 			{
 				// Fuck you template.css
 				$this->doc->addStyleDeclaration('

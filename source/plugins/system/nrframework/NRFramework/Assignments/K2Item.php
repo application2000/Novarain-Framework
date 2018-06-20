@@ -30,7 +30,8 @@ class K2Item extends K2
         }
 
         // check item's id
-        $pass = $this->passSimple($id, $this->selection);
+		$selection = is_array($this->selection) ? $this->selection : $this->splitKeywords($this->selection);
+        $pass = $this->passSimple($id, $selection);
 
         // check items's text
         if (!empty($this->params->cont_keywords))

@@ -41,8 +41,7 @@
 .well-note {
     font-size: 11px;
     line-height: 1.5;
-    opacity: 0.8;
-    text-indent: -5px;
+    opacity: .7;
 }
 
 /* Field: nr_inline */

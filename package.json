@@ -1,7 +1,7 @@
 {
   "name": "gulp-start",
   "version": "1.0.0",
-  "description": "Responsive Scroll Triggered Box",
+  "description": "Novarain Framework",
   "main": " ",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"

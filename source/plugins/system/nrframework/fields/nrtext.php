@@ -21,6 +21,9 @@ class JFormFieldNRText extends JFormFieldText
      */
     function getInput()
     {   
+        // This line added to help us support the K2 Items and Joomla! Articles dropdown listbox array values
+        $this->value = is_array($this->value) ? implode(',', $this->value) : $this->value;
+
         // Adds an extra info label next to input
         $addon  = (string) $this->element['addon'];
         $parent = parent::getInput();
@@ -30,7 +33,7 @@ class JFormFieldNRText extends JFormFieldText
             $html[] = '
                 <div class="input-append input-group">
                     ' . $parent . '
-                    <spa$n class="add-on input-group-append">
+                    <span class="add-on input-group-append">
                         <span class="input-group-text" style="font-size:inherit;">' . JText::_($addon) . '</span>
                     </span>
                 </div>';

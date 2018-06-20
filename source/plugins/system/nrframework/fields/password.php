@@ -20,6 +20,11 @@ class JFormFieldNR_Password extends JFormFieldPassword
 	 */
 	public function getInput()
 	{
+		if (defined('nrJ4'))
+		{
+			return parent::getInput();
+		}
+
 		$id = $this->id . '_btn';
 
 		$doc = JFactory::getDocument();

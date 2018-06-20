@@ -35,7 +35,7 @@ class OS extends Assignment
         },
         $this->selection);
 
-        return $this->passSimple(WebClient::getOS(), $this->selection);
+        return $this->passSimple($this->value(), $this->selection);
     }
 
     /**

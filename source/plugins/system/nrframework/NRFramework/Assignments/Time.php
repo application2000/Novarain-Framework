@@ -12,7 +12,7 @@ defined('_JEXEC') or die;
 
 use NRFramework\Assignments\DateTimeBase;
 
-class Date extends DateTimeBase
+class Time extends DateTimeBase
 {
     /**
 	 * Checks if current time passes the given time range

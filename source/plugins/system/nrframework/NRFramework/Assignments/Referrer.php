@@ -28,7 +28,7 @@ class Referrer extends URLBase
    			return;
    		}
 
-		return $this->checkURL($_SERVER['HTTP_REFERER']);
+		return $this->passURL($_SERVER['HTTP_REFERER']);
     }
 
     /**

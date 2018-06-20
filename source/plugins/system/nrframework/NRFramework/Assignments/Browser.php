@@ -17,16 +17,6 @@ use NRFramework\WebClient;
 class Browser extends Assignment
 {
     /**
-     *  Check the client's browser
-     *
-     *  @return bool
-     */
-    function pass()
-    {
-        return $this->passSimple(WebClient::getBrowser()['name'], $this->selection);
-    }
-
-    /**
 	 *  Returns the assignment's value
 	 * 
 	 *  @return string Browser name

@@ -39,7 +39,7 @@ class Assignments
         'datetime|daterange|date'            => 'Date',
         'days|day'                           => 'Day',
         'months|month'                       => 'Month',
-		'timerange|time'                     => 'TimeRange',
+		'timerange|time'                     => 'Time',
         'acymailing'                         => 'AcyMailing',
         'akeebasubs'                         => 'AkeebaSubs',
         'contentcats|categories|category'    => 'ContentCategory',

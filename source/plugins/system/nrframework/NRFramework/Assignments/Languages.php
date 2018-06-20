@@ -15,11 +15,6 @@ use NRFramework\Assignment;
 
 class Language extends Assignment
 {
-	function pass()
-	{
-        return $this->passSimple($this->getLanguage(), $this->selection); 
-	}
-
 	/**
      *  Returns the assignment's value
      * 

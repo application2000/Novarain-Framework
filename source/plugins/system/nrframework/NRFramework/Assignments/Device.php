@@ -17,16 +17,6 @@ use NRFramework\WebClient;
 class Device extends Assignment
 {
     /**
-     *  Checks client's device type
-     *
-     *  @return  bool
-     */
-	function pass()
-	{
-    	return $this->passSimple($this->getDevice(), $this->selection);
-    }
-
-    /**
      *  Returns the assignment's value
      * 
      *  @return string Device type

@@ -64,6 +64,6 @@ class Pageviews extends Assignment
      */
     public function getVisits()
     {
-        return $this->factory->get('session.counter', 0);
+        return $this->factory->getSession()->get('session.counter', 0);
     }
 }

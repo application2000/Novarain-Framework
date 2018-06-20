@@ -22,7 +22,7 @@ class IP extends Assignment
     public function pass()
     {
         // get the user's ip address
-        $user_ip = $this->app->input->server->get('REMOTE_ADDR');
+        $user_ip = $this->value();
 
         // get the supplied ip addresses/ranges as an array
         $ip_ranges = $this->prepareRanges($this->selection);

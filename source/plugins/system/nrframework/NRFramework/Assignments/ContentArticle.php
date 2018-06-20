@@ -22,13 +22,15 @@ class ContentArticle extends ContentBase
 	 */
 	public function pass()
 	{
-		if (!$this->request->id || !(($this->request->option == 'com_content' && $this->request->view == 'article')))
+        $id = $this->request->id;
+
+		if (!$id || !(($this->request->option == 'com_content' && $this->request->view == 'article')))
 		{
 			return false;
 		}
 
 		$selection = is_array($this->selection) ? $this->selection : $this->splitKeywords($this->selection);
-		return $this->passSimple($this->request->id, $selection);
+		return $this->passSimple($id, $selection);
     }
     
     /**

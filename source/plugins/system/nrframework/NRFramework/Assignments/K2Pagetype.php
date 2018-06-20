@@ -37,7 +37,7 @@ class K2Pagetype extends K2
      */
 	public function value()
 	{
-		return $this->getLanguage();
+		return $this->getPagetype();
     }
     
     public function getPagetype()

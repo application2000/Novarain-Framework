@@ -20,7 +20,7 @@ class ContentBase extends Assignment
 	 * 
 	 *  @var object
 	 */
-	protected $request;
+	protected $request = null;
 
 	/**
 	 *  Class constructor

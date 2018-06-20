@@ -16,16 +16,6 @@ use NRFramework\Assignment;
 class AcyMailing extends Assignment
 {
 	/**
-	 *  Checks if user is subscribed to AcyMailing list
-	 *
-	 *  @return  bool
-	 */
-	public function pass()
-	{
-    	return $this->passSimple($this->getSubscribedLists(), $this->selection);
-	}
-
-	/**
 	 *  Returns the assignment's value
 	 * 
 	 *  @return  array  AcyMailing lists

@@ -22,7 +22,7 @@ class URLBase extends Assignment
    	 *
    	 *  @return  bool   		Returns true if the URL contains any of the selection URLs 
    	 */
-	function checkURL($url = null)
+	function passURL($url = null)
 	{
 		// Get the current URL if none is passed
 		$url = is_null($url) ? $this->factory->getURL() : $url;

@@ -31,7 +31,7 @@ class Country extends GeoIPBase
             return $c;
         }, $this->selection);
 
-        return $this->passSimple($this->geo->getCountryCode(), $this->selection);
+        return $this->passSimple($this->value(), $this->selection);
     }
 
     /**

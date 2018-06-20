@@ -24,7 +24,7 @@ class Region extends GeoIPBase
      */
     public function pass()
     {
-        return array_intersect($this->selection, $this->getRegionCodes());
+        return array_intersect($this->selection, $this->value());
     }
 
     /**
@@ -34,7 +34,7 @@ class Region extends GeoIPBase
      */
 	public function value()
 	{
-		return $this->geo->getRegionCodes();
+		return $this->getRegionCodes();
     }
     
     /**

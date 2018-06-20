@@ -53,8 +53,7 @@ class GroupLevel extends Assignment
 			}
 		}
 
-		$usergroups = !empty($this->user->groups) ? array_values($this->user->groups) : $this->user->getAuthorisedGroups();
-		return $this->passSimple($usergroups, $this->selection); 
+		return $this->passSimple($this->value(), $this->selection); 
 	}
 
     /**

@@ -16,16 +16,6 @@ use NRFramework\Assignment;
 class AkeebaSubs extends Assignment
 {
 	/**
-	 *  Checks if user has access to certain subscription levels
-	 *
-	 *  @return  bool
-	 */
-	public function pass()
-	{
-    	return $this->passSimple($this->getLevels(), $this->selection);
-	}
-
-	/**
 	 *  Returns the assignment's value
 	 * 
 	 *  @return  array   Akeeba Subscriptions

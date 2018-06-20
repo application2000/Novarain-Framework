@@ -16,16 +16,6 @@ use NRFramework\Assignments\GeoIPBase;
 class City extends GeoIPBase
 {
     /**
-     * City Check
-     *
-     * @return bool
-     */
-    public function pass()
-    {
-        return $this->passSimple($this->geo->getCity(), $this->selection);
-    }
-
-    /**
      *  Returns the assignment's value
      * 
      *  @return string City name

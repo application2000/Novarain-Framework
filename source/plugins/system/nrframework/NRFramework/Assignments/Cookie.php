@@ -17,8 +17,7 @@ class Cookie extends Assignment
     public function pass()
     {
         $pass = false;
-        $input_cookie       = $this->app->input->cookie;
-        $cookie_data        = $input_cookie->get($this->params->name);
+        $cookie_data        = $this->value();
         $user_content       = empty($this->params->content) ? '' : $this->params->content;
         // return false if the cookie is not found
         if($cookie_data === null)

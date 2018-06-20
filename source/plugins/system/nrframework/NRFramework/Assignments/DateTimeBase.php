@@ -19,7 +19,7 @@ class DateTimeBase extends Assignment
 	 *
 	 * @var DateTimeZone
 	 */
-	private $tz;
+	protected $tz;
 
 	/**
 	 *  Class constructor
@@ -42,7 +42,7 @@ class DateTimeBase extends Assignment
 	 * 
 	 * @return bool
 	 */
-	private function checkRange(&$up_date, &$down_date)
+	protected function checkRange(&$up_date, &$down_date)
 	{
         if (!$up_date && !$down_date)
         {

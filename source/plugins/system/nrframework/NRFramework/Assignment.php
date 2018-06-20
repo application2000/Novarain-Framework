@@ -33,13 +33,6 @@ class Assignment
 	public $doc;
 
 	/**
-	 *  Request Object
-	 *
-	 *  @var  object
-	 */
-	public $request;
-
-	/**
 	 *  Date Object
 	 *
 	 *  @var  object
@@ -108,6 +101,16 @@ class Assignment
 		$this->params           = $options->params;
 		$this->selection        = $options->selection;
 		$this->assignment_state = $options->assignment_state;
+    }
+    
+    /**
+     *  Base assignment check
+     * 
+     *  @return bool
+     */
+	public function pass()
+	{
+    	return $this->passSimple($this->value(), $this->selection);
 	}
 
 	/**

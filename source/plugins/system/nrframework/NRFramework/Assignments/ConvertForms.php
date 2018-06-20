@@ -15,17 +15,6 @@ use NRFramework\Assignment;
 
 class ConvertForms extends Assignment
 {
-	/**
-	 *  Checks if user has subscribed to certain Convert Forms campaigns
-	 *
-	 *  @return  bool
-	 */
-	function pass()
-	{
-    	return $this->passSimple($this->getCampaigns(), $this->selection);
-	}
-
-
     /**
      *  Returns the assignment's value
      * 

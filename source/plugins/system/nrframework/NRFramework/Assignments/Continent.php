@@ -31,7 +31,7 @@ class Continent extends GeoIPBase
             return $c;
         }, $this->selection);
 
-        return $this->passSimple($this->geo->getContinentCode(), $this->selection);
+        return $this->passSimple($this->value(), $this->selection);
     }
 
     /**

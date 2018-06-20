@@ -52,7 +52,7 @@ class NR_GetResponse extends NR_Wrapper
 			'dayOfCycle'		=> 0,
 			'campaign' 			=> ['campaignId' => $campaign],
 			'customFieldValues'	=> $this->validateCustomFields($customFields),
-			'ipAddress' 		=> isset($_SERVER['REMOTE_ADDR']) ? $_SERVER['REMOTE_ADDR'] : '';
+			'ipAddress' 		=> isset($_SERVER['REMOTE_ADDR']) ? $_SERVER['REMOTE_ADDR'] : ''
 		);
 
 		if (empty($name) || is_null($name))

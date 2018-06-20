@@ -16,16 +16,6 @@ use NRFramework\Assignment;
 class Component extends Assignment
 {
     /**
-     *  Check's the current component against the selected value
-     * 
-     *  @return bool
-     */
-    public function pass()
-    {
-        return $this->passSimple($this->getComponent(), $this->selection);
-    }
-
-    /**
      *  Returns the assignment's value
      * 
      *  @return string The component's name

@@ -20,14 +20,14 @@ use NRFramework\Assignment;
  *  Belgium / Flanders:   37.62.255.255
  *  USA / New York:       72.229.28.185
  */
-class GeoIP extends Assignment
+class GeoIPBase extends Assignment
 {
     /**
      *  GeoIP Class
      *
      *  @var  class
      */
-    private $geo;
+    protected $geo;
 
     /**
      *  Class constructor

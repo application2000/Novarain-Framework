@@ -10,7 +10,7 @@ namespace NRFramework\Assignments;
 
 defined('_JEXEC') or die;
 
-use NRFramework\Assignments\DateTimebase;
+use NRFramework\Assignments\DateTimeBase;
 
 class Date extends DateTimeBase
 {

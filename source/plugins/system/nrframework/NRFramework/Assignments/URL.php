@@ -22,7 +22,7 @@ class URL extends URLBase
    	 */
    	public function pass()
    	{
-		return $this->checkURL();
+		return $this->passURL();
     }
 
     /**

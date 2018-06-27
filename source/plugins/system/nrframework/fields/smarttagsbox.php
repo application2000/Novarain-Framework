@@ -12,15 +12,10 @@
 
 defined('_JEXEC') or die('Restricted access');
 
-JLoader::register('NRFormField', JPATH_PLUGINS . '/system/nrframework/helpers/field.php');
-
 use NRFramework\SmartTags;
 
-class JFormFieldSmartTagsBox extends NRFormField
+class JFormFieldSmartTagsBox extends JFormField
 {
-    private $collection = [];
-    public $display_global = true;
-
     /**
      * Undocumented variable
      *
@@ -80,7 +75,8 @@ class JFormFieldSmartTagsBox extends NRFormField
                     '{referrer}' => 'Referrer URL',
                     '{date}'     => 'Date',
                     '{time}'     => 'Time',
-                    '{randomid}' => 'Random ID'
+                    '{randomid}' => 'Random ID',
+                    '{querystring.YOUR_KEY}' => 'Query String'
                 ]
             ]
         ]);

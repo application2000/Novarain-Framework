@@ -59,7 +59,8 @@ jQuery(function($) {
                 return true;
             }
 
-            $input.parent().children().wrapAll('"<div class="has-smarttags"></div>');
+            //$input.parent().children().wrapAll('"<div class="has-smarttags"></div>');
+            $input.parent().addClass("has-smarttags");
             $input.parent().append('<span class="icon-tags st_trigger" data-id="' + key + '"></span>');
 
             // Add Helper Classes

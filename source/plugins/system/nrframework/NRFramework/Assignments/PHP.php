@@ -19,7 +19,7 @@ class PHP extends Assignment
 	 *
 	 *  @return  bool
 	 */
-	function passPHP()
+	public function pass()
 	{
 		if (!is_array($this->selection))
 		{
@@ -98,7 +98,6 @@ class PHP extends Assignment
 
 		return $pass;
 	}
-
 	
 	public function value()
 	{

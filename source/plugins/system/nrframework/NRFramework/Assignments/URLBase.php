@@ -16,7 +16,7 @@ use NRFramework\Assignment;
 class URLBase extends Assignment 
 {   	
    	/**
-   	 *  Check URL
+   	 *  Pass URL
    	 *
    	 *  @param   mixed  $url    If null, the current URL will be used. Otherwise we need a valid absolute URL.
    	 *

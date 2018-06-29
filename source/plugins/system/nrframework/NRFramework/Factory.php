@@ -50,7 +50,7 @@
         return \JFactory::getDate();
      }
 
-     public function getDatefromFormat($format, $date, $timezone)
+     public function getDateFromFormat($format, $date, $timezone)
      {
          return \JDate::createFromFormat($format, $date, $timezone);
      }

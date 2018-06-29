@@ -382,13 +382,13 @@ class Functions
         }
 
         $date = trim($date);
-
+        
         // Check if date has correct syntax: 00-00-00 00:00:00
-        if (preg_match('#^[0-9]+-[0-9]+-[0-9]+( [0-9][0-9]:[0-9][0-9]:[0-9][0-9])?$#', $date))
+        if (preg_match('#^[0-9]+-[0-9]+-[0-9]+( [0-9][0-9]:[0-9][0-9]:[0-9][0-9])$#', $date))
         {
             return;
         }
-
+        
         // Check if date has syntax: 00-00-00 00:00
         // If so, add :00 (seconds)
         if (preg_match('#^[0-9]+-[0-9]+-[0-9]+ [0-9][0-9]:[0-9][0-9]$#', $date))
@@ -402,8 +402,8 @@ class Functions
         // If so, add 00:00:00 (hours:mins;secs)
         if (preg_match('#^([0-9]+-[0-9]+-[0-9]+)#', $date, $match))
         {
-            $date = $match['1'] . ' 00:00:00';
-
+            $date = $match[1] . ' 00:00:00';
+            
             return;
         }
 

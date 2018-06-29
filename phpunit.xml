@@ -7,8 +7,12 @@
     beStrictAboutTestSize="true"
     colors="true">
 	<testsuites>
-	    <testsuite name="Novarain Framework Unit Tests">
+	    <testsuite name="NRFramework">
 	        <directory>tests</directory>
+            <exclude>tests/Wrappers</exclude>
+        </testsuite>
+        <testsuite name="NRFramework_Wrappers">
+	        <directory>tests/Wrappers</directory>
         </testsuite>
     </testsuites>
 </phpunit>

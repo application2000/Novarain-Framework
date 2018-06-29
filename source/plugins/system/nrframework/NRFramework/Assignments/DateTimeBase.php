@@ -30,7 +30,15 @@ class DateTimeBase extends Assignment
 	{
 		parent::__construct($assignment, $factory);
 
-        $this->tz   = new \DateTimeZone($this->app->getCfg('offset'));
+		if (property_exists($assignment->params, "timezone"))
+		{
+			$this->tz =  new \DateTimeZone($assignment->params->timezone);
+		}
+		else
+		{
+			$this->tz   = new \DateTimeZone($this->app->getCfg('offset'));
+		}
+        
         $this->date = $factory->getDate()->setTimeZone($this->tz);
 	}
 

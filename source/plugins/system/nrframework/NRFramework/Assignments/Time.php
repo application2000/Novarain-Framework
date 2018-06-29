@@ -34,7 +34,8 @@ class Time extends DateTimeBase
         // do comparison using time only
 		$up   = is_null($this->params->publish_up)   ? null : $this->factory->getDate()->setTimezone($this->tz)->setTime($up_hours, $up_mins);
 		$down = is_null($this->params->publish_down) ? null : $this->factory->getDate()->setTimezone($this->tz)->setTime($down_hours, $down_mins);
-		return $this->checkRange($up, $down);
+
+        return $this->checkRange($up, $down);
     }
     
     /**

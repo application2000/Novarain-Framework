@@ -146,24 +146,13 @@ class Functions
      *  @param   string  $extension  Extension name
      *
      *  @return  integer
+     * 
+     *  @deprecated Use \NRFramework\Extension::getID instead
      */
     public static function getExtensionID($extension, $folder = null)
     {
-        $db = \JFactory::getDBO();
-
-        $query = $db->getQuery(true)
-            ->select($db->quoteName('extension_id'))
-            ->from($db->quoteName('#__extensions'))
-            ->where($db->quoteName('element') . ' = ' . $db->quote($extension));
-
-        if ($folder)
-        {
-            $query->where($db->quoteName('folder') . ' = ' . $db->quote($folder));
-        }
-
-        $db->setQuery($query);
-
-        return $db->loadResult();
+        $type = is_null($folder) ? 'component' : 'plugin';
+        return \NRFramework\Extension::getID($extension, $type, $folder);
     }
 
     /**
@@ -171,52 +160,15 @@ class Functions
      *
      *  @param   string  $extension  The extension element name
      *  @param   string  $type       The extension's type 
-     *  @param   string  $folder     Plugin folder
+     *  @param   string  $folder     Plugin folder     * 
      *
      *  @return  boolean             Returns true if extension is installed
+     * 
+     *  @deprecated Use \NRFramework\Extension::isInstalled instead
      */
     public static function extensionInstalled($extension, $type = 'component', $folder = 'system')
     {
-        jimport('joomla.filesystem.folder');
-        jimport('joomla.filesystem.file');
-
-        $db = \JFactory::getDbo();
-
-        switch ($type)
-        {
-            case 'component':
-
-                $result = $db->setQuery(
-                    $db->getQuery(true)
-                        ->select('COUNT(' . $db->quoteName('extension_id') . ')')
-                        ->from($db->quoteName('#__extensions'))
-                        ->where($db->quoteName('element') . ' = ' . $db->quote('com_'.$extension))
-                        ->where($db->quoteName('type') . ' = ' . $db->quote('component'))
-                        ->where($db->quoteName('enabled') . ' = 1')
-                )->loadResult();
-
-                if ($result)
-                {
-                    return true;
-                }
-
-                break;
-
-            case 'plugin':
-                return \JFile::exists(JPATH_PLUGINS . '/' . $folder . '/' . $extension . '/' . $extension . '.php');
-
-            case 'module':
-                return (\JFile::exists(JPATH_ADMINISTRATOR . '/modules/mod_' . $extension . '/' . $extension . '.php')
-                    || \JFile::exists(JPATH_ADMINISTRATOR . '/modules/mod_' . $extension . '/mod_' . $extension . '.php')
-                    || \JFile::exists(JPATH_SITE . '/modules/mod_' . $extension . '/' . $extension . '.php')
-                    || \JFile::exists(JPATH_SITE . '/modules/mod_' . $extension . '/mod_' . $extension . '.php')
-                );
-
-            case 'library':
-                return \JFolder::exists(JPATH_LIBRARIES . '/' . $extension);
-        }
-
-        return false;
+        return \NRFramework\Extension::isInstalled($extension, $type, $folder);
     }
 
     /**

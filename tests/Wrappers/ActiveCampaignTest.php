@@ -2,6 +2,9 @@
 
 include_once __DIR__ . '/../cases/WrapperTestCase.php';
 
+/**
+ * This UnitTest is likely to fail as it's based on a 30day Trial Account. 
+ */
 class ActiveCampaignTest extends WrapperTestCase
 {
     static $credentials = [

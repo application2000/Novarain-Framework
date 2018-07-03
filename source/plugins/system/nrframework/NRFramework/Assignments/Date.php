@@ -15,28 +15,21 @@ use NRFramework\Assignments\DateTimeBase;
 class Date extends DateTimeBase
 {
     /**
-	 *  Checks if current date passes the given date range
+	 *  Checks if current date passes the given date range. 
+	 *  Dates must be always passed in format: Y-m-d H:i:s
 	 *
 	 *  @return  bool
 	 */
-	function pass()
+	public function pass()
 	{
         // No valid dates
 		if (!$this->params->publish_up && !$this->params->publish_down)
 		{
 			return false;
-        }
-
-        $format = 'Y-m-d H:i:s';
-		$up     = $this->params->publish_up;
-		$down   = $this->params->publish_down;		
-
-        // fix the date string
-		\NRFramework\Functions::fixDate($up);
-		\NRFramework\Functions::fixDate($down);
-
-		$up   = $up   ? $this->factory->getDateFromformat($format, $up, $this->tz) : null;
-		$down = $down ? $this->factory->getDateFromformat($format, $down, $this->tz) : null;
+		}
+		
+		$up   = $this->params->publish_up   ? $this->getDate($this->params->publish_up)   : null;
+		$down = $this->params->publish_down ? $this->getDate($this->params->publish_down) : null;
 
         return $this->checkRange($up, $down);
     }

@@ -22,6 +22,13 @@ class DateTimeBase extends Assignment
 	protected $tz;
 
 	/**
+	 * If set to True, dates will be constructed with modified offset based on the passed timezone
+	 *
+	 * @var Boolean
+	 */
+	protected $modify_offset = true;
+
+	/**
 	 *  Class constructor
 	 *
 	 *  @param  object  $assignment
@@ -30,16 +37,25 @@ class DateTimeBase extends Assignment
 	{
 		parent::__construct($assignment, $factory);
 
-		if (property_exists($assignment->params, "timezone"))
+		// Set timezone
+		if (property_exists($assignment->params, 'timezone') && !empty($assignment->params->timezone))
 		{
-			$this->tz =  new \DateTimeZone($assignment->params->timezone);
+			$this->tz = new \DateTimeZone($assignment->params->timezone);
 		}
 		else
 		{
-			$this->tz   = new \DateTimeZone($this->app->getCfg('offset'));
+			$this->tz = new \DateTimeZone($this->app->getCfg('offset', 'GMT'));
 		}
-        
-        $this->date = $factory->getDate()->setTimeZone($this->tz);
+
+		// Set modify offset switch
+		if (property_exists($this->params, 'modify_offset'))
+		{
+			$this->modify_offset = (bool) $this->params->modify_offset;
+		}
+
+		// Set now date
+		$now = property_exists($assignment->params, 'now') ? $assignment->params->now : 'now';
+		$this->date = $this->getDate($now);
 	}
 
 	/**
@@ -55,8 +71,8 @@ class DateTimeBase extends Assignment
         if (!$up_date && !$down_date)
         {
             return false;
-        }
-
+		}
+ 
 		$now = $this->date->getTimestamp();
 
 		if (((bool)$up_date   && $up_date->getTimestamp() > $now) ||
@@ -66,5 +82,30 @@ class DateTimeBase extends Assignment
 		}
 
 		return true;
+	}
+
+	/**
+	 * Create a date object based on the given string and apply timezone.
+	 *
+	 * @param  String $date
+	 *
+	 * @return void
+	 */
+	protected function getDate($date = 'now')
+	{
+		// Fix the date string
+		\NRFramework\Functions::fixDate($date);
+
+		if ($this->modify_offset)
+		{
+			// Create date, set timezone and modify offset
+			$date = $this->factory->getDate($date)->setTimeZone($this->tz);
+		} else 
+		{
+			// Create date and set timezone without modifyig offset
+			$date = $this->factory->getDate($date, $this->tz);
+		}
+
+		return $date;
 	}
 }

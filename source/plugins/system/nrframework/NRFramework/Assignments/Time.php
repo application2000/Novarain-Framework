@@ -14,6 +14,13 @@ use NRFramework\Assignments\DateTimeBase;
 
 class Time extends DateTimeBase
 {
+	/**
+	 * If set to True, dates will be constructed with modified offset based on the passed timezone
+	 *
+	 * @var Boolean
+	 */
+	protected $modify_offset = false;
+
     /**
 	 * Checks if current time passes the given time range
 	 *
@@ -21,19 +28,11 @@ class Time extends DateTimeBase
 	 */
 	public function pass()
 	{
-        if (!is_null($this->params->publish_up))
-        {
-            list($up_hours, $up_mins) = explode(':', $this->params->publish_up);
-        }
-        
-        if (!is_null($this->params->publish_down))
-        {
-            list($down_hours, $down_mins) = explode(':', $this->params->publish_down);
-        }
+        $up   = $this->date->format('Y-m-d', true) . ' ' . $this->params->publish_up;
+        $down = $this->date->format('Y-m-d', true) . ' ' . $this->params->publish_down;
 
-        // do comparison using time only
-		$up   = is_null($this->params->publish_up)   ? null : $this->factory->getDate()->setTimezone($this->tz)->setTime($up_hours, $up_mins);
-		$down = is_null($this->params->publish_down) ? null : $this->factory->getDate()->setTimezone($this->tz)->setTime($down_hours, $down_mins);
+        $up   = $this->factory->getDate((string) $up, $this->tz);
+        $down = $this->factory->getDate((string) $down, $this->tz);
 
         return $this->checkRange($up, $down);
     }

@@ -45,9 +45,9 @@
         return \NRFramework\CacheManager::getInstance(\JFactory::getCache('novarain', ''));
      }
 
-     public function getDate()
+     public function getDate($date = 'now', $tz = null)
      {
-        return \JFactory::getDate();
+        return \JFactory::getDate($date, $tz);
      }
 
      public function getDateFromFormat($format, $date, $timezone)

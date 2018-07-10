@@ -14,6 +14,16 @@ class JFormFieldNR_Geo extends NRFormFieldList
 {
 	private $list;
 
+	protected function getInput()
+	{
+		if ($this->get('detect_visitor_country', false) && empty($this->value) && $countryCode = $this->getVisitorCountryCode())
+		{
+			$this->value = $countryCode;
+		}
+
+		return parent::getInput();
+	}
+
 	protected function getOptions()
 	{
 		switch ($this->get('geo'))
@@ -42,4 +52,28 @@ class JFormFieldNR_Geo extends NRFormFieldList
 
 		return array_merge(parent::getOptions(), $options);
 	}
+
+    /**
+     *  Detect visitor's country
+     *
+     *  @return  string   The visitor's country code (GR)
+     */
+    private function getVisitorCountryCode()
+    {
+    	$path = JPATH_PLUGINS . '/system/tgeoip/';
+
+    	if (!\JFolder::exists($path))
+    	{
+    		return;
+    	}
+
+    	if (!class_exists('TGeoIP'))
+    	{
+        	@include_once $path . 'vendor/autoload.php';
+        	@include_once $path . 'helper/tgeoip.php';
+    	}
+
+        $geo = new \TGeoIP();
+        return $geo->getCountryCode();
+    }
 }

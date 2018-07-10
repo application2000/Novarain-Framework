@@ -15,7 +15,8 @@ class JFormFieldNREventBookingCategories extends JFormField
 	 */
 	protected function getInput()
 	{
-		return \NRFramework\HTML::treeselect($this->getCategories(), $this->name, $this->value, $this->id, $size);
+		$categories = $this->getCategories();
+		return \NRFramework\HTML::treeselect($categories, $this->name, $this->value, $this->id);
 	}
 
 	/**

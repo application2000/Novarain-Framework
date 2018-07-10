@@ -106,7 +106,7 @@ class HTML
 				</span>
 
 				<span class="nr_treeselect_control nr_treeselect-filter right">
-					<input type="text" name="nr_treeselect-filter" class="search-query" size="16"
+					<input type="text" name="nr_treeselect-filter" class="search-query nr_treeselect-filter" size="16"
 					autocomplete="off" placeholder="' . \JText::_('JSEARCH_FILTER') . '" aria-invalid="false" tabindex="-1">
 				</span>
 			</div>';

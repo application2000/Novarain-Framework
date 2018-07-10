@@ -16,7 +16,7 @@
 					if (!$li.find("ul.nr_treeselect-sub ul.nr_treeselect-sub").length) $li.find("div.nr_treeselect-menu-expand").remove();
 				}
 			});
-			list.find("span.nr_treeselect-toggle").click(function() {
+			list.find("span.nr_treeselect-toggle").live('click', function() {
 				var $icon = $(this);
 				if ($icon.parent().find("ul.nr_treeselect-sub").is(":visible")) {
 					$icon.removeClass("icon-minus").addClass("icon-plus");
@@ -28,7 +28,7 @@
 					$icon.parent().find("ul.nr_treeselect-sub span.nr_treeselect-toggle").removeClass("icon-plus").addClass("icon-minus");
 				}
 			});
-			controls.find("input.nr_treeselect-filter").keyup(function() {
+			controls.find("input.nr_treeselect-filter").live('keyup', function() {
 				var $text = $(this).val().toLowerCase();
 				list.find("li").each(function() {
 					var $li = $(this);
@@ -36,31 +36,31 @@
 					else $li.show();
 				});
 			});
-			controls.find("a.nr_treeselect-checkall").click(function() {
+			controls.find("a.nr_treeselect-checkall").live('click', function() {
 				list.find("input").prop("checked", true);
 			});
-			controls.find("a.nr_treeselect-uncheckall").click(function() {
+			controls.find("a.nr_treeselect-uncheckall").live('click', function() {
 				list.find("input").prop("checked", false);
 			});
-			controls.find("a.nr_treeselect-toggleall").click(function() {
+			controls.find("a.nr_treeselect-toggleall").live('click', function() {
 				list.find("input").each(function() {
 					var $input = $(this);
 					if ($input.prop("checked")) $input.prop("checked", false);
 					else $input.prop("checked", true);
 				});
 			});
-			controls.find("a.nr_treeselect-expandall").click(function() {
+			controls.find("a.nr_treeselect-expandall").live('click', function() {
 				list.find("ul.nr_treeselect-sub").show();
 				list.find("span.nr_treeselect-toggle").removeClass("icon-plus").addClass("icon-minus");
 			});
-			controls.find("a.nr_treeselect-collapseall").click(function() {
+			controls.find("a.nr_treeselect-collapseall").live('click', function() {
 				list.find("ul.nr_treeselect-sub").hide();
 				list.find("span.nr_treeselect-toggle").removeClass("icon-minus").addClass("icon-plus");
 			});
-			controls.find("a.nr_treeselect-showall").click(function() {
+			controls.find("a.nr_treeselect-showall").live('click', function() {
 				list.find("li").show();
 			});
-			controls.find("a.nr_treeselect-showselected").click(function() {
+			controls.find("a.nr_treeselect-showselected").live('click', function() {
 				list.find("li").each(function() {
 					var $li = $(this);
 					var $hide = true;
@@ -77,36 +77,36 @@
 					$li.show();
 				});
 			});
-			controls.find("a.nr_treeselect-maximize").click(function() {
+			controls.find("a.nr_treeselect-maximize").live('click', function() {
 				list.css("max-height", "");
 				controls.find("a.nr_treeselect-maximize").hide();
 				controls.find("a.nr_treeselect-minimize").show();
 			});
-			controls.find("a.nr_treeselect-minimize").click(function() {
+			controls.find("a.nr_treeselect-minimize").live('click', function() {
 				list.css("max-height", maxheight);
 				controls.find("a.nr_treeselect-minimize").hide();
 				controls.find("a.nr_treeselect-maximize").show();
 			});
 		});
-		$("div.nr_treeselect a.checkall").click(function() {
+		$("div.nr_treeselect a.checkall").live('click', function() {
 			$(this).parent().parent().parent().parent().parent().parent().find("ul.nr_treeselect-sub input").prop("checked",
 				true);
 		});
-		$("div.nr_treeselect a.uncheckall").click(function() {
+		$("div.nr_treeselect a.uncheckall").live('click', function() {
 			$(this).parent().parent().parent().parent().parent().parent().find("ul.nr_treeselect-sub input").prop("checked", false);
 		});
-		$("div.nr_treeselect a.expandall").click(function() {
+		$("div.nr_treeselect a.expandall").live('click', function() {
 			var $parent = $(this).parent().parent().parent().parent().parent().parent().parent();
 			$parent.find("ul.nr_treeselect-sub").show();
 			$parent.find("ul.nr_treeselect-sub span.nr_treeselect-toggle").removeClass("icon-plus").addClass("icon-minus");
 		});
-		$("div.nr_treeselect a.collapseall").click(function() {
+		$("div.nr_treeselect a.collapseall").live('click', function() {
 			var $parent =
 				$(this).parent().parent().parent().parent().parent().parent().parent();
 			$parent.find("li ul.nr_treeselect-sub").hide();
 			$parent.find("li span.nr_treeselect-toggle").removeClass("icon-minus").addClass("icon-plus");
 		});
-		$("div.nr_treeselect-item.hidechildren").click(function() {
+		$("div.nr_treeselect-item.hidechildren").live('click', function() {
 			var $parent = $(this).parent();
 			$(this).find("input").each(function() {
 				var $sub = $parent.find("ul.nr_treeselect-sub").first();

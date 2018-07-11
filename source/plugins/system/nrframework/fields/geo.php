@@ -2,7 +2,7 @@
 /**
  * @author          Tassos Marinos <info@tassos.gr>
  * @link            http://www.tassos.gr
- * @copyright       Copyright © 2017 Tassos Marinos All Rights Reserved
+ * @copyright       Copyright © 2018 Tassos Marinos All Rights Reserved
  * @license         GNU GPLv3 <http://www.gnu.org/licenses/gpl.html> or later
  */
 
@@ -13,6 +13,16 @@ require_once JPATH_PLUGINS . '/system/nrframework/helpers/fieldlist.php';
 class JFormFieldNR_Geo extends NRFormFieldList
 {
 	private $list;
+
+	protected function getInput()
+	{
+		if ($this->get('detect_visitor_country', false) && empty($this->value) && $countryCode = $this->getVisitorCountryCode())
+		{
+			$this->value = $countryCode;
+		}
+
+		return parent::getInput();
+	}
 
 	protected function getOptions()
 	{
@@ -42,4 +52,28 @@ class JFormFieldNR_Geo extends NRFormFieldList
 
 		return array_merge(parent::getOptions(), $options);
 	}
+
+    /**
+     *  Detect visitor's country
+     *
+     *  @return  string   The visitor's country code (GR)
+     */
+    private function getVisitorCountryCode()
+    {
+    	$path = JPATH_PLUGINS . '/system/tgeoip/';
+
+    	if (!\JFolder::exists($path))
+    	{
+    		return;
+    	}
+
+    	if (!class_exists('TGeoIP'))
+    	{
+        	@include_once $path . 'vendor/autoload.php';
+        	@include_once $path . 'helper/tgeoip.php';
+    	}
+
+        $geo = new \TGeoIP();
+        return $geo->getCountryCode();
+    }
 }

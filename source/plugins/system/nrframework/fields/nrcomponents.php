@@ -53,7 +53,7 @@ class JFormFieldNRComponents extends JFormFieldList
         )->loadObjectList();
 
         $comps = array();
-        
+
         foreach ($components as $component)
         {
             // Make sure we have a valid element
@@ -72,7 +72,9 @@ class JFormFieldNRComponents extends JFormFieldList
                     continue;
                 }
 
-                if (!\JFolder::exists($component_folder . '/views') && !\JFolder::exists($component_folder . '/View'))
+                if (!\JFolder::exists($component_folder . '/views') && 
+                    !\JFolder::exists($component_folder . '/View')  && 
+                    !\JFolder::exists($component_folder . '/view'))
                 {
                     continue;
                 }

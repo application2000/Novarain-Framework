@@ -20,7 +20,7 @@ class EventBookingCategory extends EventBookingBase
      *
      *  @return bool
      */
-    public function passEventBookingCategory()
+    public function pass()
     {
         if (empty($this->selection) || !$this->passContext())
         {
@@ -29,11 +29,21 @@ class EventBookingCategory extends EventBookingBase
 
         return $this->passComponentCategories('eb_categories', false);
 	}
+
+	/**
+     *  Returns the assignment's value
+     * 
+     *  @return array Event Booking Ctegory IDs
+     */
+	public function value()
+	{
+		return $this->getCategoryIds();
+	}
 	
     /**
-	 *  Returns category IDs based on the active K2 view
+	 *  Returns category IDs based
 	 *
-	 *  @return  array                  The IDs
+	 *  @return  array
 	 */
 	protected function getCategoryIds()
 	{

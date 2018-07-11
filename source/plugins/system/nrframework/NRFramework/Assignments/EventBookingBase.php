@@ -17,6 +17,26 @@ use NRFramework\Cache;
 abstract class EventBookingBase extends Assignment
 {
     /**
+     *  Request information
+     */
+    protected $request = null;
+
+    public function __construct($options, $factory)
+	{
+		parent::__construct($options, $factory);
+        
+        $request = new \stdClass;
+
+        $request->view   = $this->app->input->get('view');
+        $request->task   = $this->app->input->get('task');
+        $request->option = $this->app->input->get('option');
+        $request->layout = $this->app->input->get('layout', '', 'string');
+        $request->id     = $this->app->input->get('id');
+
+        $this->request = $request;
+    }
+
+    /**
      *  Returns an EventBooking item from the database
      *
      *  @return object
@@ -75,7 +95,7 @@ abstract class EventBookingBase extends Assignment
      */
 	protected function getEventCategories($id)
 	{
-        $db = \JFactory::getDbo();
+        $db = $this->db;
         
         $query = $db->getQuery(true)
             ->select('category_id')

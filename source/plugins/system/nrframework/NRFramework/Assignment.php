@@ -3,7 +3,7 @@
 /**
  * @author          Tassos Marinos <info@tassos.gr>
  * @link            http://www.tassos.gr
- * @copyright       Copyright © 2017 Tassos Marinos All Rights Reserved
+ * @copyright       Copyright © 2018 Tassos Marinos All Rights Reserved
  * @license         GNU GPLv3 <http://www.gnu.org/licenses/gpl.html> or later
  */
 
@@ -222,7 +222,74 @@ class Assignment
 		}
 
 		return Cache::set($hash, $parent_ids);
-    }
+	}
+	
+	/**
+     *  Pass Component Category IDs
+     *
+     *  @return bool
+     */
+    protected function passComponentCategories($ref_table, $inc_categories = true, $inc_items = true)
+    {
+		// Include Children switch: 0 = No, 1 = Yes, 2 = Child Only
+		$inc_children = $this->params->inc_children;
+
+		// Check whether we support the Category and the Item views
+		if (isset($this->params->inc) && is_array($this->params->inc))
+		{
+			$inc_categories = in_array('inc_categories', $this->params->inc);
+			$inc_items      = in_array('inc_items', $this->params->inc);
+		}
+
+		// Check if we are in a valid context
+		if (!($inc_categories && $this->isCategory()) && !($inc_items && $this->isItem()))
+		{
+			return false;
+		}
+
+		// Start Checks
+		$pass = false;
+
+		// Get current page assosiated category IDs. It can be a single ID of the current Category view or multiple IDs assosiated to active item.
+		$catids = $this->getCategoryIds();
+
+		foreach ($catids as $catid)
+		{
+			$pass = in_array($catid, $this->selection);
+
+			if ($pass)
+			{
+				// If inc_children is either disabled or set to 'Also on Childs', there's no need for further checks. 
+				// The condition is already passed.
+				if (in_array($this->params->inc_children, [0, 1]))
+				{
+					break;
+				}
+
+				// We are here because we need childs only. Disable pass and continue checking parent IDs.
+				$pass = false;
+			}
+
+			// Pass check for child items
+			if (!$pass && $this->params->inc_children)
+			{
+				$parent_ids = $this->getParentIDs($catid, $ref_table, 'parent');
+
+				foreach ($parent_ids as $id)
+				{
+					if (in_array($id, $this->selection))
+					{
+						$pass = true;
+						break 2;
+					}
+				}
+
+				unset($parent_ids);
+			}
+		}
+
+		return $pass;
+	}
     
     /**
      *  Splits a keyword string on commas and newlines

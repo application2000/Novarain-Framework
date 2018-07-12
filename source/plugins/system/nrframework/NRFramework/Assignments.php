@@ -3,7 +3,7 @@
 /**
  * @author          Tassos Marinos <info@tassos.gr>
  * @link            http://www.tassos.gr
- * @copyright       Copyright © 2017 Tassos Marinos All Rights Reserved
+ * @copyright       Copyright © 2018 Tassos Marinos All Rights Reserved
  * @license         GNU GPLv3 <http://www.gnu.org/licenses/gpl.html> or later
  */
 
@@ -55,7 +55,8 @@ class Assignments
         'k2_items'                           => 'K2Item',
         'k2_cats'                            => 'K2Category',
         'k2_tags'                            => 'K2Tag',
-        'k2_pagetypes'                       => 'K2Pagetype'
+        'k2_pagetypes'                       => 'K2Pagetype',
+        'eventbookingcategory'               => 'EventBookingCategory'
     );
     
     /**

@@ -91,10 +91,15 @@ class SmartTags
 			'client.useragent' => WebClient::getClient()->userAgent,
 			
 			// Other
-			'time'			=> \JFactory::getDate()->format('H:i'),
-			'date'			=> \JFactory::getDate()->format('Y-m-d H:i:s'),
 			'randomid'		=> bin2hex(\JCrypt::genRandomBytes(8))
 		);
+
+		// Add Dates
+		$tz   = new \DateTimeZone(\JFactory::getApplication()->getCfg('offset', 'GMT'));
+		$date = \JFactory::getDate()->setTimezone($tz);
+
+		$this->tags['time'] = $date->format('H:i', true);
+		$this->tags['date'] = $date->format('Y-m-d H:i:s', true);
 
 		// Add Query Parameters
 		$query = \JUri::getInstance()->getQuery(true);

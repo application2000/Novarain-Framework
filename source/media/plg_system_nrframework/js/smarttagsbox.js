@@ -61,7 +61,7 @@ jQuery(function($) {
 
             //$input.parent().children().wrapAll('"<div class="has-smarttags"></div>');
             $input.parent().addClass("has-smarttags");
-            $input.parent().append('<span class="icon-tags st_trigger" data-id="' + key + '"></span>');
+            $input.parent().append('<span title="' + Joomla.JText._('NR_SMARTTAGS_SHOW') + '" class="icon-tags st_trigger" data-id="' + key + '"></span>');
 
             // Add Helper Classes
             input_type = $input.prop('nodeName').toLowerCase();

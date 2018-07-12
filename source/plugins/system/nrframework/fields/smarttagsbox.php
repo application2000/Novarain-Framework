@@ -44,6 +44,7 @@ class JFormFieldSmartTagsBox extends JFormField
         JHtml::_('stylesheet', 'plg_system_nrframework/smarttagsbox.css', ['version' => 'auto', 'relative' => true]);
 
         JText::script('NR_SMARTTAGS_NOTFOUND');
+        JText::script('NR_SMARTTAGS_SHOW');
 
         JFactory::getDocument()->addScriptOptions('SmartTagsBox', [
             'selector' => $this->input_selector,
@@ -60,7 +61,7 @@ class JFormFieldSmartTagsBox extends JFormField
                     '{user.login}'     => 'User Login name',
                     '{user.email}'     => 'User Email',
                     '{user.name}'      => 'User Full name',
-                    '{user.firstname}' => 'User Firstname',
+                    '{user.firstname}' => 'User First name',
                     '{user.lastname}'  => 'User Last name',
                     '{user.groups}'    => 'User Group IDs',
                 ],

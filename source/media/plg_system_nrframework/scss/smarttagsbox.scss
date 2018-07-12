@@ -125,12 +125,13 @@
         width: 25px;
         height: 25px;
         color: #000;
-        opacity: .2;
+        opacity: .3;
         padding: 6px;
         line-height:1;
         margin:1px;
         background-color:#fff;
         z-index:1;
+        font-size:13px;
 
         &:hover {
             opacity:.6;

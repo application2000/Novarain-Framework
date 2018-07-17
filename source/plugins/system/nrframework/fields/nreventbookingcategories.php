@@ -8,28 +8,29 @@
 
 defined('_JEXEC') or die;
 
-class JFormFieldNREventBookingCategories extends JFormField
+require_once __DIR__ . '/treeselect.php';
+
+class JFormFieldNREventBookingCategories extends JFormFieldNRTreeSelect
 {
 	/**
-	 * Output the HTML for the field
+	 * Indicates whether the options array should be sorted before render.
+	 *
+	 * @var boolean
 	 */
-	protected function getInput()
-	{
-		$categories = $this->getCategories();
-		return \NRFramework\HTML::treeselect($categories, $this->name, $this->value, $this->id);
-	}
+	protected $sortTree = true;
 
 	/**
 	 * Get a list of all EventBooking Categories
 	 *
 	 * @return void
 	 */
-	public function getCategories()
+	protected function getOptions()
 	{
-		$db = JFactory::getDbo();
+		// Get a database object.
+		$db = $this->db;
 
 		$query = $db->getQuery(true)
-			->select('id as value, name as text, level, IF (published=1, 0, 1) as disable')
+			->select('id as value, name as text, level, parent, IF (published=1, 0, 1) as disable')
 			->from('#__eb_categories');
 			
 		$db->setQuery($query);

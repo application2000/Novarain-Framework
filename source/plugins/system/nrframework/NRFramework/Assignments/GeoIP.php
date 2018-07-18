@@ -52,10 +52,6 @@ class GeoIP extends Assignment
         {
             $this->selection = $this->splitKeywords($this->selection);
         }
-        else
-        {
-            $this->selection = $this->splitKeywords($this->selection[0]);
-        }
     }
 
     /**

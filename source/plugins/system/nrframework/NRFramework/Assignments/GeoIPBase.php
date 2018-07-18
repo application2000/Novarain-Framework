@@ -49,8 +49,10 @@ class GeoIPBase extends Assignment
         parent::__construct($assignment, $factory);
 
         // Convert a comma/newline separated selection string into an array
-        $selection = is_array($this->selection) ? $this->selection[0] : $this->selection;
-        $this->selection = $this->splitKeywords($selection);
+        if (!is_array($this->selection))
+        {
+            $this->selection = $this->splitKeywords($selection);
+        }
     }
 
     /**

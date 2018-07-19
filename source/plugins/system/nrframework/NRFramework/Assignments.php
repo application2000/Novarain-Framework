@@ -56,7 +56,8 @@ class Assignments
         'k2_cats'                            => 'K2Category',
         'k2_tags'                            => 'K2Tag',
         'k2_pagetypes'                       => 'K2Pagetype',
-        'eventbookingcategory'               => 'EventBookingCategory'
+        'eventbookingcategory'               => 'EventBookingCategory',
+        'j2storecategory'                    => 'J2StoreCategory'
     );
 
     /**

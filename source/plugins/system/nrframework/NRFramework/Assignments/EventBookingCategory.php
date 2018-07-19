@@ -27,7 +27,7 @@ class EventBookingCategory extends EventBookingBase
             return false;
 		}
 
-        return $this->passComponentCategories('eb_categories', false);
+        return $this->passComponentCategories('eb_categories', 'parent');
 	}
 
 	/**

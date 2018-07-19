@@ -217,7 +217,18 @@ class Assignment
      *
      *  @return bool
      */
-    protected function passComponentCategories($ref_table, $inc_categories = true, $inc_items = true)
+
+	/**
+	 * Checks whether the current page is within the selected categories
+	 *
+	 * @param	string	   $ref_table				The referenced table
+	 * @param	string	   $ref_parent_column		The name of the parent column in the referecned table
+	 * @param	boolean	   $inc_categories			Indicates whether the Category view should me included in the check
+	 * @param	boolean    $inc_items				Indicates whether the Item view should me included in the check
+	 * 
+	 * @return	boolean
+	 */
+    protected function passComponentCategories($ref_table = 'categories', $ref_parent_column = 'parent_id', $inc_categories = false, $inc_items = true)
     {
 		// Include Children switch: 0 = No, 1 = Yes, 2 = Child Only
 		$inc_children = $this->params->inc_children;
@@ -240,6 +251,7 @@ class Assignment
 
 		// Get current page assosiated category IDs. It can be a single ID of the current Category view or multiple IDs assosiated to active item.
 		$catids = $this->getCategoryIds();
+		$catids = is_array($catids) ? $catids : (array) $catids;
 
 		foreach ($catids as $catid)
 		{
@@ -261,7 +273,7 @@ class Assignment
 			// Pass check for child items
 			if (!$pass && $this->params->inc_children)
 			{
-				$parent_ids = $this->getParentIDs($catid, $ref_table, 'parent');
+				$parent_ids = $this->getParentIDs($catid, $ref_table, $ref_parent_column);
 
 				foreach ($parent_ids as $id)
 				{

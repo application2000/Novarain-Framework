@@ -12,7 +12,6 @@ namespace NRFramework\Assignments;
 defined('_JEXEC') or die;
 
 use NRFramework\Assignment;
-use NRFramework\Cache;
 
 abstract class EventBookingBase extends Assignment
 {
@@ -43,18 +42,19 @@ abstract class EventBookingBase extends Assignment
      */
     protected function getItem()
     {
-        $hash = md5('eventbookingssitem');
+        $hash  = md5('eventbookingssitem');
+        $cache = $this->factory->getCache(); 
 
-        if (Cache::has($hash))
+        if ($cache->has($hash))
         {
-            return Cache::get($hash);
+            return $cache->get($hash);
         }
 
         require_once JPATH_COMPONENT . '/helper/database.php';
 
         $item = \EventbookingHelperDatabase::getEvent($this->request->id);
 
-        return Cache::set($hash, $item);
+        return $cache->set($hash, $item);
     }   
 
     /**

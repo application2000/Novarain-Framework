@@ -56,11 +56,11 @@ abstract class J2StoreBase extends Assignment
 		if (!class_exists('J2Product'))
 		{
 			return;
-		}
+        }
 
-        $item = \J2Product::getInstance()->getProduct();
+		$item = \J2Product::getInstance()->setId($this->request->id)->getProduct();
 
-		if (!is_object($item))
+		if (!is_object($item) || !isset($item->source))
 		{
 			return;
 		}

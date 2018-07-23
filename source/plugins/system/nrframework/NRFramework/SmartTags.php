@@ -44,12 +44,12 @@ class SmartTags
 	 *
 	 *  @var  string
 	 */
-	private $placeholder = "{}";
+	private $placeholder = '{}';
 
 	/**
 	 *  Class constructor
 	 */
-	function __construct($options = array())
+	public function __construct($options = array())
 	{
 		$user = isset($options['user']) ? $options['user'] : null;
 
@@ -150,12 +150,6 @@ class SmartTags
 	}
 
 	/**
-	 *  Adds Custom Tags to list
-	 *
-	 *  @param  array  $tags  Tags array in key value pairs
-	 */
-	
-	/**
 	 *  Adds Custom Tags to the list
 	 *
 	 *  @param  Mixed   $tags    Tags list (Array or Object)
@@ -220,12 +214,12 @@ class SmartTags
 			// Revert object back to its original state
 			$data = is_object($obj) ? (object) $data : $data;
 	   		return $data;
-    	}
-
+		}
+		
     	// String case
     	return strtr($data, $this->tags);
-    }
-
+	}
+	
     /**
      *  Prepares tags by adding the placeholder to each key
      *

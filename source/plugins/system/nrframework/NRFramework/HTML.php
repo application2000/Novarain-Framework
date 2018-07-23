@@ -14,6 +14,18 @@ defined('_JEXEC') or die;
 
 class HTML
 {
+	public static function smartTagsBox($options = array())
+	{
+		include_once JPATH_PLUGINS . '/system/nrframework/fields/smarttagsbox.php';
+
+		$field   = new \JFormFieldSmartTagsBox;
+		$element = new \SimpleXMLElement('<field name="pro" type="SmartTagsBox"/>');
+		
+		$field->setup($element, null);
+
+		return $field->__get('input');
+	}
+
 	/**
 	 * Construct the HTML for the input field in a tree
 	 * Logic from administrator\components\com_modules\views\module\tmpl\edit_assignment.php

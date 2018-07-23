@@ -16,7 +16,8 @@ gulp.task('default', ['watch']);
 
 /* compile scss files */
 gulp.task('build-css', function () {
-	gulp.src(source+'scss/**/*.scss')
+    // Individual Files
+    gulp.src(source+'scss/*.scss')
         .pipe(plumber())
         .pipe(sass({
             outputStyle: 'compressed'

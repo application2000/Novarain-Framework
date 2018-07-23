@@ -16,7 +16,8 @@
     "url": ""
   },
   "devDependencies": {
-    "gulp": "^4.0.0",
+    "bulma": "^0.6.2",
+    "gulp": "*",
     "gulp-autoprefixer": "*",
     "gulp-concat": "^2.6.1",
     "gulp-group-css-media-queries": "*",
@@ -28,8 +29,5 @@
     "gulp-sourcemaps": "^2.4.0",
     "gulp-uglify": "*",
     "jshint": "^2.9.4"
-  },
-  "dependencies": {
-    "gulp": "^3.8.11"
   }
 }

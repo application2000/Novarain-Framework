@@ -14,7 +14,7 @@ jQuery(function($) {
         $active_element =  null
         input_selector = Joomla.getOptions('SmartTagsBox').selector;
 
-    init();
+    attachicons();
 
     $el.on("update", function() {
         init();
@@ -46,10 +46,6 @@ jQuery(function($) {
         return false;
     });
 
-    function init() {
-        attachicons();
-    }
-
     function attachicons() {
         $(input_selector).each(function(key) {
             var $input = $(this);
@@ -59,7 +55,6 @@ jQuery(function($) {
                 return true;
             }
 
-            //$input.parent().children().wrapAll('"<div class="has-smarttags"></div>');
             $input.parent().addClass("has-smarttags");
             $input.parent().append('<span title="' + Joomla.JText._('NR_SMARTTAGS_SHOW') + '" class="icon-tags st_trigger" data-id="' + key + '"></span>');
 

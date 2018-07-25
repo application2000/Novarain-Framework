@@ -83,8 +83,8 @@ class Assignment
 	 *  Class constructor
 	 *
 	 *  @param  object  $assignment
-	 *  @param  object  $request     
-	 *  @param  object  $date        
+	 *  @param  object  $request
+	 *  @param  object  $date
 	 */
 	public function __construct($options, $factory)
 	{
@@ -98,9 +98,9 @@ class Assignment
 		$this->user = $factory->getUser();
 
 		// Set Assignment Options
-		$this->params           = $options->params;
 		$this->selection        = $options->selection;
-		$this->assignment_state = $options->assignment_state;
+		$this->assignment_state = isset($options->assignment_state) ? $options->assignment_state : 'include';
+		$this->params           = isset($options->params) ? $options->params : null;
     }
     
     /**
@@ -159,7 +159,7 @@ class Assignment
 
 		if (!is_array($object))
 		{
-			$x = explode(" ", $object);
+			$x = explode(' ', $object);
 			return $x;
 		}
 	}
@@ -212,12 +212,6 @@ class Assignment
 		return $cache->set($hash, $parent_ids);
 	}
 	
-	/**
-     *  Pass Component Category IDs
-     *
-     *  @return bool
-     */
-
 	/**
 	 * Checks whether the current page is within the selected categories
 	 *

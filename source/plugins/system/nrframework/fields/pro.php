@@ -9,40 +9,35 @@
 
 // No direct access to this file
 defined('_JEXEC') or die;
-JHtml::_('bootstrap.popover');
-require_once dirname(__DIR__) . '/helpers/field.php';
 
-class JFormFieldNR_PRO extends NRFormField
+class JFormFieldNR_PRO extends JFormField
 {
     /**
      *  Method to render the input field
      *
-     *  @return  string  
+     *  @return  string
      */
     protected function getInput()
     {   
-        $url = $this->getURL();
+        $label = (string) $this->element['label'];
+        $isFeatureMode = !is_null($label) && !empty($label);
 
-        return '<a style="float:none;" class="btn btn-danger ' . $this->get("class") . '" href="' . $url . '" target="_blank"><span class="icon-lock"></span> '. $this->prepareText($this->get("link", "NR_UPGRADE_TO_PRO_TO_UNLOCK")) .'</a>';
-    }
+        $buttonText = $isFeatureMode ? 'NR_UNLOCK_PRO_FEATURE' : 'NR_UPGRADE_TO_PRO';
 
-    /**
-     *  Constructs URL with Google Analytics Campaign Parameters
-     *
-     *  @return  string
-     */
-    private function getURL()
-    {
-        $url = $this->get("url");
+        NRFramework\HTML::renderProOnlyModal();
 
-        if (!$this->get("addutm", true))
+        $html = '<a style="float:none;" class="btn btn-danger" data-pro-only="' . JText::_($label) . '">';
+
+        if ($isFeatureMode)
         {
-            return $url;
+            $html .= '<span class="icon-lock" style="position:relative; top:1px;"></span> ';
+        } else 
+        {
+            $html .= '<span class="icon-heart" style="position:relative; top:2px; left:-1px;"></span>';
         }
 
-        $utm  = 'utm_source=Joomla&utm_medium=upgradebutton&utm_campaign=freeversion';
-        $char = strpos($url, "?") === false ? "?" : "&";
+        $html .= JText::_($buttonText) . '</a>';
 
-        return $url . $char . $utm;
+        return $html;
     }
 }

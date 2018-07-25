@@ -12,8 +12,60 @@ namespace NRFramework;
 // No direct access
 defined('_JEXEC') or die;
 
+use NRFramework\Cache;
+
 class HTML
 {
+	/**
+	 * Renders Pro Button
+	 *
+	 * @param string $feature_label  The text that will be used as the modal popup feature
+	 *
+	 * @return void
+	 */
+	public static function renderProButton($feature_label = null)
+	{
+		include_once JPATH_PLUGINS . '/system/nrframework/fields/pro.php';
+
+        $field   = new \JFormFieldNR_PRO;
+        $element = new \SimpleXMLElement('
+			<field name="pro" type="nr_pro"
+				label="' . $feature_label . '"
+            />');
+
+        $field->setup($element, null);
+
+        echo $field->__get('input');
+	}
+
+    /**
+     *  Renders a modal that will be shown on Pro only features
+     *
+     *  @return   void
+     */
+    public static function renderProOnlyModal()
+    {
+		$hash = 'proOnlyModal';
+
+		// Render modal once
+		if (Cache::get($hash))
+		{
+			return;
+		}
+
+		$options = [
+			'extension_name' => Extension::getExtensionNameByRequest(true),
+			'upgrade_url'    => Extension::getTassosExtensionUpgradeURL()
+		];
+
+		$layout = new \JLayoutFile('proonlymodal', dirname(__DIR__) . '/layouts');
+		$html = $layout->render($options);
+
+		echo \JHtml::_('bootstrap.renderModal', 'proOnlyModal', ['backdrop' => 'static'], $html);
+
+		Cache::set($hash, true);
+    }
+
 	public static function smartTagsBox($options = array())
 	{
 		include_once JPATH_PLUGINS . '/system/nrframework/fields/smarttagsbox.php';

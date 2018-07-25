@@ -1,0 +1,80 @@
+#proOnlyModal {
+    width: 500px;
+    left: 0;
+    right: 0;
+    margin: 0 auto;
+    border-radius:0;
+
+    em {
+        font-style:normal;
+    }
+
+    h2 {
+        margin-top:0;
+    }
+
+    .modal-body {
+        max-height:100%;
+    
+        p {
+            margin:20px 0;
+            &:last-child {
+                margin-bottom:0;
+            }
+        }
+    }
+
+    .close {
+        border: none;
+        position: absolute;
+        z-index: 1;
+        margin: 0;
+        right: 0;
+    }
+
+    .pro-only-presales {
+        font-size:12px;
+    }
+
+    .pro-only-body {
+        padding: 30px;
+        color: #555;
+        font-size:14px;
+    
+        .icon-lock {
+            font-size: 40px;
+            width: auto;
+            height: auto;
+            display: block;
+            color: #d0d0d0;
+            margin:20px 0 25px 0;
+        }
+    }
+
+    .pro-only-bonus {
+        background-color: #faffac;
+        margin: 35px -30px 0 -30px;
+        padding: 24px 60px 20px;
+        font-size: 15px;
+        color: #4d4d4d;
+        position:relative;
+    
+        &:before {
+            content: "\e218";
+            color: #3abc01;
+            font-family: "IcoMoon";
+            display: block;
+            position: absolute;
+            top: -7px;
+            font-size: 18px;
+            border-radius: 100%;
+            width: 100%;
+            left: 0;
+        }
+    
+        b:last-child {
+            font-weight: 700;
+            color: #3abc01;
+        }
+    }
+}

@@ -47,12 +47,12 @@ class NR_GetResponse extends NR_Wrapper
 	public function subscribe($email, $name, $campaign, $customFields, $update_existing)
 	{
 		$data = array(
-			'"email' 			=> $email,
+			'email' 			=> $email,
 			'name'				=> $name,
 			'dayOfCycle'		=> 0,
 			'campaign' 			=> ['campaignId' => $campaign],
 			'customFieldValues'	=> $this->validateCustomFields($customFields),
-			'ipAddress' 		=> isset($_SERVER['REMOTE_ADDR']) ? $_SERVER['REMOTE_ADDR'] : ''
+			'ipAddress' 		=> isset($_SERVER['REMOTE_ADDR']) ? $_SERVER['REMOTE_ADDR'] : '127.0.0.1'
 		);
 
 		if (empty($name) || is_null($name))

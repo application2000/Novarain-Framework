@@ -21,7 +21,7 @@ JFactory::getDocument()->addScriptDeclaration('
         // Move to body so it can be accessible by all buttons
         $proOnlyModal.appendTo("body");
 
-        $("*[data-pro-only").on("click", function(event) {
+        $("*[data-pro-only]").on("click", function(event) {
             event.preventDefault();
 
             var $el = $(this)

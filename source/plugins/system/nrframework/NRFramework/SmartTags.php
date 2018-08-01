@@ -68,6 +68,7 @@ class SmartTags
 
 			// Site 
 			'site.name'     => \JFactory::getConfig()->get('sitename'),
+			'site.email'    => \JFactory::getConfig()->get('mailfrom'),
 			'site.url'      => \JURI::root(),
 
 			// Page

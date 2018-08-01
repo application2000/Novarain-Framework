@@ -57,6 +57,7 @@ class JFormFieldSmartTagsBox extends JFormField
                     '{page.desc}'      => 'Page Meta Description',
                     '{site.name}'      => 'Site Name',
                     '{site.url}'       => 'Site URL',
+                    '{site.email}'     => 'Site Email',
                     '{user.id}'        => 'User ID',
                     '{user.login}'     => 'User Login name',
                     '{user.email}'     => 'User Email',

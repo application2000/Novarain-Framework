@@ -14,6 +14,8 @@ require_once __DIR__ . '/wrapper.php';
 
 class NR_ElasticEmail extends NR_Wrapper
 {
+	protected $endpoint = 'https://api.elasticemail.com/v2';
+
 	/**
 	 * Create a new instance
 	 * 
@@ -24,7 +26,6 @@ class NR_ElasticEmail extends NR_Wrapper
 	{
 		parent::__construct();
 		$this->setKey($options);
-		$this->endpoint = 'https://api.elasticemail.com/v2';
 	}
 
 	/**

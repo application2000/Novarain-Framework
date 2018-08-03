@@ -4,7 +4,7 @@ include_once __DIR__ . '/../cases/WrapperTestCase.php';
 
 class ElasticEmailTest extends WrapperTestCase
 {
-    static $credentials = ['api' => '4f316f19-71b2-40dd-8041-785c00f092a8'];
+    static $credentials = ['api' => '7d00b337-e670-40c7-b0f3-f4ec14a341a6'];
     static $invalid_path_error = 'Invalid API path';
 
     public function testPublicAccount()

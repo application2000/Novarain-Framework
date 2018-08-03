@@ -42,9 +42,9 @@ class NR_Wrapper
 	{
 		$apiKey = is_array($apiKey) && isset($apiKey['api']) ? $apiKey['api'] : $apiKey;
 
-		if (empty($apiKey) || is_null($apiKey))
+		if (!is_string($apiKey) || empty($apiKey) || is_null($apiKey))
 		{
-			throw new \Exception("Invalid Key `{$apiKey}` supplied.");
+			throw new \Exception('Invalid API Key supplied.');
 		}
 
 		$this->key = trim($apiKey);

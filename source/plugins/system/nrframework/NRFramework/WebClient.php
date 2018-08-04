@@ -22,17 +22,19 @@ class WebClient
 
 	/**
 	 *  Get visitor's Device Type
+	 * 
+	 *  @param	 string	   $ua User Agent string, if null use the implicit one from the server's enviroment
 	 *
 	 *  @return  string    The client's device type. Can be: tablet, mobile, desktop
 	 */
-	public static function getDeviceType()
+	public static function getDeviceType($ua = null)
 	{
         if (!class_exists('Mobile_Detect'))
         {
         	\JLoader::register('Mobile_Detect', JPATH_PLUGINS . '/system/nrframework/helpers/vendors/Mobile_Detect.php');
         }
 
-        $detect = new \Mobile_Detect;
+        $detect = new \Mobile_Detect(null, $ua);
 
         return ($detect->isMobile() ? ($detect->isTablet() ? 'tablet' : 'mobile') : 'desktop');
 	}
@@ -40,13 +42,15 @@ class WebClient
 	/**
 	 *  Get visitor's Operating System
 	 *
+	 *  @param	 string	    $ua User Agent string, if null use the implicit one from the server's enviroment
+	 * 
 	 *  @return  string     Possible values: any of JApplicationWebClient's OS constants (except 'iphone' and 'ipad'), 
      *                                       'ios', 'chromeos'
 	 */
-	public static function getOS()
+	public static function getOS($ua = null)
 	{
         // detect iOS and CromeOS (not handled by JApplicationWebClient)
-        $ua = self::getClient()->userAgent;
+        $ua = self::getClient($ua)->userAgent;
 
         $ios_regex = '/iPhone|iPad|iPod/i';
         if (preg_match($ios_regex, $ua))
@@ -61,7 +65,7 @@ class WebClient
         }
 
         // use JApplicationWebClient for OS detection
-		$platformInt = self::getClient()->platform;
+		$platformInt = self::getClient($ua)->platform;
 		$constants   = self::getClientConstants();
 		
 		if (isset($constants[$platformInt]))
@@ -72,12 +76,14 @@ class WebClient
 
 	/**
 	 *  Get visitor's Browser name / version
+	 * 
+	 *  @param	 string	   $ua User Agent string, if null use the implicit one from the server's enviroment
 	 *
 	 *  @return  array
 	 */
-	public static function getBrowser()
+	public static function getBrowser($ua = null)
 	{
-		$client     = self::getClient();
+		$client     = self::getClient($ua);
 		$browserInt = $client->browser;
 		$constants  = self::getClientConstants();
 
@@ -97,7 +103,7 @@ class WebClient
 	 */
 	private static function getClientConstants()
 	{
-		$r = new \ReflectionClass('JApplicationWebClient');
+		$r = new \ReflectionClass('\\Joomla\\Application\\Web\\WebClient');
 		$constantsArray = $r->getConstants();
 
 		// flip the associative array
@@ -106,18 +112,19 @@ class WebClient
 
 	/**
 	 *  Get the Application Client helper
-	 *
 	 *  see https://api.joomla.org/cms-3/classes/Joomla.Application.Web.WebClient.html
+	 * 
+	 *  @param	 string	   $ua User Agent string, if null use the implicit one from the server's enviroment
 	 *
 	 *  @return  object
 	 */
-	public static function getClient()
+	public static function getClient($ua = null)
 	{
-		if (is_object(self::$client))
+		if (is_object(self::$client) && $ua == null)
 		{
 			return self::$client;
 		}
 
-		return (self::$client = \JFactory::getApplication()->client);
+		return (self::$client = new \Joomla\Application\Web\WebClient($ua));
 	}
 }

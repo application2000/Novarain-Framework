@@ -16,18 +16,6 @@ use NRFramework\Assignments\GeoIPBase;
 class Region extends GeoIPBase
 {
     /**
-     *  Region check
-     *
-     *  Input($this->selection) should be a comma/newline separated list of ISO 3611 country-region codes, i.e.GR-I (Greece - Attica)
-     * 
-     *  @return bool
-     */
-    public function pass()
-    {
-        return array_intersect($this->selection, $this->value());
-    }
-
-    /**
      *  Returns the assignment's value
      * 
      *  @return string Region codes

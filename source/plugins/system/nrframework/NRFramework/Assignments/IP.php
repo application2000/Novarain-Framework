@@ -62,8 +62,8 @@ class IP extends Assignment
         // replace newlines with commas
         $ip_list = preg_replace('/\s+/',',',trim($ip_list));
 
-        // strip out empty values and return ip ranges as an array
-        return array_filter(explode(',', $ip_list));
+        // strip out empty values, reorder array keys and return ip ranges as an array
+        return array_values(array_filter(explode(',', $ip_list)));
     }
 
     /**

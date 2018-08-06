@@ -7,19 +7,6 @@ use \NRFramework\Factory;
 
 class TimeTest extends AssignmentTestCase
 {
-    public function setUp()
-    {
-        $this->options = (object) [
-            //'params' => (object) ['timezone' => '+0000'],
-            'selection' => null,
-            'assignment_state' => null
-        ];
-
-        $this->factoryStub = $this->getMockBuilder('\\NRFramework\\Factory')
-            ->setMethods(['getDbo', 'getUser', 'getApplication', 'getDocument'])
-            ->getMock();
-    }
-
     public function passDataProvider()
     {
         // timezone, up, down, now, expected

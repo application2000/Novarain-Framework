@@ -38,7 +38,7 @@ class GeoIPBase extends Assignment
     public function __construct($assignment, $factory)
     {
         // Load Geo Class
-        $ip = isset($assignment->params->ip) ? $assignment->ip : null;
+        $ip = isset($assignment->params->ip) ? $assignment->params->ip : null;
         $this->loadGeo($ip);
 
         if (!$this->geo)
@@ -51,7 +51,7 @@ class GeoIPBase extends Assignment
         // Convert a comma/newline separated selection string into an array
         if (!is_array($this->selection))
         {
-            $this->selection = $this->splitKeywords($selection);
+            $this->selection = $this->splitKeywords($this->selection);
         }
     }
 

@@ -26,11 +26,11 @@ abstract class K2 extends Assignment
         
         $request = new \stdClass;
 
-        $request->view   = $this->app->input->get("view");
-        $request->task   = $this->app->input->get("task");
-        $request->option = $this->app->input->get("option");
+        $request->view   = $this->app->input->get('view');
+        $request->task   = $this->app->input->get('task');
+        $request->option = $this->app->input->get('option');
         $request->layout = $this->app->input->get('layout', '', 'string');
-        $request->id     = $this->app->input->get("id");
+        $request->id     = $this->app->input->get('id');
 
         $this->request = $request;
     }
@@ -100,11 +100,6 @@ abstract class K2 extends Assignment
      */
     protected function passContext()
     {
-        if ($this->request->option != 'com_k2')
-		{
-			return false;
-        }
-        
-        return true;
+        return ($this->request->option == 'com_k2');
     }    
 }

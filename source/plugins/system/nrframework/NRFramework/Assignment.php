@@ -224,6 +224,11 @@ class Assignment
 	 */
     protected function passComponentCategories($ref_table = 'categories', $ref_parent_column = 'parent_id', $inc_categories = false, $inc_items = true)
     {
+        if (empty($this->selection) || !$this->passContext())
+        {
+            return false;
+		}
+
 		// Include Children switch: 0 = No, 1 = Yes, 2 = Child Only
 		$inc_children = $this->params->inc_children;
 

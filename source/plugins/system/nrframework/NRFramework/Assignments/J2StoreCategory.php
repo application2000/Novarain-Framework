@@ -22,11 +22,6 @@ class J2StoreCategory extends J2StoreBase
      */
     public function pass()
     {
-        if (empty($this->selection) || !$this->passContext())
-        {
-            return false;
-		}
-
         return $this->passComponentCategories();
 	}
 

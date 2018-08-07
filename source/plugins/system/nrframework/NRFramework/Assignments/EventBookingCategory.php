@@ -22,11 +22,6 @@ class EventBookingCategory extends EventBookingBase
      */
     public function pass()
     {
-        if (empty($this->selection) || !$this->passContext())
-        {
-            return false;
-		}
-
         return $this->passComponentCategories('eb_categories', 'parent');
 	}
 

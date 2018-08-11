@@ -17,8 +17,8 @@ class AssignmentsTest extends PHPUnit\Framework\TestCase
         return [
             ['acymailing', 'AcyMailing'],
             ['akeebasubs', 'AkeebaSubs'],
-            ['contentcats','ContentCategory'],
-            ['article', 'ContentArticle'],
+            ['contentcats','Component\ContentCategory'],
+            ['article', 'Component\ContentArticle'],
             ['components', 'Component'],
             ['convertforms', 'ConvertForms'],
             ['nonexistent-alias', null]

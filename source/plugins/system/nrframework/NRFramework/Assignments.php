@@ -42,8 +42,6 @@ class Assignments
 		'timerange|time'                     => 'Time',
         'acymailing'                         => 'AcyMailing',
         'akeebasubs'                         => 'AkeebaSubs',
-        'contentcats|categories|category'    => 'ContentCategory',
-        'contentarticles|articles|article'   => 'ContentArticle',
         'components|component'	             => 'Component',
         'convertforms'	                     => 'ConvertForms',
         'geo_country|country|countries'	     => 'Country',
@@ -52,12 +50,15 @@ class Assignments
         'geo_region|region|regions'          => 'Region',
         'cookiename|cookie'                  => 'Cookie',
         'ip_addresses|iprange|ip'            => 'IP',
-        'k2_items'                           => 'K2Item',
-        'k2_cats'                            => 'K2Category',
-        'k2_tags'                            => 'K2Tag',
-        'k2_pagetypes'                       => 'K2Pagetype',
-        'eventbookingcategory'               => 'EventBookingCategory',
-        'j2storecategory'                    => 'J2StoreCategory'
+        'k2_items'                           => 'Component\K2Item',
+        'k2_cats'                            => 'Component\K2Category',
+        'k2_tags'                            => 'Component\K2Tag',
+        'k2_pagetypes'                       => 'Component\K2Pagetype',
+        'contentcats|category'               => 'Component\ContentCategory',
+        'contentarticles|article'            => 'Component\ContentArticle',
+        'eventbookingcategory'               => 'Component\EventBookingCategory',
+        'j2storecategory'                    => 'Component\J2StoreCategory',
+        'hikashopcategory'                   => 'Component\HikashopCategory'
     );
 
     /**

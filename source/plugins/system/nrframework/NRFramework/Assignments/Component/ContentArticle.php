@@ -1,17 +1,15 @@
 <?php
 
 /**
- * @author          Tassos.gr <info@tassos.gr>
+ * @author          Tassos.gr
  * @link            http://www.tassos.gr
  * @copyright       Copyright © 2018 Tassos Marinos All Rights Reserved
  * @license         GNU GPLv3 <http://www.gnu.org/licenses/gpl.html> or later
- */
+*/
 
-namespace NRFramework\Assignments;
+namespace NRFramework\Assignments\Component;
 
 defined('_JEXEC') or die;
-
-use NRFramework\Assignments\ContentBase;
 
 class ContentArticle extends ContentBase
 {
@@ -22,17 +20,7 @@ class ContentArticle extends ContentBase
 	 */
 	public function pass()
 	{
-        if (!$this->isItem())
-        {
-            return false;
-        }
-
-        if (!is_array($this->selection))
-        {
-            $this->selection = $this->splitKeywords($this->selection);
-        }
-        
-        return parent::pass();
+        return $this->passSinglePage();
     }
     
     /**

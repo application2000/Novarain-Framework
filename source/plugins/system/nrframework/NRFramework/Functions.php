@@ -18,6 +18,30 @@ use Joomla\Registry\Registry;
 
 class Functions
 {
+	/**
+	 *  Checks if an array of values (needle) exists in a text (haystack)
+	 *
+	 *  @param   array   $needle     The searched array of values.
+	 *  @param   string  $haystack   The text
+	 *
+	 *  @return  bool
+	 */
+	public static function strpos_arr($needle, $haystack)
+	{
+		$needle = !is_array($needle) ? (array) $needle : $needle;
+
+		foreach ($needle as $query)
+		{
+			if (strpos($haystack, $query) !== false) 
+			{
+				// stop on first true result
+				return true; 
+			}
+		}
+
+		return false;
+	}
+
     /**
      *  Log message to framework's log file
      *

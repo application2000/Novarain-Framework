@@ -7,13 +7,11 @@
  * @license         GNU GPLv3 <http://www.gnu.org/licenses/gpl.html> or later
 */
 
-namespace NRFramework\Assignments;
+namespace NRFramework\Assignments\Component;
 
 defined('_JEXEC') or die;
 
-use NRFramework\Assignments\K2;
-
-class K2Pagetype extends K2
+class K2Pagetype extends K2Base
 {
     /**
      *  Pass check for K2 page types
@@ -27,7 +25,7 @@ class K2Pagetype extends K2
             return false;
         }
 
-        return $this->passSimple($this->getPagetype(), $this->selection);
+        return parent::pass();
     }
 
     /**
@@ -37,14 +35,6 @@ class K2Pagetype extends K2
      */
 	public function value()
 	{
-		return $this->getPagetype();
-    }
-    
-    public function getPagetype()
-    {
-        $view   = $this->app->input->get("view");
-        $layout = $this->app->input->get('layout', '', 'string');
-        
-        return $view . '_' . ($layout !== '' ? $layout : $view);
+		return $this->getPageType();
     }
 }

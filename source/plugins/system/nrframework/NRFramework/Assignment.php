@@ -114,26 +114,26 @@ class Assignment
 	}
 
 	/**
-	 *  Makes a simple assignment check
+	 *  Checks if a value (needle) exists in an array (haystack)
 	 *
-	 *  @param   mixed   $values     Current state
-	 *  @param   array  $selection   User's selection
+	 *  @param   mixed   $needle     The searched value.
+	 *  @param   array   $haystack   The array
 	 *
 	 *  @return  bool
 	 */
-	public function passSimple($values, $selection)
+	public function passSimple($needle, $haystack)
 	{
-		if (empty($selection))
+		if (empty($haystack))
 		{
 			return false;
 		}
 		
-		$values = $this->makeArray($values);
+		$needle = $this->makeArray($needle);
 		$pass   = false;
 
-		foreach ($values as $value)
+		foreach ($needle as $value)
 		{
-			if (in_array(strtolower($value), array_map('strtolower', $selection)))
+			if (in_array(strtolower($value), array_map('strtolower', $haystack)))
 			{
 				$pass = true;
 				break;
@@ -141,6 +141,26 @@ class Assignment
 		}
 
 		return $pass;
+	}
+
+	/**
+	 *  Checks if an array of values (needle) exists in a text (haystack)
+	 *
+	 *  @param   array   $needle     The searched array of values.
+	 *  @param   string  $haystack   The text
+	 *
+	 *  @return  bool
+	 */
+	public function passArrayInString($needle, $haystack)
+	{
+		if (empty($needle) || empty($haystack))
+		{
+			return false;
+		}
+
+		$needle = $this->splitKeywords($needle);
+		
+		return \NRFramework\Functions::strpos_arr($needle, $haystack);
 	}
 
 	/**
@@ -210,84 +230,6 @@ class Assignment
 		}
 
 		return $cache->set($hash, $parent_ids);
-	}
-	
-	/**
-	 * Checks whether the current page is within the selected categories
-	 *
-	 * @param	string	   $ref_table				The referenced table
-	 * @param	string	   $ref_parent_column		The name of the parent column in the referecned table
-	 * @param	boolean	   $inc_categories			Indicates whether the Category view should me included in the check
-	 * @param	boolean    $inc_items				Indicates whether the Item view should me included in the check
-	 * 
-	 * @return	boolean
-	 */
-    protected function passComponentCategories($ref_table = 'categories', $ref_parent_column = 'parent_id', $inc_categories = false, $inc_items = true)
-    {
-        if (empty($this->selection) || !$this->passContext())
-        {
-            return false;
-		}
-
-		// Include Children switch: 0 = No, 1 = Yes, 2 = Child Only
-		$inc_children = $this->params->inc_children;
-
-		// Check whether we support the Category and the Item views
-		if (isset($this->params->inc) && is_array($this->params->inc))
-		{
-			$inc_categories = in_array('inc_categories', $this->params->inc);
-			$inc_items      = in_array('inc_items', $this->params->inc);
-		}
-
-		// Check if we are in a valid context
-		if (!($inc_categories && $this->isCategory()) && !($inc_items && $this->isItem()))
-		{
-			return false;
-		}
-
-		// Start Checks
-		$pass = false;
-
-		// Get current page assosiated category IDs. It can be a single ID of the current Category view or multiple IDs assosiated to active item.
-		$catids = $this->getCategoryIds();
-		$catids = is_array($catids) ? $catids : (array) $catids;
-
-		foreach ($catids as $catid)
-		{
-			$pass = in_array($catid, $this->selection);
-
-			if ($pass)
-			{
-				// If inc_children is either disabled or set to 'Also on Childs', there's no need for further checks. 
-				// The condition is already passed.
-				if (in_array($this->params->inc_children, [0, 1]))
-				{
-					break;
-				}
-
-				// We are here because we need childs only. Disable pass and continue checking parent IDs.
-				$pass = false;
-			}
-
-			// Pass check for child items
-			if (!$pass && $this->params->inc_children)
-			{
-				$parent_ids = $this->getParentIDs($catid, $ref_table, $ref_parent_column);
-
-				foreach ($parent_ids as $id)
-				{
-					if (in_array($id, $this->selection))
-					{
-						$pass = true;
-						break 2;
-					}
-				}
-
-				unset($parent_ids);
-			}
-		}
-
-		return $pass;
 	}
     
     /**

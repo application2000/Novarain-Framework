@@ -106,4 +106,51 @@ class plgSystemNRFramework extends JPlugin
 
 		return false;
 	}
+
+    /**
+     *  Listens to AJAX requests on ?option=com_ajax&format=raw&plugin=nrframework
+     *
+     *  @return void
+     */
+    function onAjaxNRFramework()
+    {
+		//JSession::checkToken('request') or jexit(JText::_('JINVALID_TOKEN'));
+
+        // Check if we have a valid task
+		$task = $this->app->input->get('task', null);
+
+		// Check if we have a valid method task
+		$taskMethod = 'ajaxTask' . $task;
+
+		if (!method_exists($this, $taskMethod))
+		{
+			die('Task not found');
+		}
+
+		$this->$taskMethod();
+	}
+
+	private function ajaxTaskConditionBuilder()
+	{
+		$input = $this->app->input;
+
+		$subtask = $input->get('subtask', null);
+
+		switch ($subtask)
+		{
+			case 'add':
+				$controlGroup = $input->get('controlgroup', null, 'RAW');
+				$groupKey     = $input->getInt('groupKey');
+				$conditionKey = $input->getInt('conditionKey');
+
+				echo NRFramework\ConditionBuilder::add($controlGroup, $groupKey, $conditionKey);
+				break;
+			case 'options':
+				$controlGroup = $input->get('controlgroup', null, 'RAW');
+				$name = $input->get('name');
+
+				echo NRFramework\ConditionBuilder::renderOptions($name, $controlGroup);
+				break;
+		}
+	}
 }

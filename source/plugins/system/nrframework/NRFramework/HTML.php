@@ -16,6 +16,20 @@ use NRFramework\Cache;
 
 class HTML
 {
+	public static function conditionBuilder($options)
+	{
+		$conditionsField = Functions::renderField('NRConditions');
+
+		$options = [
+			'fieldgroup' => $conditionsField
+		];
+
+		$layout = new \JLayoutFile('conditionbuilder', dirname(__DIR__) . '/layouts');
+		$html = $layout->render($options);
+
+		return $html;
+	}
+
 	/**
 	 * Renders Pro Button
 	 *

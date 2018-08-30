@@ -25,6 +25,13 @@ abstract class JFormFieldNRTreeSelect extends JFormField
 	 * @var boolean
 	 */
 	protected $sortTree = false;
+	
+	/**
+	 * Indicates whether the options array should have the levels re-calculated
+	 * 
+	 * @var boolean
+	 */
+	protected $fixLevels = false;
 
 	/**
 	 * Output the HTML for the field
@@ -38,6 +45,11 @@ abstract class JFormFieldNRTreeSelect extends JFormField
 		if ($this->sortTree)
 		{
 			$options = $this->sortTreeSelectOptions($options);
+		}
+
+        if ($this->fixLevels)
+        {
+			$options = $this->fixLevels($options);
 		}
 
 		return HTML::treeselect($options, $this->name, $this->value, $this->id);
@@ -72,6 +84,54 @@ abstract class JFormFieldNRTreeSelect extends JFormField
         }
 
         return $result;
+	}
+	
+	/**
+     *  Fixes the levels of the categories
+     * 
+     *  @param  array $categories
+     * 
+     *  @return array
+     */
+    protected function fixLevels($cats)
+    {
+		// new categories
+		$categories = [];
+		
+        // get category levels
+        foreach ($cats as $c)
+        {
+            $level = 0;
+            $parent_id = (int)$c->parent;
+
+            while ($parent_id)
+            {
+                $level++;
+                $parent_id = $this->getNextParentId($cats, $parent_id);
+			}
+			
+            $c->level = $level;
+            $categories[] = $c;
+		}
+		
+		return $categories;
+	}
+
+    /**
+     *  Returns the next parent id
+     *  Helper method for getCategories
+     * 
+     *  @return int
+     */
+    protected function getNextParentId($categories, $current_pid)
+    {
+        foreach($categories as $c)
+        {
+            if ((int)$c->value === $current_pid)
+            {
+                return (int)$c->parent;
+            }
+        }
     }
 
 	/**

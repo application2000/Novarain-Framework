@@ -20,8 +20,7 @@ $background-group-color: #f9f9f9;
 .cb-group {
     background-color:$background-group-color;
     border:solid 1px $border-color;
-    margin:5px; 
-    -webkit-box-shadow: 1px 1px 1px 1px rgba(0,0,0,0.1);
+    box-shadow: 1px 1px 1px 1px rgba(0,0,0,0.1);
 
     &:not(:last-child) {    
 

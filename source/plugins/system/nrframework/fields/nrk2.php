@@ -74,6 +74,8 @@ class JFormFieldNRK2 extends NRFormGroupField
         $query
             ->select('c.id, c.name, c.parent, c.published, c.language')
             ->from('#__k2_categories as c')
+            ->where('c.trash = 0')
+            ->where('c.id != c.parent')
             ->order('c.ordering');
         $this->db->setQuery($query);
         $cats = $this->db->loadObjectList();

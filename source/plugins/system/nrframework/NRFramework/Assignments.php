@@ -58,7 +58,14 @@ class Assignments
         'contentarticles|article'            => 'Component\ContentArticle',
         'eventbookingcategory'               => 'Component\EventBookingCategory',
         'j2storecategory'                    => 'Component\J2StoreCategory',
-        'hikashopcategory'                   => 'Component\HikashopCategory'
+        'hikashopcategory'                   => 'Component\HikashopCategory',
+        'sppagebuildercategory'              => 'Component\SPPageBuilderCategory',
+        'virtuemartcategory'                 => 'Component\VirtueMartCategory',
+        'jshoppingcategory'                  => 'Component\JShoppingCategory',
+        'rsblogcategory'                     => 'Component\RSBlogCategory',
+        'easyblogcategory'                   => 'Component\EasyBlogCategory',
+        'zoocategory'                        => 'Component\ZooCategory',
+        'eshopcategory'                      => 'Component\EshopCategory'
     );
 
     /**

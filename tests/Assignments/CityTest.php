@@ -14,7 +14,6 @@ class CityTest extends AssignmentTestCase
             ['185.225.105.75', '', false],
             ['185.225.105.75', null, false],
             ['185.225.105.75', 'Athens', true],
-            ['49.126.92.10', 'Patan', true],
             ['128.250.204.118', 'Melbourne', true],
             ['217.129.2.18', 'Lisbon', true],
             ['217.129.2.18', 'Portugal', false],

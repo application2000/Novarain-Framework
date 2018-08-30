@@ -14,7 +14,6 @@ class RegionTest extends AssignmentTestCase
             ['185.225.105.75', '', false],
             ['185.225.105.75', null, false],
             ['185.225.105.75', 'GR-I', true], // GR - Attiki
-            ['49.126.92.10', 'NP-BA', true], // Nepal - Bagmati
             ['128.250.204.118', 'AU-VIC', true], // Australia - Victoria
             ['217.129.2.18', 'PT-11', true], // Portugal - Lisboa
             ['217.129.2.18', 'PT-10', false],

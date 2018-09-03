@@ -15,6 +15,13 @@ $background-group-color: #f9f9f9;
     input[type="text"] {
         height:auto;
     }
+
+    @media (min-width: 1200px) {
+        input.span12, textarea.span12 {
+            width: 100%;
+        }
+    }
+
 }
 
 .cb-group {

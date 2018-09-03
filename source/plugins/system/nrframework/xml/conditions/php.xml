@@ -6,7 +6,7 @@
             label="NR_PHPCODE" 
             description="NR_ASSIGN_PHP_DESC"
             filter="raw"
-            class="span-12 input-full"
+            class="span12 input-full"
             rows="10"
         />
     </fieldset>

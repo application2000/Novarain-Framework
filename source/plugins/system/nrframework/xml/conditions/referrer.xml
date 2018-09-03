@@ -5,13 +5,9 @@
         <field name="value" type="textarea" 
             label="NR_SELECTION" 
             description="NR_ASSIGN_REFERRER_DESC"
-            class="span-12 input-full"
+            class="span12 input-full"
             rows="5"
             hint="www.facebook.com"
-        />
-        <field name="assign_referrer_note" type="note"
-            class="well-note"
-            description="NR_ASSIGN_REFERRER_NOTE"
         />
     </fieldset>
 </form>

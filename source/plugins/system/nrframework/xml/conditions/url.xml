@@ -5,7 +5,7 @@
         <field name="value" type="textarea" 
             label="NR_ASSIGN_URLS_LIST" 
             description="NR_ASSIGN_URLS_DESC"
-            class="span-12 input-full"
+            class="span12 input-full"
             hint="/blog/welcome-to-our-site"
             rows="5"
         />

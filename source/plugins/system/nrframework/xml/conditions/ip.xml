@@ -6,7 +6,7 @@
             label="NR_SELECTION" 
             description="NR_ASSIGN_IP_ADDRESSES_DESC"
             filter="raw"
-            class="span-12 input-full"
+            class="span12 input-full"
             rows="5"
             hint="180.150.1.6"
         />

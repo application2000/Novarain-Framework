@@ -21,6 +21,11 @@ class JFormFieldConditionBuilder extends JFormField
      */
     protected function getInput()
     {   
-        return ConditionBuilder::render($this->name, $this->value);
+        return ConditionBuilder::render($this->name, $this->value, $this->getConditionsList());
+    }
+
+    protected function getConditionsList()
+    {
+        return $this->element['conditions'];
     }
 }

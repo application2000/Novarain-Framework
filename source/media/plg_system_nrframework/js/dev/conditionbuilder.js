@@ -1,8 +1,7 @@
 jQuery(function($) {
 
     var app_ajax_url = "?option=com_ajax&format=raw&plugin=nrframework&task=ConditionBuilder"
-        system_base_path = Joomla.getOptions('system.paths').base
-        system_url = Joomla.getOptions('system.paths').root;
+        system_url = $(".cb").attr("data-root");
 
     // Setup Events
     $(document).on("click", ".addCondition", function(event) {
@@ -48,7 +47,8 @@ jQuery(function($) {
         var options = {
             controlgroup: controlGroup,
             groupKey: groupKey,
-            conditionKey: conditionKey
+            conditionKey: conditionKey,
+            conditionsList: $(".cb").attr("data-conditionslist")
         };
 
         call('add', options, function(response) {
@@ -107,7 +107,7 @@ jQuery(function($) {
      */
     function call(endpoint, payload, callback) {
         $.ajax({ 
-            url: system_base_path + app_ajax_url + "&subtask=" + endpoint,
+            url: system_url + app_ajax_url + "&subtask=" + endpoint,
             data: payload,
             beforeSend: function() {
                 //$(".cb").addClass("disabled");

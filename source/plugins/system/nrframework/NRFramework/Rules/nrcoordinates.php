@@ -1,9 +1,6 @@
 <?php
 
 /**
- * @package         @pkg.name@
- * @version         @pkg.version@ @vUf@
- *
  * @author          Tassos Marinos <info@tassos.gr>
  * @link            http://www.tassos.gr
  * @copyright       Copyright © 2018 Tassos Marinos All Rights Reserved

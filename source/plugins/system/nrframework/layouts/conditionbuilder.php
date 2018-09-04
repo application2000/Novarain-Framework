@@ -1,9 +1,6 @@
 <?php
 
 /**
- * @package         @pkg.name@
- * @version         @pkg.version@ @vUf@
- * 
  * @author          Tassos Marinos <info@tassos.gr>
  * @link            http://www.tassos.gr
  * @copyright       Copyright © 2018 Tassos Marinos All Rights Reserved
@@ -22,7 +19,7 @@ use NRFramework\ConditionBuilder;
 
 ?> 
 
-<div class="cb" data-control-group="<?php echo $id; ?>" data-max-index="<?php echo $maxIndex; ?>">
+<div class="cb" data-root="<?php echo JURI::root(true) ?>" data-control-group="<?php echo $id; ?>" data-max-index="<?php echo $maxIndex; ?>" data-conditionslist="<?php echo implode(',', $conditions_list); ?>">
     <div class="cb-items">
         <?php foreach ($data as $groupKey => $groupConditions) { 
                 $maxIndex_ = max(array_keys($groupConditions));
@@ -31,7 +28,7 @@ use NRFramework\ConditionBuilder;
                 <?php
                     foreach ($groupConditions as $conditionKey => $condition)
                     { 
-                        echo ConditionBuilder::add($id, $groupKey, $conditionKey, $condition); 
+                        echo ConditionBuilder::add($id, $groupKey, $conditionKey, $condition, $conditions_list);
                     }
                 ?>
             </div>
@@ -41,3 +38,10 @@ use NRFramework\ConditionBuilder;
         <a class="btn addCondition" href="#"><b><span class="icon-plus"></b> AND</a>
     </div>
 </div>
+
+<?php 
+    if (!empty($available_condititions))
+    {
+        echo \NRFramework\HTML::renderProOnlyModal();
+    }
+?>

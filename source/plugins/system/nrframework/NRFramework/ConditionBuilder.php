@@ -13,55 +13,7 @@ defined('_JEXEC') or die;
 
 class ConditionBuilder
 {    
-    /**
-     * List of available conditions
-     *
-     * @var array
-     */
-    public static $conditions = [
-		'Datetime' => [
-			'date'  => 'Date',
-			'day'   => 'Day of Week',
-			'month' => 'Month',
-			'time'  => 'Time',
-		],
-		'Joomla' => [
-			'url'       => 'URL',
-			'userid'    => 'User ID',
-			'usergroup' => 'User Group',
-			'menu'      => 'Menu',
-			'component' => 'Component',
-			'language'  => 'Language'
-		],
-		'Integrations' => [
-			'article'      => 'Joomla! Articles',
-			'category'     => 'Joomla! Categories',
-			'k2item'       => 'K2 Item',
-			'k2category'   => 'K2 Category',
-			'k2tag'        => 'K2 Tags',
-			'acymailing'   => 'AcyMailing List',
-			'convertforms' => 'Convert Forms Campaign',
-			'akeebasubs'   => 'AkeebaSubs Level',
-		],
-		'Visitor' => [
-			'country'   => 'Country',
-			'city'      => 'City',
-			'region'    => 'Region',
-			'continent' => 'Continent',
-			'device'    => 'Device',
-			'ip'        => 'IP Address',
-			'os'        => 'Operating System',
-			'browser'   => 'Browser',
-			'referrer'  => 'Referrer',
-			'pageviews' => 'Page Views',
-			'cookie'    => 'Cookie'
-		],
-		'Other' => [
-			'php' => 'PHP'
-		]
-	];
-
-    public static function render($id, $loadData = array())
+    public static function render($id, $loadData = array(), $conditions_list = array())
     {
         // Initialize a new empty condition
         if (empty($loadData))
@@ -74,19 +26,20 @@ class ConditionBuilder
         }
 
         $options = [
-            'id'       => $id,
-            'data'     => $loadData,
+            'id' => $id,
+            'data' => $loadData,
+            'conditions_list' => $conditions_list,
             'maxIndex' => count($loadData) - 1
         ];
 
-        $layout = self::getLayout('conditionbuilder', $options);
-        return $layout;
+        return self::getLayout('conditionbuilder', $options);
     }
-
-    public static function add($controlGroup, $groupKey, $conditionKey, $condition = null)
+   
+    public static function add($controlGroup, $groupKey, $conditionKey, $condition = null, $conditions_list = array())
     {
         $controlGroup_ = $controlGroup . "[$groupKey][$conditionKey]";
         $form = self::getForm('/conditionbuilder/base.xml', $controlGroup_, $condition);
+        $form->setFieldAttribute('name', 'conditions_list', is_array($conditions_list) ? implode(',', $conditions_list) : $conditions_list);
 
         $options = [
             'toolbar'      => $form,
@@ -100,19 +53,12 @@ class ConditionBuilder
             $options['options'] = $optionsHTML;
         }
 
-		$layout = self::getLayout('conditionbuilder_row', $options);
-        return $layout;
+        return self::getLayout('conditionbuilder_row', $options);
     }
 
     public static function renderOptions($name, $controlGroup = null, $formData = null)
     {
         $form = self::getForm('/conditions/' . $name . '.xml', $controlGroup, $formData);
-
-        // Make sure value attribute is required
-        // $form->setFieldAttribute('value', 'required', true);
-
-        //var_dump($form->getFieldsets()['general']->class);
-
         return $form->renderFieldset('general');
     }
 

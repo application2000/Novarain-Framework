@@ -142,8 +142,9 @@ class plgSystemNRFramework extends JPlugin
 				$controlGroup = $input->get('controlgroup', null, 'RAW');
 				$groupKey     = $input->getInt('groupKey');
 				$conditionKey = $input->getInt('conditionKey');
+				$conditions_list = $input->get('conditionsList', null, 'RAW');
 
-				echo NRFramework\ConditionBuilder::add($controlGroup, $groupKey, $conditionKey);
+				echo NRFramework\ConditionBuilder::add($controlGroup, $groupKey, $conditionKey, null, $conditions_list);
 				break;
 			case 'options':
 				$controlGroup = $input->get('controlgroup', null, 'RAW');

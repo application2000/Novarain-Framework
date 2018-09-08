@@ -27,7 +27,6 @@ class JFormFieldNRConditions extends JFormFieldGroupedList
 			'time'    => 'Time',
 		],
 		'Joomla' => [
-			'url'       => 'URL',
 			'userid'    => 'User ID',
 			'usergroup' => 'User Group',
 			'menu'      => 'Menu',
@@ -44,21 +43,22 @@ class JFormFieldNRConditions extends JFormFieldGroupedList
 			'com_convertforms\convertforms'=> 'Convert Forms Campaign',
 			'com_akeebasubs\akeebasubs' => 'AkeebaSubs Level',
 		],
-		'Visitor' => [
+		'Geolocation' => [
 			'country'   => 'Country',
 			'city'      => 'City',
 			'region'    => 'Region',
 			'continent' => 'Continent',
+		],
+		'Advanced' => [
+			'url'       => 'URL',
 			'device'    => 'Device',
 			'ip'        => 'IP Address',
 			'os'        => 'Operating System',
 			'browser'   => 'Browser',
 			'referrer'  => 'Referrer',
 			'pageviews' => 'Page Views',
-			'cookie'    => 'Cookie'
-		],
-		'Other' => [
-			'php' => 'PHP'
+			'cookie'    => 'Cookie',
+			'php' 		=> 'PHP'
 		]
 	];
 

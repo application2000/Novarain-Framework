@@ -3,10 +3,9 @@
     <fieldset name="general" class="oneline">
         <field name="match" type="comparator"/>
         <field name="value" type="nrbrowser"
-            label="NR_SELECTION"
+            label="NR_ASSIGN_BROWSERS"
             description="NR_ASSIGN_BROWSERS_DESC"
             multiple="true"
-            class="hasChosen"
         />
     </fieldset>
 </form>

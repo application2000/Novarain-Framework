@@ -3,14 +3,14 @@
     <fieldset name="general">
         <field name="match" type="comparator"/>
         <field name="value" type="nrk2" 
-            label="NR_SELECTION" 
+            label="NR_CATEGORIES" 
             description="NR_ASSIGN_CATEGORY_DESC"
             group="categories" 
             multiple="true" 
         />
         <fields name="params">
             <field name="inc_children" type="list"
-                class="input-medium"
+                class="input-small"
                 default="0"
                 label="NR_ALSO_ON_CHILD_ITEMS"
                 description="NR_ALSO_ON_CHILD_ITEMS_DESC">

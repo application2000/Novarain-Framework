@@ -3,7 +3,7 @@
     <fieldset name="general">
         <field name="match" type="comparator"/>
         <field name="value" type="nrtext" 
-            label="NR_SELECTION" 
+            label="NR_ARTICLE" 
             description="NR_ARTICLES_DESC"
             hint="Enter comma separated ids"
         />

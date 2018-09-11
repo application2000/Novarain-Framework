@@ -3,7 +3,7 @@
     <fieldset name="general">
         <field name="match" type="comparator"/>
         <field name="value" type="nrgrouplevel"
-            label="NR_SELECTION" 
+            label="NR_USERGROUP" 
             description="NR_ACCESSLEVEL_DESC"
             multiple="true"
         />

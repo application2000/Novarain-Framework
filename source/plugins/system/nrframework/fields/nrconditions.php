@@ -21,21 +21,21 @@ class JFormFieldNRConditions extends JFormFieldGroupedList
      */
     public static $conditions = [
 		'Datetime' => [
-			'date'    => 'Date',
-			'weekday' => 'Day of Week',
-			'month'   => 'Month',
-			'time'    => 'Time',
+			'date' => 'NR_DATE',
+			'weekday' => 'NR_WEEKDAY',
+			'month' => 'NR_MONTH',
+			'time' => 'NR_TIME',
 		],
 		'Joomla' => [
-			'userid'    => 'User ID',
-			'usergroup' => 'User Group',
-			'menu'      => 'Menu',
-			'component' => 'Component',
-			'language'  => 'Language'
+			'userid' => 'NR_ASSIGN_USER_ID',
+			'usergroup' => 'NR_USERGROUP',
+			'menu' => 'NR_MENU',
+			'component' => 'NR_ASSIGN_COMPONENTS',
+			'language' => 'NR_ASSIGN_LANGS'
 		],
 		'Integrations' => [
-			'com_content\article' => 'Joomla! Articles',
-			'com_content\category' => 'Joomla! Categories',
+			'com_content\article' => 'Content Article',
+			'com_content\category' => 'Content Category',
 			'com_k2\k2item' => 'K2 Item',
 			'com_k2\k2category' => 'K2 Category',
 			'com_k2\k2tag' => 'K2 Tags',
@@ -44,21 +44,21 @@ class JFormFieldNRConditions extends JFormFieldGroupedList
 			'com_akeebasubs\akeebasubs' => 'AkeebaSubs Level',
 		],
 		'Geolocation' => [
-			'country'   => 'Country',
-			'city'      => 'City',
-			'region'    => 'Region',
-			'continent' => 'Continent',
+			'country' => 'NR_ASSIGN_COUNTRIES',
+			'city' => 'NR_CITY',
+			'region' => 'NR_REGION',
+			'continent' => 'NR_CONTINENT',
 		],
 		'Advanced' => [
-			'url'       => 'URL',
-			'device'    => 'Device',
-			'ip'        => 'IP Address',
-			'os'        => 'Operating System',
-			'browser'   => 'Browser',
-			'referrer'  => 'Referrer',
-			'pageviews' => 'Page Views',
-			'cookie'    => 'Cookie',
-			'php' 		=> 'PHP'
+			'url' => 'NR_URL',
+			'referrer' => 'NR_ASSIGN_REFERRER',
+			'device' => 'NR_ASSIGN_DEVICES',
+			'ip' => 'NR_IPADDRESS',
+			'os' => 'NR_ASSIGN_OS',
+			'browser' => 'NR_ASSIGN_BROWSERS',
+			'pageviews' => 'NR_ASSIGN_PAGEVIEWS_VIEWS',
+			'cookie' => 'NR_COOKIE',
+			'php' => 'NR_ASSIGN_PHP'
 		]
 	];
 
@@ -100,7 +100,7 @@ class JFormFieldNRConditions extends JFormFieldGroupedList
 					$disabled = true;
 				}
 
-				$groups[$conditionGroup][] = JHtml::_('select.option', $conditionName, $condition, 'value', 'text', $disabled);
+				$groups[$conditionGroup][] = JHtml::_('select.option', $conditionName, JText::_($condition), 'value', 'text', $disabled);
 			}
 		}
 

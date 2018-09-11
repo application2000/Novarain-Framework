@@ -3,7 +3,7 @@
     <fieldset name="general">
         <field name="match" type="comparator"/>
         <field name="value" type="nrk2"
-            label="NR_SELECTION"
+            label="NR_TAG"
             description="NR_ASSIGN_TAGS_DESC"
             group="tags"
             multiple="true"

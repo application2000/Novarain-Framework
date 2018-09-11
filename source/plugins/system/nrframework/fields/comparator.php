@@ -20,7 +20,7 @@ class JFormFieldComparator extends JFormFieldList
 	 */
 	protected function getInput()
 	{
-        $this->class = 'input-medium';
+        $this->class = 'input-small';
         $this->required = true;
 
         return parent::getInput();
@@ -33,18 +33,9 @@ class JFormFieldComparator extends JFormFieldList
 
     protected function getOptions()
     {
-        $options = [
-            //''            => '- Select -',
+        return [
             1 => 'Is',
             0 => 'Is Not',
-            //'equals'      => 'Equals',
-            //'notequal'    => 'Does Not Equal',
-            //'contains'    => 'Contains',
-            //'notcontains' => 'Does Not Contain',
-            //'greater'     => 'Greater Than',
-            //'less'        => 'Less Than'
         ];
-
-        return $options;
     }
 }

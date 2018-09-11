@@ -3,7 +3,7 @@
     <fieldset name="general">
         <field name="match" type="comparator"/>
         <field name="value" type="nr_geo"
-            label="NR_SELECTION" 
+            label="NR_CONTINENT" 
             description="NR_ASSIGN_CONTINENTS_DESC"
             multiple="true"
             geo="continents"

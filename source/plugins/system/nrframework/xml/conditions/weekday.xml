@@ -3,18 +3,17 @@
     <fieldset name="general">
         <field name="match" type="comparator"/>
         <field name="value" type="list"
-            label="Day of Week"
-            description="NR_MATCH_DESC"
+            label="NR_WEEKDAY" 
             multiple="true">
-            <option value="1">Monday</option>
-            <option value="2">Tuesday</option>
-            <option value="3">Wednesday</option>
-            <option value="4">Thursday</option>
-            <option value="5">Friday</option>
-            <option value="6">Saturday</option>
-            <option value="7">Sunday</option>
-            <option value="weekend">Weekend</option>
-            <option value="weekday">Weekdays</option>
+            <option value="Mon">NR_MONDAY</option>
+            <option value="Tue">NR_TUESDAY</option>
+            <option value="Wed">NR_WEDNESDAY</option>
+            <option value="Thu">NR_THURSDAY</option>
+            <option value="Fri">NR_FRIDAY</option>
+            <option value="Sat">NR_SATURDAY</option>
+            <option value="Sun">NR_SUNDAY</option>
+            <option value="Weekend">NR_WEEKEND</option>
+            <option value="Weekday">NR_WEEKDAYS</option>
         </field>
     </fieldset>
 </form>

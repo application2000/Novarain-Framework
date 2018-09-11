@@ -3,7 +3,7 @@
     <fieldset name="general">
         <field name="match" type="comparator"/>
         <field name="value" type="text" 
-            label="NR_SELECTION" 
+            label="NR_ASSIGN_USER_ID" 
             description="NR_ASSIGN_USER_ID_SELECTION_DESC"
             hint="545,555,556"
         />

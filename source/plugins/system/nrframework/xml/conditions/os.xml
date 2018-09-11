@@ -3,7 +3,7 @@
     <fieldset name="general">
         <field name="match" type="comparator"/>
         <field name="value" type="nros"
-            label="NR_SELECTION"
+            label="NR_ASSIGN_OS"
             description="NR_ASSIGN_OS_DESC"
             multiple="true"
             class="hasChosen"

@@ -109,9 +109,6 @@ jQuery(function($) {
         $.ajax({ 
             url: system_url + app_ajax_url + "&subtask=" + endpoint,
             data: payload,
-            beforeSend: function() {
-                //$(".cb").addClass("disabled");
-            },
             success: function(response) {
                 callback(response);
                 
@@ -125,9 +122,6 @@ jQuery(function($) {
             error: function(jqXHR, textStatus, errorThrown) {
                 alert(errorThrown);
             },
-            complete: function() {
-                //$(".cb").removeClass("disabled");
-            }
         });
     }
 
@@ -159,6 +153,11 @@ jQuery(function($) {
                     $el.find(".clockpicker").clockpicker();
                 });
                 break;
+        }
+
+        // Hack to re-initialize showOn function
+        if (condition_name != 'date') {
+            $(document).trigger("subform-row-add");
         }
     }
 })

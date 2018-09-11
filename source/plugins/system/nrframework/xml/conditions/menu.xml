@@ -5,8 +5,8 @@
             label="NR_MENU_ITEMS"
         />
         <field name="value" type="nrmenuitems"
+            label="NR_MENU_ITEMS" 
             multiple="true" 
-            label="NR_SELECTION" 
             description="NR_MENU_ITEMS_DESC" 
         />
         <fields name="params">

@@ -3,18 +3,17 @@
     <fieldset name="general">
         <field name="match" type="comparator"/>
         <field name="value" type="nr_content" 
+            label="NR_CATEGORIES" 
+            description="NR_CATEGORIES_DESC"
             group="categories" 
             multiple="true" 
-            default=""
-            label="NR_SELECTION" 
-            description="NR_CATEGORIES_DESC"
         />
         <fields name="params">
             <field name="inc_children" type="list"
                 default="0"
                 label="NR_ALSO_ON_CHILD_ITEMS"
                 description="NR_ALSO_ON_CHILD_ITEMS_DESC"
-                class="input-medium">
+                class="input-small">
                 <option value="0">JNO</option>
                 <option value="1">JYES</option>
                 <option value="2">NR_ONLY</option>

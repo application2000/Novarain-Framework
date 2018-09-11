@@ -3,11 +3,10 @@
     <fieldset name="general">
         <field name="match" type="comparator"/>
         <field name="value" type="nrcomponents" 
-            label="NR_SELECTION"
+            label="NR_ASSIGN_COMPONENTS"
             description="NR_ASSIGN_COMPONENTS_DESC"
             multiple="true" 
             frontend="true"
-            class="hasChosen"
         />
     </fieldset>
 </form>

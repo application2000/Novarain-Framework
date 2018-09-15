@@ -50,9 +50,9 @@ class Assignments
         'geo_region|region|regions'          => 'Region',
         'cookiename|cookie'                  => 'Cookie',
         'ip_addresses|iprange|ip'            => 'IP',
-        'k2_items'                           => 'Component\K2Item',
-        'k2_cats'                            => 'Component\K2Category',
-        'k2_tags'                            => 'Component\K2Tag',
+        'k2_items|k2item'                    => 'Component\K2Item',
+        'k2_cats|k2category'                 => 'Component\K2Category',
+        'k2_tags|k2tag'                      => 'Component\K2Tag',
         'k2_pagetypes'                       => 'Component\K2Pagetype',
         'contentcats|category'               => 'Component\ContentCategory',
         'contentarticles|article'            => 'Component\ContentArticle',
@@ -416,13 +416,15 @@ class Assignments
                 }
                 else
                 {
-                    $inst = new $assignment->class($assignment->options, $this->factory);
+                    $inst   = new $assignment->class($assignment->options, $this->factory);
+                    $passed = $inst->pass();
                     $assignment->pass = $this->passStateCheck(
-                        $inst->pass(),
+                        $passed,
                         $assignment->options->assignment_state
                     );
-                    $assignment->value = $inst->value();
-                    $assignment->name = \preg_replace('/.*\\\\(.*)$/', "$1", $assignment->class);
+                    $assignment->value  = $inst->value();
+                    $assignment->name   = \preg_replace('/.*\\\\(.*)$/', "$1", $assignment->class);
+                    $assignment->pass   = $passed;
                 }
                 $debugGroup[] = $assignment;
             }

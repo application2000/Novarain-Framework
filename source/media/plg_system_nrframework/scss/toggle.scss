@@ -1,0 +1,70 @@
+// Color Variables
+$green: #46a546;
+$background: whitesmoke;
+$width: 300px;
+$width: 40px;
+$height: $width * .55;
+
+@mixin inactiveMixin() {
+    content: "";
+    position: absolute;
+    display: block;
+}
+
+// Mobile Toggle Switch
+.nrtoggle {
+    margin-bottom:-5px;
+
+    input {
+        opacity: 0; // hides checkbox
+        position: absolute;
+
+        & + label {
+            position: relative;
+            display: inline-block;
+            user-select: none;
+            transition: .4s ease;
+            height: $height;
+            width: $width;
+            border: 1px solid #dcd9d9;
+            border-radius: $height;
+            background-color:#efeff0;
+            margin:0;
+
+            // Rectangle
+            &:before {
+                @include inactiveMixin();
+                transition: .2s cubic-bezier(.24, 0, .5, 1);
+                height: $height;
+                width: $width;
+                top: 0;
+                left: 0;
+                border-radius: $height;
+            }
+
+            // Circle
+            &:after {
+                @include inactiveMixin();
+                box-shadow: 0 0 0 1px hsla(0, 0%, 0%, 0.1), 0 4px 0px 0 hsla(0, 0%, 0%, .03), 0 4px 9px hsla(0, 0%, 0%, .06), 0 3px 3px hsla(0, 0%, 0%, .05);
+                transition: .3s cubic-bezier(.54, 1.60, .5, 1);
+                background: $background;
+                height: $height - 2;
+                width: $height - 2;
+                top: 1px;
+                left: 0px;
+                border-radius: 100%;
+            }
+        }
+
+        // When Active
+        &:checked {
+            & + label:before {
+                background: $green;
+                transition: width .2s cubic-bezier(0, 0, 0, .1);
+            }
+            & + label:after {
+                left: $width - $height;
+            }
+        }
+    }
+}

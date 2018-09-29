@@ -23,7 +23,7 @@ class JFormFieldNRSPPageBuilderCategories extends JFormFieldNRTreeSelect
         $db = $this->db;
         
 		$query = $db->getQuery(true)
-			->select('a.id as value, a.title as text, COUNT(DISTINCT b.id) AS level, a.parent_id as parent, IF (a.published=1, 0, 1) as disable')
+			->select('a.id as value, a.title as text, (COUNT(DISTINCT b.id) - 1) AS level, a.parent_id as parent, IF (a.published=1, 0, 1) as disable')
 			->from('#__categories as a')
             ->join('LEFT', '#__categories AS b on a.lft > b.lft AND a.rgt < b.rgt')
             ->where('a.extension = "com_sppagebuilder"')

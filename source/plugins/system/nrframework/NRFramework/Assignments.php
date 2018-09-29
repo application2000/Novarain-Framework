@@ -56,16 +56,26 @@ class Assignments
         'k2_pagetypes'                       => 'Component\K2Pagetype',
         'contentcats|category'               => 'Component\ContentCategory',
         'contentarticles|article'            => 'Component\ContentArticle',
+        'eventbookingsingle'                 => 'Component\EventBookingSingle',
         'eventbookingcategory'               => 'Component\EventBookingCategory',
+        'j2storesingle'                      => 'Component\J2StoreSingle',
         'j2storecategory'                    => 'Component\J2StoreCategory',
+        'hikashopsingle'                     => 'Component\HikashopSingle',
         'hikashopcategory'                   => 'Component\HikashopCategory',
+        'sppagebuildersingle'                => 'Component\SPPageBuilderSingle',
         'sppagebuildercategory'              => 'Component\SPPageBuilderCategory',
         'virtuemartcategory'                 => 'Component\VirtueMartCategory',
+        'virtuemartsingle'                   => 'Component\VirtueMartSingle',
+        'jshoppingsingle'                    => 'Component\JShoppingSingle',
         'jshoppingcategory'                  => 'Component\JShoppingCategory',
+        'rsblogsingle'                       => 'Component\RSBlogSingle',
         'rsblogcategory'                     => 'Component\RSBlogCategory',
         'easyblogcategory'                   => 'Component\EasyBlogCategory',
+        'easyblogsingle'                     => 'Component\EasyBlogSingle',
+        'zoosingle'                          => 'Component\ZooSingle',
         'zoocategory'                        => 'Component\ZooCategory',
-        'eshopcategory'                      => 'Component\EshopCategory'
+        'eshopcategory'                      => 'Component\EshopCategory',
+        'eshopsingle'                        => 'Component\EshopSingle'
     );
 
     /**

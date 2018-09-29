@@ -105,8 +105,7 @@ class Assignments
             return true;
         }
 
-        // convert $assignments_info parameter from object (used by existing extensions)
-        // to array
+        // convert $assignments_info parameter from object (used by existing extensions) to array
         if (is_object($assignments_info))
         {
             $assignments_info = $this->prepareAssignmentsFromObject($assignments_info, $match_method);
@@ -122,7 +121,7 @@ class Assignments
         }
 
         // return true if no assignments are given
-        if (count($assignments) === 1 && empty($assignments[0]))
+        if (empty($assignments))
         {
             return $debug ? [true, $debug_info] : true;
         }

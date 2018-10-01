@@ -33,6 +33,17 @@ class JFormFieldNRConditions extends JFormFieldGroupedList
 			'component' => 'NR_ASSIGN_COMPONENTS',
 			'language' => 'NR_ASSIGN_LANGS'
 		],
+		'Technology' => [
+			'device' => 'NR_ASSIGN_DEVICES',
+			'browser' => 'NR_ASSIGN_BROWSERS',
+			'os' => 'NR_ASSIGN_OS',
+		],
+		'Geolocation' => [
+			'city' => 'NR_CITY',
+			'country' => 'NR_ASSIGN_COUNTRIES',
+			'region' => 'NR_REGION',
+			'continent' => 'NR_CONTINENT',
+		],
 		'Integrations' => [
 			'com_content\article' => 'Content Article',
 			'com_content\category' => 'Content Category',
@@ -43,19 +54,10 @@ class JFormFieldNRConditions extends JFormFieldGroupedList
 			'com_convertforms\convertforms'=> 'Convert Forms Campaign',
 			'com_akeebasubs\akeebasubs' => 'AkeebaSubs Level',
 		],
-		'Geolocation' => [
-			'country' => 'NR_ASSIGN_COUNTRIES',
-			'city' => 'NR_CITY',
-			'region' => 'NR_REGION',
-			'continent' => 'NR_CONTINENT',
-		],
 		'Advanced' => [
 			'url' => 'NR_URL',
 			'referrer' => 'NR_ASSIGN_REFERRER',
-			'device' => 'NR_ASSIGN_DEVICES',
 			'ip' => 'NR_IPADDRESS',
-			'os' => 'NR_ASSIGN_OS',
-			'browser' => 'NR_ASSIGN_BROWSERS',
 			'pageviews' => 'NR_ASSIGN_PAGEVIEWS_VIEWS',
 			'cookie' => 'NR_COOKIE',
 			'php' => 'NR_ASSIGN_PHP'

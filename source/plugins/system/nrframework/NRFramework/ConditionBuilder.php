@@ -11,10 +11,18 @@ namespace NRFramework;
 
 defined('_JEXEC') or die;
 
+use NRFramework\Extension;
+
 class ConditionBuilder
 {    
     public static function render($id, $loadData = array(), $conditions_list = array())
     {
+        // Condition Builder relies on com_ajax for AJAX requests.
+        if (!Extension::componentIsEnabled('ajax'))
+        {
+            \JFactory::getApplication()->enqueueMessage(\JText::_('AJAX Component is not enabled.'), 'error');
+        }
+
         // Initialize a new empty condition
         if (empty($loadData))
         {

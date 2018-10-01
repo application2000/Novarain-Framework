@@ -1,7 +1,8 @@
 jQuery(function($) {
 
     var app_ajax_url = "?option=com_ajax&format=raw&plugin=nrframework&task=ConditionBuilder"
-        system_url = $(".cb").attr("data-root");
+        system_url = $(".cb").attr("data-root")
+        token = $(".cb").attr("data-token");
 
     // Setup Events
     $(document).on("click", ".addCondition", function(event) {
@@ -107,7 +108,7 @@ jQuery(function($) {
      */
     function call(endpoint, payload, callback) {
         $.ajax({ 
-            url: system_url + app_ajax_url + "&subtask=" + endpoint,
+            url: system_url + app_ajax_url + "&subtask=" + endpoint + "&" + token + "=1",
             data: payload,
             success: function(response) {
                 callback(response);
@@ -126,21 +127,25 @@ jQuery(function($) {
     }
 
     function loadConditionAssets(condition_name, $el) {
+
+        // All assets must be loaded from the front-end
+        var base_url = system_url.replace("/administrator", "");
+
         switch (condition_name) {
             case 'usergroup':
             case 'menu':
             case 'category':
             case 'k2category':
-                NRHelper.loadStyleSheet(system_url + "/media/plg_system_nrframework/css/treeselect.css");
-                NRHelper.loadScript(system_url + "/media/plg_system_nrframework/js/treeselect.js", function() {
+                NRHelper.loadStyleSheet(base_url + "/media/plg_system_nrframework/css/treeselect.css");
+                NRHelper.loadScript(base_url + "/media/plg_system_nrframework/js/treeselect.js", function() {
                     NRTreeselect.init($el.get(0));
                 });
                 break;
             case 'date':
-                NRHelper.loadStyleSheet(system_url + "/media/system/css/fields/calendar.css");
-                NRHelper.loadScript(system_url + "/media/system/js/fields/calendar-locales/en.js");
-                NRHelper.loadScript(system_url + "/media/system/js/fields/calendar-locales/date/gregorian/date-helper.min.js");
-                NRHelper.loadScript(system_url + "/media/system/js/fields/calendar.min.js", function() {
+                NRHelper.loadStyleSheet(base_url + "/media/system/css/fields/calendar.css");
+                NRHelper.loadScript(base_url + "/media/system/js/fields/calendar-locales/en.js");
+                NRHelper.loadScript(base_url + "/media/system/js/fields/calendar-locales/date/gregorian/date-helper.min.js");
+                NRHelper.loadScript(base_url + "/media/system/js/fields/calendar.min.js", function() {
                     var elements = $el.get(0).querySelectorAll(".field-calendar");
                     for (i = 0; i < elements.length; i++) {
                         JoomlaCalendar.init(elements[i]);
@@ -148,8 +153,8 @@ jQuery(function($) {
                 });
                 break;
             case 'time':
-                NRHelper.loadStyleSheet(system_url + "/media/plg_system_nrframework/css/jquery-clockpicker.min.css");
-                NRHelper.loadScript(system_url + "/media/plg_system_nrframework/js/jquery-clockpicker.min.js", function() {
+                NRHelper.loadStyleSheet(base_url + "/media/plg_system_nrframework/css/jquery-clockpicker.min.css");
+                NRHelper.loadScript(base_url + "/media/plg_system_nrframework/js/jquery-clockpicker.min.js", function() {
                     $el.find(".clockpicker").clockpicker();
                 });
                 break;

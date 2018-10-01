@@ -112,9 +112,15 @@ class plgSystemNRFramework extends JPlugin
      *
      *  @return void
      */
-    function onAjaxNRFramework()
+    public function onAjaxNRFramework()
     {
-		//JSession::checkToken('request') or jexit(JText::_('JINVALID_TOKEN'));
+		JSession::checkToken('request') or jexit(JText::_('JINVALID_TOKEN'));
+
+		// Only in backend
+        if (!$this->app->isAdmin())
+        {
+            return;
+        }
 
         // Check if we have a valid task
 		$task = $this->app->input->get('task', null);

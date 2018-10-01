@@ -19,7 +19,7 @@ use NRFramework\ConditionBuilder;
 
 ?> 
 
-<div class="cb" data-root="<?php echo JURI::root(true) ?>" data-control-group="<?php echo $id; ?>" data-max-index="<?php echo $maxIndex; ?>" data-conditionslist="<?php echo implode(',', $conditions_list); ?>">
+<div class="cb" data-token="<?php echo JSession::getFormToken() ?>" data-root="<?php echo JURI::base(true) ?>" data-control-group="<?php echo $id; ?>" data-max-index="<?php echo $maxIndex; ?>" data-conditionslist="<?php echo implode(',', $conditions_list); ?>">
     <div class="cb-items">
         <?php foreach ($data as $groupKey => $groupConditions) { 
                 $maxIndex_ = max(array_keys($groupConditions));

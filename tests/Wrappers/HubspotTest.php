@@ -11,6 +11,7 @@ class HubspotTest extends WrapperTestCase
         return [
             ['john@mail.', [], 'Email address john@mail. is invalid'],
             ['john@mail.com', ['first_name' => 'John']],
+            ['peter@mail.com', ['first_name' => 'Peter', 'hs_analytics_source' => 'test'], 'is a read only property'],
         ];
     }
 

@@ -11,15 +11,25 @@ namespace NRFramework\Assignments\Component;
 
 defined('_JEXEC') or die;
 
-class ZooCategory extends ZooBase
+class EasyBlogSingle extends EasyBlogBase
 {
     /**
-     *  Pass check
-     *
-     *  @return bool
+	 *  Pass check
+	 *
+	 *  @return  bool
+	 */
+	public function pass()
+	{
+        return $this->passSinglePage();
+    }
+    
+    /**
+     *  Returns the assignment's value
+     * 
+     *  @return int
      */
-    public function pass()
+    public function value()
     {
-        return $this->passCategories('zoo_category', 'parent');
-	}
+        return $this->request->id;
+    }
 }

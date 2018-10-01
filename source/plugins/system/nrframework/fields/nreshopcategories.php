@@ -10,8 +10,22 @@ defined('_JEXEC') or die;
 
 require_once __DIR__ . '/treeselect.php';
 
-class JFormFieldNRRSBlogCategories extends JFormFieldNRTreeSelect
+class JFormFieldNREShopCategories extends JFormFieldNRTreeSelect
 {
+	/**
+	 * Indicates whether the options array should be sorted before render.
+	 *
+	 * @var boolean
+	 */
+	protected $sortTree = true;
+
+	/**
+	 * Indicates whether the options array should have the levels re-calculated
+	 * 
+	 * @var boolean
+	 */
+	protected $fixLevels = true;
+    
 	/**
 	 * Get a list of all EventBooking Categories
 	 *
@@ -23,13 +37,10 @@ class JFormFieldNRRSBlogCategories extends JFormFieldNRTreeSelect
         $db = $this->db;
         
 		$query = $db->getQuery(true)
-			->select('a.id as value, a.title as text, (COUNT(DISTINCT b.id) - 1) AS level, a.parent_id as parent, IF (a.published=1, 0, 1) as disable')
-			->from('#__rsblog_categories as a')
-			->where('a.parent_id > 0')
-			->join('LEFT', '#__rsblog_categories AS b on a.lft > b.lft AND a.rgt < b.rgt')
-			->group('a.id, a.title, a.lft')
-			->order('a.lft ASC');
-			
+			->select('a.id as value, b.category_name as text, a.category_parent_id as parent, IF (a.published=1, 0, 1) as disable')
+			->from('#__eshop_categories as a')
+			->join('LEFT', '#__eshop_categorydetails AS b on a.id=b.category_id');
+
 		$db->setQuery($query);
 
 		return $db->loadObjectList();

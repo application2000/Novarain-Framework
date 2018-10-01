@@ -21,10 +21,10 @@ class ContentCategory extends ContentBase
     public function pass()
     {
 		// Rename inc_articles to inc_items
-		if (in_array('inc_articles', $this->params->inc))
+		if (isset($this->params->inc) && in_array('inc_articles', $this->params->inc))
 		{
 			$this->params->inc[] = 'inc_items';
-		}
+        }
 
         return $this->passCategories();
 	}

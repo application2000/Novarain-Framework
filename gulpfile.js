@@ -4,7 +4,8 @@ var autoprefixer = require('gulp-autoprefixer');
 var plumber      = require('gulp-plumber');
 var sass         = require('gulp-sass');
 var livereload   = require('gulp-livereload');
-var sourcemaps = require('gulp-sourcemaps');
+var uglify       = require('gulp-uglify');
+var sourcemaps   = require('gulp-sourcemaps');
 var source       = "source/media/plg_system_nrframework/";
 
 // define the default task and add the watch task to it

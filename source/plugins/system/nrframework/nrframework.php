@@ -135,6 +135,36 @@ class plgSystemNRFramework extends JPlugin
 
 		$this->$taskMethod();
 	}
+	
+	private function ajaxTaskInclude()
+	{
+		$input = $this->app->input;
+
+		$file  = $input->get('file');
+		$path  = JPATH_SITE . '/' . $input->get('path', '', 'RAW');
+		$class = $input->get('class');
+
+		$file_to_include = $path . $file . '.php';
+
+		if (!JFile::exists($file_to_include))
+		{
+			die('FILE_ERROR');
+		}
+
+		@include_once $file_to_include;
+
+		if (!class_exists($class))
+		{
+			die('CLASS_ERROR');
+		}
+
+		if (!method_exists($class, 'onAJAX'))
+		{
+			die('METHOD_ERROR');
+		}
+
+		(new $class())->onAJAX($input->getArray());
+	}
 
 	private function ajaxTaskConditionBuilder()
 	{

@@ -2,7 +2,7 @@
 <form>
     <fieldset name="general">
         <field name="match" type="comparator"/>
-        <field name="value" type="nrtext"
+        <field name="value" type="k2items"
             label="NR_ASSIGN_K2_ITEMS"
             description="NR_ASSIGN_K2_ITEMS_LIST_DESC"
             hint="Enter comma separated ids"

@@ -23,6 +23,16 @@
 .select2-results__option {
   padding: 5px 8px;
   user-select: none;
+  display:flex;
+  justify-content: space-between;
+
+  .row-text {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    padding-right: 10px;
+
+  }
 
   &:not(:last-child) {
     border-bottom: solid 1px #e2e2e2;

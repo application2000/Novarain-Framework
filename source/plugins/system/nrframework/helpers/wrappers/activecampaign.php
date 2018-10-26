@@ -32,8 +32,8 @@ class NR_ActiveCampaign extends NR_Wrapper
 	 *
 	 *  http://www.activecampaign.com/api/example.php?call=contact_sync
 	 *
-	 *  @param   string  $email           The name of the Contact
-	 *  @param   string  $name            Email of the Contact
+	 *  @param   string  $email           The Email of the Contact
+	 *  @param   string  $name            The name of the Contact (Name can be also declared in Custom Fields)
 	 *  @param   string  $list            List ID
 	 *  @param   string  $tags            Tags for this contact (comma-separated). Example: "tag1, tag2, etc"
 	 *  @param   array   $customfields    Custom Fields
@@ -41,10 +41,11 @@ class NR_ActiveCampaign extends NR_Wrapper
 	 *
 	 *  @return  void                   
 	 */
-	public function subscribe($email, $name, $list, $tags = "", $customfields = array(), $updateexisting)
+	public function subscribe($email, $name = null, $list, $tags = '', $customfields = array(), $updateexisting)
 	{
-		$name = explode(" ", $name, 2);
-
+		// Detect name
+		$name = (is_null($name) || empty($name)) ? $this->getNameFromCustomFields($customfields) : explode(' ', $name, 2);
+		
 		$customFields = $this->validateCustomFields($customfields);
 
 		$apiAction = ($updateexisting) ? 'contact_sync' : 'contact_add';
@@ -52,7 +53,7 @@ class NR_ActiveCampaign extends NR_Wrapper
 		$data = array(
 			'api_action'           => $apiAction,
 			'email'                => $email,
-			'first_name'           => isset($name[0]) ? $name[0] : null,
+ 			'first_name'           => isset($name[0]) ? $name[0] : null,
 			'last_name'            => isset($name[1]) ? $name[1] : null,
 			'p[' . $list . ']'     => $list,
 			'tags'                 => $tags,
@@ -64,6 +65,44 @@ class NR_ActiveCampaign extends NR_Wrapper
 		$data = array_merge($data, $customFields);
 		
 		$this->post('', $data);
+	}
+
+	/**
+	 * Search for First Name and Last Name in Custom Fields and return an array with both values.
+	 *
+	 * @param	array	$customfields	The Custom Fields array passed by the user.
+	 *
+	 * @return	array
+	 */
+	private function getNameFromCustomFields($customfields)
+	{
+		return [
+			(string) $this->getCustomFieldValue(['first_name', 'First Name'], $customfields),
+			(string) $this->getCustomFieldValue(['last_name', 'Last Name'], $customfields)
+		];
+	}
+
+	/**
+	 * Search Custom Fields declared by the user for a specific custom field. If exists return its value.
+	 *
+	 * @param	array	$needles	The custom field names
+	 * @param	array	$haystack	The custom fields array
+	 *
+	 * @return	mixed	String on success, Null on failure
+	 */
+	private function getCustomFieldValue($needles, $haystack)
+	{
+		$haystack = array_change_key_case($haystack);
+
+		foreach ($needles as $needle)
+		{
+			$needle = strtolower($needle);
+
+			if (array_key_exists($needle, $haystack))
+			{
+				return trim($haystack[$needle]);
+			}
+		}
 	}
 
 	/**

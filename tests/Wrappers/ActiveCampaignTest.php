@@ -8,8 +8,8 @@ include_once __DIR__ . '/../cases/WrapperTestCase.php';
 class ActiveCampaignTest extends WrapperTestCase
 {
     static $credentials = [
-        'api'      => '6c75049ae2e17893601cb070df739ad2640198e892b598185abc42121a2f0d147612c178',
-        'endpoint' => 'https://mailinator87069.api-us1.com'
+        'api'      => '59d5b85a362f6880e0bfb441eab324c9cc423adb695c8400c9211e7e46d791307db55c9e',
+        'endpoint' => 'https://mailinator9617.api-us1.com'
     ];
 
     public function testAddList()
@@ -34,17 +34,19 @@ class ActiveCampaignTest extends WrapperTestCase
     public function subscribeProvider()
     {
         return [
-            ['john@mail', 'John', '', [], true, 'Contact Email Address is not valid'],
-            ['john@mail.com', 'John'],
-            ['john@mail2.com', 'John'],
-            ['john@mail2.com', 'John', '', [], false, 'does not allow duplicates']
+            ['john@mail', '', '', [], true, 'Contact Email Address is not valid'],
+            ['lebronxx@mail.com', 'Lebron James'],
+            ['johndoe@mail.com', '', '', ['first_name' => 'John', 'Last Name' => 'Doe']],
+            ['helen@mail.com', '', '', ['first_name' => 'Helen']],
+            ['marydoe@mail.com', 'Mary Doe'],
+            ['marydoe@mail.com', 'Mary Doe', '', [], false, 'does not allow duplicates']
         ];
     }
 
     /**
      * @dataProvider subscribeProvider
      */
-	public function testSubscribe($email, $name, $tags = '', $customfields = [], $updateexisting = true, $expected = true)
+	public function testSubscribe($email, $name = null, $tags = '', $customfields = [], $updateexisting = true, $expected = true)
     {
         $wrapper = self::$wrapper;
         $wrapper->subscribe($email, $name, $this->getFirstListID(), $tags, $customfields, $updateexisting);

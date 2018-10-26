@@ -57,6 +57,7 @@ class SmartTags
 		$this->setUserFirstLastName();
 
 		$this->doc  = \JFactory::getDocument();
+		$this->app = \JFactory::getApplication();
 
 		$this->tags = array(
 			// Server
@@ -71,11 +72,6 @@ class SmartTags
 			'site.email'    => \JFactory::getConfig()->get('mailfrom'),
 			'site.url'      => \JURI::root(),
 
-			// Page
-			'page.title'    => $this->doc->getTitle(),
-			'page.desc'     => $this->doc->getDescription(),
-			'page.lang'     => $this->doc->getLanguage(),
-
 			// User
 			'user.id'        => $this->user->id,
 			'user.name'      => $this->user->name,
@@ -83,7 +79,7 @@ class SmartTags
 			'user.lastname'  => $this->user->lastname,
 			'user.login'     => $this->user->username,
 			'user.email'     => $this->user->email,
-			'user.groups'    => implode(",", $this->user->groups),
+			'user.groups'    => implode(',', $this->user->groups),
 
 			// Client
 			'client.device'    => WebClient::getDeviceType(),
@@ -95,22 +91,69 @@ class SmartTags
 			'randomid'		=> bin2hex(\JCrypt::genRandomBytes(8))
 		);
 
-		// Add Dates
-		$tz   = new \DateTimeZone(\JFactory::getApplication()->getCfg('offset', 'GMT'));
+		$this->addPageTags();
+		$this->addDateTags();
+		$this->addQueryStringTags();
+	}
+
+	/**
+	 * Add Query String Tags to the collection
+	 *
+	 * @return void
+	 */
+	private function addQueryStringTags()
+	{
+		$query = \JUri::getInstance()->getQuery(true);
+
+		if (empty($query))
+		{
+			return;
+		}
+
+		$tags = [];
+
+		foreach ($query as $key => $value)
+		{
+			$tags[strtolower($key)] = $value;
+		}
+
+		$this->add($tags, 'querystring.');
+	}
+
+	/**
+	 * Add Date-based Tags to the collection
+	 *
+	 * @return void
+	 */
+	private function addDateTags()
+	{
+		$tz   = new \DateTimeZone($this->app->getCfg('offset', 'GMT'));
 		$date = \JFactory::getDate()->setTimezone($tz);
 
-		$this->tags['time'] = $date->format('H:i', true);
-		$this->tags['date'] = $date->format('Y-m-d H:i:s', true);
+		$tags = [
+			'time' => $date->format('H:i', true),
+			'date' => $date->format('Y-m-d H:i:s', true)
+		];
 
-		// Add Query Parameters
-		$query = \JUri::getInstance()->getQuery(true);
-		if (!empty($query))
-		{
-			foreach ($query as $key => $value)
-			{
-				$this->tags['querystring.' . strtolower($key)] = $value;
-			}
-		}
+		$this->add($tags);
+	}
+
+	/**
+	 * Include Page-related Tags to the collection
+	 *
+	 * @return void
+	 */
+	private function addPageTags()
+	{
+		$tags = [
+			'title'     => $this->doc->getTitle(),
+			'desc'      => $this->doc->getMetaData('description'),
+			'keywords'  => $this->doc->getMetaData('keywords'),
+			'lang'      => $this->doc->getLanguage(),
+			'generator' => $this->doc->getGenerator()
+		];
+
+		$this->add($tags, 'page.');
 	}
 
 	/**

@@ -36,7 +36,8 @@ class JFormFieldNR_Rate extends NRFormField
 		$this->halfstar  = $this->get('halfstar', 0) ? "true" : "false";
 		$this->spacing   = $this->get('spacing', "3px");
 		$this->ratedfill = $this->get('ratedfill', "#e7711b");
-
+		$this->value     = empty($this->value) ? 0 : $this->value;
+		
 		static $run;
 		if (!$run)
 		{

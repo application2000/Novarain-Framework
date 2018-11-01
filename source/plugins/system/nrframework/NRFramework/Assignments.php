@@ -108,7 +108,7 @@ class Assignments
 	 *  @return  bool|array                         True if check passes. If $debug is set to true an array will be returned with
      *                                              the result in the first element and debug info in the second.
 	 */
-	function passAll($assignments_info, $match_method = 'and', $debug = false)
+	public function passAll($assignments_info, $match_method = 'and', $debug = false)
 	{
         if (!$assignments_info)
         {
@@ -137,29 +137,59 @@ class Assignments
         }
 
         $pass = null;
+
         foreach ($assignments as $group)
         {
-            // don't continue if already failed
+            // Don't continue if already failed
             if (!is_null($pass) && $pass == false)
             {
-                return $debug ? [false, $debug_info] : false;
+                break;
             }
 
-            foreach ($group as $assignment)
-            {
-                // set $pass to false if any of the assignments doesn't exist
-                if (is_null($assignment) || !\property_exists($assignment, 'class') || is_null($assignment->class))
-                {
-                    $pass = false;
-                    break;
-                }
-
-                $assignmentInstance = new $assignment->class($assignment->options, $this->factory);
-                $pass               |= $this->passStateCheck($assignmentInstance->pass(), $assignment->options->assignment_state);
-            }
+            // Check if any of the assignments in the group passes.
+            $pass = $this->passAny($group);
         }
 
         return $debug ? [$pass, $debug_info] : $pass;
+    }
+
+    /**
+     * Check if any of the given assignments passes the check
+     *
+     * @param   array   $assignments                    The assignments array to check
+     * @param   bool    $fail_on_invalid_assignment     Indicates whether the test will fail if an invalid assignment is found
+     *
+     * @return  bool
+     */
+    private function passAny($assignments, $fail_on_invalid_assignment = true)
+    {
+        if (!is_array($assignments) || count($assignments) == 0)
+        {
+            return false;
+        }
+
+        foreach ($assignments as $assignment)
+        {
+            // set $pass to false if any of the assignments doesn't exist
+            if ($fail_on_invalid_assignment)
+            {
+                if (is_null($assignment) || !\property_exists($assignment, 'class') || is_null($assignment->class))
+                {
+                    return false;
+                }
+            }
+
+            $assignmentInstance = new $assignment->class($assignment->options, $this->factory);
+            $pass = $this->passStateCheck($assignmentInstance->pass(), $assignment->options->assignment_state);
+
+            // Return true if any of the assignments passes the check
+            if ($pass)
+            {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     /**
@@ -433,7 +463,6 @@ class Assignments
                     );
                     $assignment->value  = $inst->value();
                     $assignment->name   = \preg_replace('/.*\\\\(.*)$/', "$1", $assignment->class);
-                    $assignment->pass   = $passed;
                 }
                 $debugGroup[] = $assignment;
             }

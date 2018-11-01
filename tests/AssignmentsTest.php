@@ -1,12 +1,24 @@
 <?php
 
+use \NRFramework\Assignments;
+
 class AssignmentsTest extends PHPUnit\Framework\TestCase
 {
     protected $assignments;
+    protected $factory;
 
     public function setUp()
     {
-        $this->assignments = new NRFramework\Assignments();
+        $this->factory = $this->createMock('\\NRFramework\\Factory');
+
+        // $user = new JUser;
+        // $user->id       = 15;
+        // $user->name     = 'John Doe';
+        // $user->username = 'johndoe';
+
+        // $this->factory->method('getUser')->willReturn($user);
+
+        $this->assignments = new Assignments($this->factory);
     }
 
     /**
@@ -40,14 +52,75 @@ class AssignmentsTest extends PHPUnit\Framework\TestCase
             ['nonexistent_assignment', false]
         ];
     }
-    // public function testPassStateCheck()
-    // {
-    //     $this->assertTrue(true);
-    // }
-    // public function testPrepareAssignmentsInfo()
-    // {
-    //     $this->assertTrue(true);
-    // }
+
+    public function passAllProvider()
+    {
+        // 1 assignment (include)
+        $assignments0 = [
+            [
+                (object) ['alias' => 'url', 'value' => '?t=1', 'assignment_state' => '1'],
+            ]
+        ];
+
+        // 2 assignments (include)
+        $assignments1 = [
+            [
+                (object) ['alias' => 'device', 'value' => ['desktop'], 'assignment_state' => '1'],
+            ],
+            [
+                (object) ['alias' => 'url', 'value' => '?t=1', 'assignment_state' => '1']
+            ]
+        ];
+
+        // 1 assignment (exclude)
+        $assignments2 = [
+            [
+                (object) ['alias' => 'url', 'value' => '?t=1', 'assignment_state' => '0'],
+            ]
+        ];
+
+        // 2 assignments (exclude)
+        $assignments3 = [
+            [
+                (object) ['alias' => 'device', 'value' => ['desktop'], 'assignment_state' => '0'],
+            ],
+            [
+                (object) ['alias' => 'url', 'value' => '?t=1', 'assignment_state' => '0']
+            ]
+        ];
+
+        $env1 = [
+            'url'  => 'http://www.google.gr'
+        ];
+
+        $env2 = [
+            'url'  => 'http://www.google.gr?amp=true&t=1'
+        ];
+
+        return [
+            [
+                $env1, $assignments1, false,
+                $env2, $assignments1, true,
+                $env1, $assignments0, false,
+                $env2, $assignments0, true,
+                $env1, $assignments2, true,
+                $env2, $assignments2, false,
+                $env1, [], true                 // Succeed if we pass no assignments
+            ]
+        ];
+    }
+
+    /**
+     * @dataProvider passAllProvider
+     */
+    public function testPassAll($environment, $assignments, $expected)
+    {
+        $this->factory->method('getURL')->willReturn($environment['url']);
+
+        $pass = $this->assignments->passAll($assignments);
+
+        $this->assertEquals($expected, $pass);
+    }
 
     /**
      * @dataProvider existsProvider
@@ -64,6 +137,4 @@ class AssignmentsTest extends PHPUnit\Framework\TestCase
     {
         $this->assertEquals($expected, $this->assignments->aliasToClassname($alias));
     }
-
-    // match method 
 }

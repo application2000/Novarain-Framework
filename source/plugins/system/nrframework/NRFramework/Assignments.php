@@ -313,7 +313,7 @@ class Assignments
      * 
      *  @return array of objects
      */
-    protected function prepareAssignmentsFromObject($assignments_info, $match_method = 'and')
+    public function prepareAssignmentsFromObject($assignments_info, $match_method = 'and')
     {
         if (!isset($assignments_info->params))
         {

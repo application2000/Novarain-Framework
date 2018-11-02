@@ -22,6 +22,39 @@ class AssignmentsTest extends PHPUnit\Framework\TestCase
     }
 
     /**
+     * data provider for testprepareAssignmentsFromObject
+     *
+     * @return void
+     */
+    public function prepareAssignmentsFromObject()
+    {
+        $data1 = [
+            'dummyproperty1' => true,
+            'dummy_property2' => 0,
+            'assign_urls' => '1',
+            'assign_urls_list' => ['/blog/test', '/blog/test2'],
+            'assign_urls_param_regex' => '0',
+            'assign_devices' => '1',
+            'assign_devices_list' => ['desktop']
+        ];
+
+        $data2 = [
+            'dummyproperty1' => true,
+            'dummy_property2' => 0,
+            'assign_urls' => '1',
+            'assign_urls_list' => ['/blog/test', '/blog/test2'],
+            'assign_urls_param_regex' => '0'
+        ];
+
+        return [
+            [$data1, 1, 2, 'or', true],
+            [$data1, 2, 1, 'and', true],
+            [$data2, 1, 1, 'and', true],
+            [$data2, 1, 1, 'or', true]
+        ];
+    }
+
+    /**
      * data provider for testAliasToClassname
      */
     public function aliasToClassnameProvider()
@@ -136,5 +169,22 @@ class AssignmentsTest extends PHPUnit\Framework\TestCase
     public function testAliasToClassname($alias, $expected)
     {
         $this->assertEquals($expected, $this->assignments->aliasToClassname($alias));
+    }
+
+    /**
+     * @dataProvider prepareAssignmentsFromObject
+     */
+    public function testPrepareAssignmentsFromObject($assignments, $count_and, $count_or, $mathing_method, $expected)
+    {
+        $data = (object) [
+            'id'     => 0,
+            'name'   => 'test',
+            'params' => json_encode($assignments)
+        ];
+
+        $result = $this->assignments->prepareAssignmentsFromObject($data, $mathing_method);
+
+        $pass = is_array($result) && count($result) == $count_and && count($result[0]) == $count_or;
+        $this->assertEquals($pass, $expected);
     }
 }

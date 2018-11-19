@@ -8,25 +8,14 @@ class CampaignMonitorTest extends WrapperTestCase
     public $listid = '87ade79b3bb302d262c0c0f98c0fc03a';
     static $invalid_path_error = 'We couldn\'t find the resource';
 
-    public function XtestAddList()
-    {
-        $wrapper = self::$wrapper;
-        $wrapper->post('/lists/', [
-            'Title' => 'Website Subscribers',
-            'UnsubscribePage' => 'http://www.example.com/unsubscribed.html',
-            'UnsubscribeSetting' => 'AllClientLists',
-            'ConfirmedOptIn' => false,
-            'ConfirmationSuccessPage' => 'http://www.example.com/joined.html'
-        ]);
-
-        $this->assertTrue($wrapper->success());
-    }
-
     public function subscribeProvider()
     {
         return [
             ['john@mail.', '', [], 'Invalid Email Address'],
-            ['john@mail.com', 'John']
+            ['john@mail.com', 'John'],
+            ['peter66@mail.com', 'Peter', ['Address' => 'Kos', 'Favorite Fruites' => ['Bannana', 'Orange', 'Apple']]],
+            ['peter67@mail.com', 'Peter', ['Favorite Fruites' => 'Bannana']],
+            ['maria@mail.com', 'Maria', ['Favorite Fruites' => null]]
         ];
     }
 

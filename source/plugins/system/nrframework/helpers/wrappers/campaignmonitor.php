@@ -94,15 +94,25 @@ class NR_CampaignMonitor extends NR_Wrapper
 
 		foreach ($listCustomFields as $listCustomField)
 		{
-			if (!in_array($listCustomField['FieldName'], $formCustomFieldsKeys))
+			$field_name = $listCustomField['FieldName'];
+
+			if (!in_array($field_name, $formCustomFieldsKeys))
 			{
 				continue;
 			}
 
-			$fields[] = array(
-				'Key'   => $listCustomField['FieldName'],
-				'Value' => $formCustomFields[$listCustomField['FieldName']],
-			);
+			$value = $formCustomFields[$field_name];
+
+			// Always convert custom field value to array, to support multiple values in a custom field.
+			$value = is_array($value) ? $value : (array) $value;
+
+			foreach ($value as $val)
+			{
+				$fields[] = array(
+					'Key'   => $field_name,
+					'Value' => $val,
+				);	
+			}
 		}
 
 		return $fields;

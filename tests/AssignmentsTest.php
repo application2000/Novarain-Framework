@@ -47,10 +47,10 @@ class AssignmentsTest extends PHPUnit\Framework\TestCase
         ];
 
         return [
-            [$data1, 1, 2, 'or', true],
-            [$data1, 2, 1, 'and', true],
-            [$data2, 1, 1, 'and', true],
-            [$data2, 1, 1, 'or', true]
+            [$data1, 2, 'or'],
+            [$data1, 1, 'and'],
+            [$data2, 1, 'and'],
+            [$data2, 1, 'or']
         ];
     }
 
@@ -88,15 +88,23 @@ class AssignmentsTest extends PHPUnit\Framework\TestCase
 
     public function passAllProvider()
     {
-        // 1 assignment (include)
+        // 1 assignment
         $assignments0 = [
             [
                 (object) ['alias' => 'url', 'value' => '?t=1', 'assignment_state' => '1'],
             ]
         ];
 
-        // 2 assignments (include)
+        // 2 assignments AND
         $assignments1 = [
+            [
+                (object) ['alias' => 'device', 'value' => ['desktop'], 'assignment_state' => '1'],
+                (object) ['alias' => 'url', 'value' => '?t=1', 'assignment_state' => '1']
+            ]
+        ];
+
+        // 2 assignments OR
+        $assignments3 = [
             [
                 (object) ['alias' => 'device', 'value' => ['desktop'], 'assignment_state' => '1'],
             ],
@@ -105,20 +113,11 @@ class AssignmentsTest extends PHPUnit\Framework\TestCase
             ]
         ];
 
+
         // 1 assignment (exclude)
         $assignments2 = [
             [
                 (object) ['alias' => 'url', 'value' => '?t=1', 'assignment_state' => '0'],
-            ]
-        ];
-
-        // 2 assignments (exclude)
-        $assignments3 = [
-            [
-                (object) ['alias' => 'device', 'value' => ['desktop'], 'assignment_state' => '0'],
-            ],
-            [
-                (object) ['alias' => 'url', 'value' => '?t=1', 'assignment_state' => '0']
             ]
         ];
 
@@ -133,6 +132,7 @@ class AssignmentsTest extends PHPUnit\Framework\TestCase
         return [
             [
                 $env1, $assignments1, false,
+                $env1, $assignments3, true,
                 $env2, $assignments1, true,
                 $env1, $assignments0, false,
                 $env2, $assignments0, true,
@@ -174,7 +174,7 @@ class AssignmentsTest extends PHPUnit\Framework\TestCase
     /**
      * @dataProvider prepareAssignmentsFromObject
      */
-    public function testPrepareAssignmentsFromObject($assignments, $count_and, $count_or, $mathing_method, $expected)
+    public function testPrepareAssignmentsFromObject($assignments, $count_groups, $mathing_method)
     {
         $data = (object) [
             'id'     => 0,
@@ -184,7 +184,7 @@ class AssignmentsTest extends PHPUnit\Framework\TestCase
 
         $result = $this->assignments->prepareAssignmentsFromObject($data, $mathing_method);
 
-        $pass = is_array($result) && count($result) == $count_and && count($result[0]) == $count_or;
-        $this->assertEquals($pass, $expected);
+        $pass = is_array($result) && count($result) == $count_groups;
+        $this->assertTrue($pass);
     }
 }

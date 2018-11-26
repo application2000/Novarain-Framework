@@ -114,13 +114,13 @@ class Assignments
         {
             return true;
         }
-
+        
         // convert $assignments_info parameter from object (used by existing extensions) to array
         if (is_object($assignments_info))
         {
             $assignments_info = $this->prepareAssignmentsFromObject($assignments_info, $match_method);
         }
-
+        
         // prepare assignment data
         $assignments = $this->prepareAssignments($assignments_info);
 
@@ -136,62 +136,54 @@ class Assignments
             return $debug ? [true, $debug_info] : true;
         }
 
-        $pass = null;
+        $pass = false;
 
         foreach ($assignments as $group)
         {
-            // Don't continue if already failed
-            if (!is_null($pass) && $pass == false)
+            // Pass all assignments in the group
+            if ($pass = $this->passAnd($group))
             {
                 break;
             }
-
-            // Check if any of the assignments in the group passes.
-            $pass = $this->passAny($group);
         }
 
         return $debug ? [$pass, $debug_info] : $pass;
     }
 
     /**
-     * Check if any of the given assignments passes the check
+     * Check if all of the given assignments passes the check
      *
-     * @param   array   $assignments                    The assignments array to check
-     * @param   bool    $fail_on_invalid_assignment     Indicates whether the test will fail if an invalid assignment is found
+     * @param   array   $assignments       The assignments array to check
      *
      * @return  bool
      */
-    private function passAny($assignments, $fail_on_invalid_assignment = true)
+    private function passAnd($assignments)
     {
         if (!is_array($assignments) || count($assignments) == 0)
         {
-            return false;
+            return;
         }
 
         foreach ($assignments as $assignment)
         {
-            // set $pass to false if any of the assignments doesn't exist
-            if ($fail_on_invalid_assignment)
+            if (is_null($assignment) || !\property_exists($assignment, 'class') || is_null($assignment->class))
             {
-                if (is_null($assignment) || !\property_exists($assignment, 'class') || is_null($assignment->class))
-                {
-                    return false;
-                }
+                return;
             }
 
             $assignmentInstance = new $assignment->class($assignment->options, $this->factory);
             $pass = $this->passStateCheck($assignmentInstance->pass(), $assignment->options->assignment_state);
 
-            // Return true if any of the assignments passes the check
-            if ($pass)
+            // Fail if any of the assignments doesn't pass the check.
+            if (!$pass)
             {
-                return true;
+                return false;
             }
         }
 
-        return false;
+        return true;
     }
-
+   
     /**
      *  Checks if an assignment exists
      *
@@ -313,7 +305,7 @@ class Assignments
      * 
      *  @return array of objects
      */
-    public function prepareAssignmentsFromObject($assignments_info, $match_method = 'and')
+    public function prepareAssignmentsFromObject($assignments_info, $match_method)
     {
         if (!isset($assignments_info->params))
         {
@@ -360,7 +352,7 @@ class Assignments
             }
         }
 
-        if ($match_method === 'and')
+        if ($match_method === 'or')
         {
             // each assignemnt belongs to a separate group
             $res = [];

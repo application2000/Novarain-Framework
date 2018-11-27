@@ -266,7 +266,13 @@ class Assignments
         $assignments = [];
         foreach ($assignments_info as $group)
         {
+            if (empty($group)) 
+            {
+                continue;
+            }
+
             $newGroup = [];
+
             foreach ($group as $a)
             {
                 // check if the object has the required properties
@@ -282,14 +288,17 @@ class Assignments
                 {
                     $assignment->class = null;
                 }
+
                 $assignment->options = (object) array(
                     'alias'             => $a->alias,
                     'selection'         => $a->value,
                     'params'            => isset($a->params) ? $a->params : new \stdClass(),
                     'assignment_state'  => $this->getAssignmentState($a->assignment_state)
                 );
+
                 $newGroup[] = $assignment;
             }
+
             $assignments[] = $newGroup;
         }
 

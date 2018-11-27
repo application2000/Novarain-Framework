@@ -22,14 +22,6 @@ class Component extends Assignment
      */
     public function value()
     {
-        return $this->getComponent();
-    }
-
-    /**
-     *  Return's the current component's name
-     */
-    protected function getComponent()
-    {
-        return $this->app->input->get("option");
+        return $this->app->input->get('option');
     }
 }

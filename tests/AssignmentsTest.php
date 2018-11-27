@@ -99,56 +99,81 @@ class AssignmentsTest extends PHPUnit\Framework\TestCase
         $assignments1 = [
             [
                 (object) ['alias' => 'device', 'value' => ['desktop'], 'assignment_state' => '1'],
-                (object) ['alias' => 'url', 'value' => '?t=1', 'assignment_state' => '1']
+                (object) ['alias' => 'url', 'value' => '?t=1', 'assignment_state' => '1'],
+                (object) ['alias' => 'browser', 'value' => ['firefox'], 'assignment_state' => '1']
             ]
         ];
 
         // 2 assignments OR
-        $assignments3 = [
+        $assignments2 = [
             [
                 (object) ['alias' => 'device', 'value' => ['desktop'], 'assignment_state' => '1'],
             ],
             [
-                (object) ['alias' => 'url', 'value' => '?t=1', 'assignment_state' => '1']
-            ]
-        ];
-
-
-        // 1 assignment (exclude)
-        $assignments2 = [
+                (object) ['alias' => 'url', 'value' => '?t=1', 'assignment_state' => '0']
+            ],
             [
-                (object) ['alias' => 'url', 'value' => '?t=1', 'assignment_state' => '0'],
+                (object) ['alias' => 'browser', 'value' => ['firefox'], 'assignment_state' => '0']
             ]
         ];
 
-        $env1 = [
-            'url'  => 'http://www.google.gr'
+        // 2 assignments AND
+        $assignments3 = [
+            [
+                (object) ['alias' => 'device', 'value' => ['mobile'], 'assignment_state' => '1'],
+                (object) ['alias' => 'url', 'value' => '?t=1', 'assignment_state' => '1'],
+                (object) ['alias' => 'browser', 'value' => ['firefox'], 'assignment_state' => '1']
+            ]
         ];
 
-        $env2 = [
-            'url'  => 'http://www.google.gr?amp=true&t=1'
+        // 2 assignments AND
+        $assignments4 = [
+            [
+                (object) ['alias' => 'device', 'value' => ['mobile'], 'assignment_state' => '1'],
+                (object) ['alias' => 'url', 'value' => '?t=2', 'assignment_state' => '1'],
+                (object) ['alias' => 'browser', 'value' => ['firefox'], 'assignment_state' => '1']
+            ]
+        ];
+
+        // 2 assignments AND
+        $assignments5 = [
+            [
+                (object) ['alias' => 'device', 'value' => ['mobile'], 'assignment_state' => '1'],
+                (object) ['alias' => 'url', 'value' => '?t=2', 'assignment_state' => '1'],
+                (object) ['alias' => 'browser', 'value' => ['chrome'], 'assignment_state' => '1']
+            ]
+        ];
+
+        // 2 assignments AND
+        $assignments6 = [
+            [
+                (object) ['alias' => 'device', 'value' => ['mobile'], 'assignment_state' => 'exclude'],
+                (object) ['alias' => 'url', 'value' => '?t=2', 'assignment_state' => 'exclude'],
+                (object) ['alias' => 'browser', 'value' => ['firefox'], 'assignment_state' => '1']
+            ]
         ];
 
         return [
-            [
-                $env1, $assignments1, false,
-                $env1, $assignments3, true,
-                $env2, $assignments1, true,
-                $env1, $assignments0, false,
-                $env2, $assignments0, true,
-                $env1, $assignments2, true,
-                $env2, $assignments2, false,
-                $env1, [], true                 // Succeed if we pass no assignments
-            ]
+            [$assignments0, true],
+            [$assignments1, true],
+            [$assignments2, true],
+            [$assignments3, false],
+            [$assignments4, false],
+            [$assignments5, false],
+            [$assignments6, true],
+            [[[]], true],              // Succeed if we pass no assignments
+            [[], true]                 // Succeed if we pass no assignments
         ];
     }
 
     /**
      * @dataProvider passAllProvider
      */
-    public function testPassAll($environment, $assignments, $expected)
+    public function testPassAll($assignments, $expected)
     {
-        $this->factory->method('getURL')->willReturn($environment['url']);
+        $this->factory->method('getURL')->willReturn('http://www.google.gr?t=1');
+        $this->factory->method('getDevice')->willReturn('desktop');
+        $this->factory->method('getBrowser')->willReturn(['name' => 'firefox']);
 
         $pass = $this->assignments->passAll($assignments);
 

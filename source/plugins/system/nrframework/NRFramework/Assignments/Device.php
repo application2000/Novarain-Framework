@@ -12,7 +12,6 @@ namespace NRFramework\Assignments;
 defined('_JEXEC') or die;
 
 use NRFramework\Assignment;
-use NRFramework\WebClient;
 
 class Device extends Assignment
 {
@@ -23,16 +22,6 @@ class Device extends Assignment
      */
 	public function value()
 	{
-		return $this->getDevice();
+		return $this->factory->getDevice();
 	}
-    
-    /**
-     *  Gets client's device type
-     * 
-     *  @return string
-     */
-    public function getDevice()
-    {
-        return WebClient::getDeviceType();
-    }
 }

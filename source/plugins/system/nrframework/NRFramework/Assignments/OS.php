@@ -21,7 +21,7 @@ class OS extends Assignment
      *
      *  @return bool
      */
-    function pass()
+    public function pass()
     {
         // backwards compatibility check
         // replace 'iphone' and 'ipad' selection values with 'ios'

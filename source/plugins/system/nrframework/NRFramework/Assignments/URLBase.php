@@ -22,7 +22,7 @@ class URLBase extends Assignment
    	 *
    	 *  @return  bool   		Returns true if the URL contains any of the selection URLs 
    	 */
-	function passURL($url = null)
+	public function passURL($url = null)
 	{
 		// Get the current URL if none is passed
 		$url = is_null($url) ? $this->factory->getURL() : $url;
@@ -63,6 +63,7 @@ class URLBase extends Assignment
 				{
 					$url_part = str_replace(array('#', '&amp;'), array('\#', '(&amp;|&)'), $s);
 					$s = '#' . $url_part . '#si';
+
 					if (@preg_match($s . 'u', $url) || @preg_match($s, $url))
 					{
 						$pass = true;

@@ -7,66 +7,73 @@
  *  @license         GNU GPLv3 <http://www.gnu.org/licenses/gpl.html> or later
  */
 
- namespace NRFramework;
+namespace NRFramework;
 
- defined('_JEXEC') or die;
+use \NRFramework\WebClient;
+use \NRFramework\CacheManager;
+use \Joomla\CMS\Factory as JFactory;
 
- /**
-  *  Factory
-  *  
-  *  Used to decouple the framework from it's dependencies and
-  *  make unit testing easier.
-  */
+defined('_JEXEC') or die;
 
- class Factory
- {
-     public function getDbo()
-     {
-        return \JFactory::getDbo();
-     }
+/**
+*  Framework Factory Class
+*  
+*  Used to decouple the framework from it's dependencies and make unit testing easier.
+*/
+class Factory
+{
+    public function getDbo()
+    {
+        return JFactory::getDbo();
+    }
 
-     public function getApplication()
-     {
-         return \JFactory::getApplication();
-     }
+    public function getApplication()
+    {
+        return JFactory::getApplication();
+    }
 
-     public function getDocument()
-     {
-        return \JFactory::getDocument();
-     }
+    public function getDocument()
+    {
+        return JFactory::getDocument();
+    }
 
-     public function getUser()
-     {
-        return \JFactory::getUser();
-     }
+    public function getUser()
+    {
+        return JFactory::getUser();
+    }
 
-     public function getCache()
-     {
-        return \NRFramework\CacheManager::getInstance(\JFactory::getCache('novarain', ''));
-     }
+    public function getCache()
+    {
+        return CacheManager::getInstance(JFactory::getCache('novarain', ''));
+    }
 
-     public function getDate($date = 'now', $tz = null)
-     {
-        return \JFactory::getDate($date, $tz);
-     }
+    public function getDate($date = 'now', $tz = null)
+    {
+        return JFactory::getDate($date, $tz);
+    }
 
-     public function getDateFromFormat($format, $date, $timezone)
-     {
-         return \JDate::createFromFormat($format, $date, $timezone);
-     }
+    public function getURL()
+    {
+        return \JURI::getInstance()->toString();
+    }
 
-     public function getURL()
-     {
-         return \JURI::getInstance()->toString();
-     }
+    public function getLanguage()
+    {
+        return JFactory::getLanguage();
+    }
 
-     public function getLanguage()
-     {
-        return \JFactory::getLanguage();
-     }
+    public function getSession()
+    {
+        return JFactory::getSession();
+    }
 
-     public function getSession()
-     {
-        return \JFactory::getSession();
-     }
- }
+    public function getDevice()
+    {
+        return WebClient::getDeviceType();
+    }
+
+    public function getBrowser()
+    {
+        return WebClient::getBrowser();
+    }
+}

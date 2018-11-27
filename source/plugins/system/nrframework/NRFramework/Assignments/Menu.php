@@ -22,12 +22,13 @@ class Menu extends Assignment
 		parent::__construct($options, $factory);
 		$this->itemID = $this->app->input->getInt('Itemid', 0);
 	}
+	
 	/**
 	 *  Pass check for menu items
 	 *
 	 *  @return  bool
 	 */
-	function pass()
+	public function pass()
 	{
 		$includeChildren = isset($this->params->inc_children) ? $this->params->inc_children : false;
     	$includeNoItemID = isset($this->params->noitem) ? $this->params->noitem : false;

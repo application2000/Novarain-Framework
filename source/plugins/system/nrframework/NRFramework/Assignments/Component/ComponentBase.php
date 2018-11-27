@@ -132,12 +132,10 @@ abstract class ComponentBase extends Assignment
 	 *
 	 * @param	string	   $ref_table				The referenced table
 	 * @param	string	   $ref_parent_column		The name of the parent column in the referecned table
-	 * @param	boolean	   $inc_categories			Indicates whether the Category view should me included in the check
-	 * @param	boolean    $inc_items				Indicates whether the Item view should me included in the check
 	 * 
 	 * @return	boolean
 	 */
-    protected function passCategories($ref_table = 'categories', $ref_parent_column = 'parent_id', $inc_categories = false, $inc_items = true)
+    protected function passCategories($ref_table = 'categories', $ref_parent_column = 'parent_id')
     {
         if (empty($this->selection) || !$this->passContext())
         {
@@ -145,17 +143,26 @@ abstract class ComponentBase extends Assignment
 		}
 
 		// Include Children switch: 0 = No, 1 = Yes, 2 = Child Only
-		$inc_children = $this->params->inc_children;
+		$inc_children   = $this->params->inc_children;
 
-		// Check whether we support the Category and the Item views
-		if (isset($this->params->inc) && is_array($this->params->inc))
+		// Setup supported views
+		$view_single   = isset($this->params->view_single)   ? (bool) $this->params->view_single : true;
+		$view_category = isset($this->params->view_category) ? (bool) $this->params->view_category : false;
+
+		// Compatibility Break: Support old view parameters (EngageBox, ACF) here.
+		if (isset($this->params->inc))
 		{
-			$inc_categories = in_array('inc_categories', $this->params->inc);
-			$inc_items      = in_array('inc_items', $this->params->inc);
+			if (!is_array($this->params->inc))
+            {
+                $this->params->inc = (array) $this->params->inc;
+			}
+
+			$view_category = in_array('inc_categories', $this->params->inc);
+			$view_single   = in_array('inc_items', $this->params->inc) || in_array('inc_articles', $this->params->inc);
 		}
 
 		// Check if we are in a valid context
-		if (!($inc_categories && $this->isCategoryPage()) && !($inc_items && $this->isSinglePage()))
+		if (!($view_category && $this->isCategoryPage()) && !($view_single && $this->isSinglePage()))
 		{
 			return false;
 		}

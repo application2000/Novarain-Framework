@@ -18,6 +18,26 @@ use Joomla\Registry\Registry;
 
 class Functions
 {
+    public static function renderField($fieldname)
+    {
+        $fieldname = strtolower($fieldname);
+
+		require_once JPATH_PLUGINS . '/system/nrframework/fields/' . $fieldname . '.php';
+
+        $classname = '\JFormField' . $fieldname;
+
+		$field = new $classname();
+
+        $element = new \SimpleXMLElement('
+            <field name="' . $classname . '" type="' . $classname . '"
+
+			/>');
+			
+        $field->setup($element, null);
+        
+        return $field->__get('input');
+    }
+
 	/**
 	 *  Checks if an array of values (needle) exists in a text (haystack)
 	 *

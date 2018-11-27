@@ -16,6 +16,7 @@
 		<filename>autoload.php</filename>
 		<folder>fields</folder>
 		<folder>helpers</folder>
+		<folder>xml</folder>
 		<folder>language</folder>
 		<folder>layouts</folder>
 		<folder>NRFramework</folder>

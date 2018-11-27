@@ -4,7 +4,8 @@ var autoprefixer = require('gulp-autoprefixer');
 var plumber      = require('gulp-plumber');
 var sass         = require('gulp-sass');
 var livereload   = require('gulp-livereload');
-var sourcemaps = require('gulp-sourcemaps');
+var uglify       = require('gulp-uglify');
+var sourcemaps   = require('gulp-sourcemaps');
 var source       = "source/media/plg_system_nrframework/";
 
 // define the default task and add the watch task to it
@@ -28,8 +29,19 @@ gulp.task('build-css', function () {
         .pipe(livereload());
 });
 
+/* concat javascript files & minify */
+gulp.task('build-js', function() {
+    // Individual Files
+    gulp.src(source+'js/dev/*.js')
+        .pipe(plumber())
+        .pipe(uglify())
+        .pipe(gulp.dest(source+'js'))
+        .pipe(livereload());
+});
+
 /* Watch these files for changes and run the task on update */
 gulp.task('watch', function() {
     livereload.listen();
     gulp.watch(source+'scss/**/*.scss', ['build-css']);
+    gulp.watch(source+'js/dev/**/*.js', ['build-js']);
 });

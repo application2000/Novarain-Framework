@@ -84,14 +84,30 @@ class JFormFieldNRComponents extends JFormFieldList
             // Runs only if the component's name is not translated already.
             if (strpos($component->name, ' ') === false)
             {   
-                $filename  = $component->element . '.sys';
-                $adminpath = JPATH_ADMINISTRATOR . '/components/' . $component->element;
+                $filenames = [
+                    $component->element . '.sys',
+                    $component->element
+                ];
 
-                // Discover component's language file 
-                $lang->load($filename, JPATH_BASE, null)
-                || $lang->load($filename, $adminpath, null)
-                || $lang->load($filename, JPATH_BASE, $lang->getDefault())
-                || $lang->load($filename, $adminpath, $lang->getDefault());
+                $paths = [
+                    JPATH_ADMINISTRATOR,
+                    JPATH_ADMINISTRATOR . '/components/' . $component->element,
+                    JPATH_SITE,
+                    JPATH_SITE . '/components/' . $component->element
+                ];
+
+                foreach ($filenames as $key => $filename)
+                {
+                    foreach ($paths as $key => $path)
+                    {
+                        $loaded = $lang->load($filename, $path, null) || $lang->load($filename, $path, $lang->getDefault());
+
+                        if ($loaded)
+                        {
+                            break 2;
+                        }
+                    }
+                }
 
                 // Translate component's name
                 $component->name = JText::_(strtoupper($component->name));

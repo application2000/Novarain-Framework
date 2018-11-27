@@ -14,8 +14,6 @@ class AssignmentTestCase extends PHPUnit\Framework\TestCase
         $this->factoryStub = $this->getMockBuilder('\\NRFramework\\Factory')
             ->setMethods(['getDbo', 'getUser', 'getApplication', 'getDocument'])
             ->getMock();
-
-        
     }
 
     public function getProtectedMethod($methodName, $class)

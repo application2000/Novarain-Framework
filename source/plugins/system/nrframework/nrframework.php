@@ -9,6 +9,8 @@
 
 defined( '_JEXEC' ) or die( 'Restricted access' );
 
+jimport('joomla.filesystem.file');
+
 use Joomla\String\StringHelper;
 
 // Initialize Novarain Library
@@ -105,5 +107,89 @@ class plgSystemNRFramework extends JPlugin
 		$this->app->enqueueMessage('To be able to update the Pro version of this extension via the Joomla updater, you will need enter your Download Key in the settings of the <a href="'.JURI::base().'index.php?option=com_plugins&view=plugins&filter_search=novarain">Novarain Framework System Plugin</a>');
 
 		return false;
+	}
+
+    /**
+     *  Listens to AJAX requests on ?option=com_ajax&format=raw&plugin=nrframework
+     *
+     *  @return void
+     */
+    public function onAjaxNRFramework()
+    {
+		JSession::checkToken('request') or jexit(JText::_('JINVALID_TOKEN'));
+
+		// Only in backend
+        if (!$this->app->isAdmin())
+        {
+            return;
+        }
+
+        // Check if we have a valid task
+		$task = $this->app->input->get('task', null);
+
+		// Check if we have a valid method task
+		$taskMethod = 'ajaxTask' . $task;
+
+		if (!method_exists($this, $taskMethod))
+		{
+			die('Task not found');
+		}
+
+		$this->$taskMethod();
+	}
+	
+	private function ajaxTaskInclude()
+	{
+		$input = $this->app->input;
+
+		$file  = $input->get('file');
+		$path  = JPATH_SITE . '/' . $input->get('path', '', 'RAW');
+		$class = $input->get('class');
+
+		$file_to_include = $path . $file . '.php';
+
+		if (!JFile::exists($file_to_include))
+		{
+			die('FILE_ERROR');
+		}
+
+		@include_once $file_to_include;
+
+		if (!class_exists($class))
+		{
+			die('CLASS_ERROR');
+		}
+
+		if (!method_exists($class, 'onAJAX'))
+		{
+			die('METHOD_ERROR');
+		}
+
+		(new $class())->onAJAX($input->getArray());
+	}
+
+	private function ajaxTaskConditionBuilder()
+	{
+		$input = $this->app->input;
+
+		$subtask = $input->get('subtask', null);
+
+		switch ($subtask)
+		{
+			case 'add':
+				$controlGroup = $input->get('controlgroup', null, 'RAW');
+				$groupKey     = $input->getInt('groupKey');
+				$conditionKey = $input->getInt('conditionKey');
+				$conditions_list = $input->get('conditionsList', null, 'RAW');
+
+				echo NRFramework\ConditionBuilder::add($controlGroup, $groupKey, $conditionKey, null, $conditions_list);
+				break;
+			case 'options':
+				$controlGroup = $input->get('controlgroup', null, 'RAW');
+				$name = $input->get('name');
+
+				echo NRFramework\ConditionBuilder::renderOptions($name, $controlGroup);
+				break;
+		}
 	}
 }

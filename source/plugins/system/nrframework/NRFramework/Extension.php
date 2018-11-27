@@ -277,6 +277,10 @@ class Extension
 			case 'plg_system_acf':
 				$path = 'advanced-custom-fields/subscribe/new/advanced-custom-fields-1-year-plan';
 				break;
+			case 'plg_system_restrictcontent':
+			case 'com_restrictcontent':
+				$path = 'restrict-content/subscribe/new/restrict-content-1-year-plan';
+				break;
 			default:
 				$path = '';
 		}

@@ -12,7 +12,6 @@ namespace NRFramework\Assignments;
 defined('_JEXEC') or die;
 
 use NRFramework\Assignment;
-use NRFramework\WebClient;
 
 class Browser extends Assignment
 {
@@ -23,6 +22,6 @@ class Browser extends Assignment
 	 */
 	public function value()
 	{
-        return WebClient::getBrowser()['name'];
+		return $this->factory->getBrowser()['name'];
     }
 }

@@ -23,8 +23,8 @@ class K2Item extends K2Base
         $pass = $this->passSinglePage();
 
         // Keywords Checking
-        $contentKeywords = $this->params->cont_keywords;
-        $metaKeywords    = $this->params->meta_keywords;
+        $contentKeywords = isset($this->params->cont_keywords) ? $this->params->cont_keywords : '';
+        $metaKeywords    = isset($this->params->meta_keywords) ? $this->params->meta_keywords : '';
 
         // If both are empty, do not maky any further check
         if (empty($contentKeywords) && empty($metaKeywords))

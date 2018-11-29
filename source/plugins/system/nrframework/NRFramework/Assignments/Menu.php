@@ -20,6 +20,12 @@ class Menu extends Assignment
 	public function __construct($options, $factory)
 	{
 		parent::__construct($options, $factory);
+
+		if (!is_array($this->selection))
+		{
+			$this->selection = $this->splitKeywords($this->selection);
+		}
+
 		$this->itemID = $this->app->input->getInt('Itemid', 0);
 	}
 	

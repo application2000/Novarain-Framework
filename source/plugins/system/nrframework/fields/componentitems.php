@@ -171,10 +171,10 @@ class JFormFieldComponentItems extends JFormFieldAjaxify
         $query = $db->getQuery(true)
             ->select([
                 $db->quoteName($this->column_id, 'id'),
-                $db->quoteName($this->column_title, 'text')
+                $db->quoteName($this->column_title, 'text'),
+                $db->quoteName($this->column_state, 'state')
             ])
-            ->from($db->quoteName('#__' . $this->table, 'i'))
-            ->where($db->quoteName($this->column_state) . ' = 1');
+            ->from($db->quoteName('#__' . $this->table, 'i'));
 
         if (!empty($this->search_term))
         {

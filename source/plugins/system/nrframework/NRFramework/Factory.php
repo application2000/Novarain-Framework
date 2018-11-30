@@ -11,7 +11,6 @@ namespace NRFramework;
 
 use \NRFramework\WebClient;
 use \NRFramework\CacheManager;
-use \Joomla\CMS\Factory as JFactory;
 
 defined('_JEXEC') or die;
 
@@ -24,32 +23,32 @@ class Factory
 {
     public function getDbo()
     {
-        return JFactory::getDbo();
+        return \JFactory::getDbo();
     }
 
     public function getApplication()
     {
-        return JFactory::getApplication();
+        return \JFactory::getApplication();
     }
 
     public function getDocument()
     {
-        return JFactory::getDocument();
+        return \JFactory::getDocument();
     }
 
     public function getUser()
     {
-        return JFactory::getUser();
+        return \JFactory::getUser();
     }
 
     public function getCache()
     {
-        return CacheManager::getInstance(JFactory::getCache('novarain', ''));
+        return CacheManager::getInstance(\JFactory::getCache('novarain', ''));
     }
 
     public function getDate($date = 'now', $tz = null)
     {
-        return JFactory::getDate($date, $tz);
+        return \JFactory::getDate($date, $tz);
     }
 
     public function getURL()
@@ -59,12 +58,12 @@ class Factory
 
     public function getLanguage()
     {
-        return JFactory::getLanguage();
+        return \JFactory::getLanguage();
     }
 
     public function getSession()
     {
-        return JFactory::getSession();
+        return \JFactory::getSession();
     }
 
     public function getDevice()

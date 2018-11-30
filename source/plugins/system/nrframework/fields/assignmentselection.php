@@ -9,6 +9,8 @@
 
 defined('JPATH_PLATFORM') or die;
 
+use NRFramework\HTML;
+
 JFormHelper::loadFieldClass('list');
 
 class JFormFieldAssignmentSelection extends JFormFieldList
@@ -52,8 +54,8 @@ class JFormFieldAssignmentSelection extends JFormFieldList
     {
         $return = parent::setup($element, $value, $group);
 
-		JHtml::script('plg_system_nrframework/assignmentselection.js',false, true, false);
-		JHtml::stylesheet('plg_system_nrframework/assignmentselection.css', false, true, false);
+		HTML::script('plg_system_nrframework/assignmentselection.js');
+		HTML::stylesheet('plg_system_nrframework/assignmentselection.css');
 
         $this->class = 'assignmentselection input-medium chzn-color-state';
 

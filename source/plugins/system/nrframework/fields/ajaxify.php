@@ -11,6 +11,7 @@
 defined('_JEXEC') or die;
 
 use Joomla\Registry\Registry;
+use NRFramework\HTML;
 
 JFormHelper::loadFieldClass('list');
 
@@ -44,8 +45,8 @@ abstract class JFormFieldAjaxify extends JFormFieldList
         $placeholder = (string) $this->element['placeholder'];
         $this->placeholder = empty($placeholder) ? $this->placeholder : $placeholder;
 
-        JHtml::script('plg_system_nrframework/vendor/select2.min.js', ['relative' => true, 'version' => 'auto']);
-        JHtml::stylesheet('plg_system_nrframework/select2.css', ['relative' => true, 'version' => 'auto']);
+        HTML::script('plg_system_nrframework/vendor/select2.min.js');
+        HTML::stylesheet('plg_system_nrframework/select2.css');
 
         JFactory::getDocument()->addScriptDeclaration('
             jQuery(function($) {

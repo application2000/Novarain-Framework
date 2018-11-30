@@ -9,6 +9,8 @@
 // No direct access to this file
 defined('_JEXEC') or die;
 
+use NRFramework\HTML;
+
 JFormHelper::loadFieldClass('checkbox');
 
 /**
@@ -40,7 +42,7 @@ class JFormFieldNRToggle extends JFormFieldCheckbox
 	 */
 	public function getInput()
 	{
-		JHtml::stylesheet('plg_system_nrframework/toggle.css', ['relative' => true, 'version' => 'auto']);
+		HTML::stylesheet('plg_system_nrframework/toggle.css');
 
 		$required = $this->required ? ' required aria-required="true"' : '';
 		$checked  = $this->checked ? ' checked' : '';

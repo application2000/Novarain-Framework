@@ -284,4 +284,40 @@ class HTML
 	{
 		return self::treeselect($options, $name, $value, $id, $size, 1);
 	}
+
+	/**
+	 * Wrapper for the JHtml::script method to support old method signatures in Joomla < 3.7.0.
+	 *
+	 * @param  string $path
+	 *
+	 * @return void
+	 */
+	public static function script($path)
+	{
+		if (version_compare(JVERSION, '3.7.0', 'lt'))
+		{
+			\JHtml::script($path, false, true);
+		} else 
+		{
+			\JHtml::script($path, ['relative' => true, 'version' => 'auto']);
+		}
+	}
+
+	/**
+	 * Wrapper for the JHtml::stylesheet method to support old method signatures in Joomla < 3.7.0.
+	 *
+	 * @param  string $path
+	 *
+	 * @return void
+	 */
+	public static function stylesheet($path)
+	{
+		if (version_compare(JVERSION, '3.7.0', 'lt'))
+		{
+			\JHtml::stylesheet($path, false, true);
+		} else 
+		{
+			\JHtml::stylesheet($path, ['relative' => true, 'version' => 'auto']);
+		}
+	}
 }

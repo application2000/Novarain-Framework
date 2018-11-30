@@ -9,6 +9,8 @@
 // No direct access to this file
 defined('_JEXEC') or die;
 
+use NRFramework\HTML;
+
 require_once dirname(__DIR__) . '/helpers/field.php';
 
 class JFormFieldNR_Gmap extends NRFormField
@@ -38,9 +40,8 @@ class JFormFieldNR_Gmap extends NRFormField
 
 		// Add scripts to DOM
 		JHtml::_('jquery.framework');
-		JHtml::script('//maps.googleapis.com/maps/api/js?key=' . $this->getAPIKey());
-		JHtml::script('plg_system_nrframework/field.gmap.js', false, true);
-
+		JFactory::getDocument()->addScript('//maps.googleapis.com/maps/api/js?key=' . $this->getAPIKey());
+		HTML::script('plg_system_nrframework/field.gmap.js');
 		Jtext::script('NR_WRONG_COORDINATES');
 
 		// Add styles to DOM

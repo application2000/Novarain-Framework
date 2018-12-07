@@ -42,7 +42,7 @@ class MailChimpTest extends WrapperTestCase
     public function subscribeProvider()
     {
         return [
-            ['', [], 'Blank email address'],
+            ['', [], 'This value should not be blank'],
             ['hello@mailinator.com', [], 'looks fake or invalid'],
             ['mdoclli9@yahoo.com', [], true],
             ['poelmdnue@hotmail.com', ['FNAME' => 'Tassos'], true],
@@ -65,7 +65,7 @@ class MailChimpTest extends WrapperTestCase
     /**
      * Cleanup service when all tests has finished
      */
-    public static function tearDownAfterClass()
+    public static function tearDow1nAfterClass()
     {
         $wrapper = self::$wrapper;
 

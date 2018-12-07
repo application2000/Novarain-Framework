@@ -75,4 +75,9 @@ class Factory
     {
         return WebClient::getBrowser();
     }
+
+    public function getExecuter($php_code)
+    {
+        return new \NRFramework\Executer($php_code);
+    }
 }

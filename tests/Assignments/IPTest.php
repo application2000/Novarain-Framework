@@ -76,7 +76,7 @@ class IPTest extends AssignmentTestCase
      */
     public function testPrepareRanges($ip_list, $expected)
     {
-        $result = $this->getProtectedMethod('prepareRanges', $this->ip_assignment)->invokeArgs($this->ip_assignment, [$ip_list]);
+        $result = $this->invokeMethod($this->ip_assignment, 'prepareRanges', [$ip_list]);
         $this->assertEquals($expected, $result);
     }
 
@@ -85,7 +85,7 @@ class IPTest extends AssignmentTestCase
      */
     public function testIsInRange($ip, $range, $expected)
     {
-        $result = $this->getProtectedMethod('isInRange', $this->ip_assignment)->invokeArgs($this->ip_assignment, [$ip, $range]);
+        $result = $this->invokeMethod($this->ip_assignment, 'isInRange', [$ip, $range]);
         $this->assertEquals($expected, $result);
     }
 

@@ -34,14 +34,33 @@ class JFormFieldNRJShoppingCategories extends JFormFieldNRTreeSelect
 	protected function getOptions()
 	{
 		// Get a database object.
-        $db = $this->db;
-        
+		$db = $this->db;
+
 		$query = $db->getQuery(true)
-			->select('category_id as value, `name_en-GB` as text, category_parent_id as parent, IF (category_publish=1, 0, 1) as disable')
+			->select($db->quoteName('name_' . $this->getLanguage(), 'text'))
+			->select('category_id as value, category_parent_id as parent, IF (category_publish=1, 0, 1) as disable')
 			->from('#__jshopping_categories');
 
 		$db->setQuery($query);
 
 		return $db->loadObjectList();
 	}
+
+	/**
+     *  JoomShopping is using different columns per language. Therefore, we need to use their API to get the default language code.
+     *
+     *  @return  string
+     */
+    private function getLanguage($default = 'en-GB')
+    {	
+		// Silent inclusion.
+        @include_once JPATH_SITE . '/components/com_jshopping/lib/factory.php';
+
+        if (!class_exists('JSFactory'))
+        {
+            return $default;
+        }
+
+		return JSFactory::getConfig()->defaultLanguage;
+    }
 }

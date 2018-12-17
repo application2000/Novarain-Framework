@@ -34,12 +34,12 @@ class JFormFieldNRVirtueMartCategories extends JFormFieldNRTreeSelect
 	protected function getOptions()
 	{
 		// Get a database object.
-        $db = $this->db;
-        
+		$db = $this->db;
+
 		$query = $db->getQuery(true)
 			->select('a.virtuemart_category_id as value, b.category_name as text, c.category_parent_id as parent, IF (a.published=1, 0, 1) as disable')
 			->from('#__virtuemart_categories as a')
-            ->join('LEFT', '#__virtuemart_categories_en_gb AS b on a.virtuemart_category_id = b.virtuemart_category_id')
+            ->join('LEFT', '#__virtuemart_categories_' . $this->getLanguage() . ' AS b on a.virtuemart_category_id = b.virtuemart_category_id')
 			->join('LEFT', '#__virtuemart_category_categories AS c on a.virtuemart_category_id = c.id')
 			->order('c.id desc');
 
@@ -47,4 +47,25 @@ class JFormFieldNRVirtueMartCategories extends JFormFieldNRTreeSelect
 
 		return $db->loadObjectList();
 	}
+
+	/**
+     *  VirtueMart is using different tables per language. Therefore, we need to use their API to get the default language code
+     *
+     *  @return  string
+     */
+    private function getLanguage($default = 'en_gb')
+    {	
+		// Silent inclusion.
+		@include_once JPATH_ADMINISTRATOR . '/components/com_virtuemart/helpers/config.php'; 
+
+        if (!class_exists('VmConfig'))
+		{
+			return $default;
+        }
+            
+        // Init configuration
+		VmConfig::loadConfig();
+		
+        return VmConfig::$jDefLang;
+    }
 }

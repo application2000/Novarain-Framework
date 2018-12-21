@@ -1,0 +1,48 @@
+.nr-updatechecker {
+    background-color:#dff0d8;
+    border: solid 1px rgba(0,0,0,.1);
+    border-top:none;
+    border-left:none;
+    border-right:none;
+    line-height:1;
+    margin:-20px;
+    margin-bottom:25px;
+    color:#333;
+
+    .nr-wrap {
+        display:flex;
+        align-items:center;
+        justify-content: center;
+        flex-wrap:wrap;
+
+        > div {
+            padding:20px;
+
+            @media (max-width:640px) {
+                &.nruc_toolbar {
+                    padding-top:0;
+                }      
+            }
+        }
+    }
+
+    .btn {
+        min-width:120px;
+        padding:6px 14px;
+
+        span {
+            position:relative;
+            top:1px;   
+        }
+    }
+
+    .nruc_subtitle {
+        opacity: .7;
+        font-size:12px;
+    }
+
+    .nruc_title {
+        font-size:20px;
+        margin-bottom:8px;
+    }
+}

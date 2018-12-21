@@ -13,9 +13,60 @@ namespace NRFramework;
 defined('_JEXEC') or die;
 
 use NRFramework\Cache;
+use NRFramework\Functions;
+use NRFramework\Extension;
+use Joomla\CMS\Language\Text;
 
 class HTML
 {
+	public static function updateNotification($extension)
+	{
+		$version_installed = Extension::getVersion($extension);
+		$version_latest    = Extension::getLatestVersion($extension);
+
+		if (!$needsUpdate = version_compare($version_latest, $version_installed, 'gt'))
+		{
+			return;
+		}
+
+		// Load extension's language file
+		Functions::loadLanguage($extension);
+
+		// Render Layout
+		$data = [
+			'title' 	        => Text::_($extension),
+			'version_installed' => $version_installed,
+			'version_latest'    => $version_latest,
+			'ispro' 	        => Extension::isPro($extension),
+			'upgradeurl'        => Extension::getTassosExtensionUpgradeURL($extension),
+			'product_url'       => Extension::getProductURL($extension)
+		];
+
+		$layout = new \JLayoutFile('updatechecker', JPATH_PLUGINS . '/system/nrframework/layouts');
+		return $layout->render($data);
+	}
+
+	/**
+	 * Checks if the given extension has a newer version available through an AJAX request.
+	 *
+	 * @param  string $element
+	 *
+	 * @return string
+	 */
+	public static function checkForUpdates($element)
+	{
+		self::script('plg_system_nrframework/updatechecker.js');
+		self::stylesheet('plg_system_nrframework/updatechecker.css');
+
+		return '
+			<div class="nr_updatechecker"
+				data-element="' . $element. '" 
+				data-base=' . \JURI::base() . ' 
+				data-token=' . \JSession::getFormToken() . '>
+			</div>
+		';
+	}
+
 	/**
 	 * Renders Pro Button
 	 *

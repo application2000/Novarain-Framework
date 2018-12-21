@@ -12,6 +12,7 @@ defined( '_JEXEC' ) or die( 'Restricted access' );
 jimport('joomla.filesystem.file');
 
 use Joomla\String\StringHelper;
+use NRFramework\HTML;
 
 // Initialize Novarain Library
 require_once __DIR__ . '/autoload.php';
@@ -191,5 +192,15 @@ class plgSystemNRFramework extends JPlugin
 				echo NRFramework\ConditionBuilder::renderOptions($name, $controlGroup);
 				break;
 		}
+	}
+
+	/**
+	 * Check if the extension has an update and display a notification
+	 *
+	 * @return string
+	 */
+	private function ajaxTaskUpdateNotification()
+	{
+		echo HTML::updateNotification($this->app->input->get('element'));
 	}
 }

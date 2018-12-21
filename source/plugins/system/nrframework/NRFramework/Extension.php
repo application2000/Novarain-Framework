@@ -9,10 +9,17 @@
 
 namespace NRFramework;
 
+use Joomla\CMS\Factory as JFactory;
+use Joomla\CMS\Language\Text;
+use Joomla\Registry\Registry;
+use NRFramework\Cache;
+
 defined( '_JEXEC' ) or die( 'Restricted access' );
 
 class Extension
 {
+	public static $product_base_url = 'https://www.tassos.gr/joomla-extensions';
+
 	/**
 	 * Array including already loaded extensions
 	 *
@@ -55,7 +62,7 @@ class Extension
 		}
 
 		// Let's call the database
-		$db = \JFactory::getDBO();	
+		$db = JFactory::getDBO();	
 
         $query = $db->getQuery(true)
             ->select('*')
@@ -86,7 +93,7 @@ class Extension
 		}
 
 		// Let's call the database
-		$db = \JFactory::getDBO();
+		$db = JFactory::getDBO();
 
 		switch ($type)
 		{
@@ -183,7 +190,7 @@ class Extension
      */
     public static function isInstalled($extension, $type = 'component', $folder = 'system')
     {
-        $db = \JFactory::getDbo();
+        $db = JFactory::getDbo();
 
         switch ($type)
         {
@@ -218,7 +225,7 @@ class Extension
 	 */
 	public static function getExtensionNameByRequest($translate = false)
 	{
-		$input  = \JFactory::getApplication()->input;
+		$input  = JFactory::getApplication()->input;
 		$option = $input->get('option');
 
 		switch ($option)
@@ -241,7 +248,7 @@ class Extension
 
 		if ($translate)
 		{
-			$name = explode(' - ', \JText::_($name));
+			$name = explode(' - ', Text::_($name));
 			return end($name);
 		}
 
@@ -257,8 +264,7 @@ class Extension
 	 */
 	public static function getTassosExtensionUpgradeURL($name = null)
 	{
-		$name    = is_null($name) ? self::getExtensionNameByRequest() : $name;
-		$baseURL = 'https://www.tassos.gr/joomla-extensions/';
+		$name = is_null($name) ? self::getExtensionNameByRequest() : $name;
 
 		switch ($name)
 		{
@@ -288,6 +294,172 @@ class Extension
 		// Google Analytics UTM Parameters
         $utm = 'utm_source=Joomla&utm_medium=upgradebutton&utm_campaign=freeversion';
 
-		return $baseURL . $path . '?coupon=FREE2PRO&' . $utm;
+		return self::$product_base_url . '/' . $path . '?coupon=FREE2PRO&' . $utm;
+	}
+
+	public static function getProductAlias($extension)
+	{
+		$extension = is_null($extension) ? self::getExtensionNameByRequest() : $extension;
+
+		switch ($extension)
+		{
+			case 'com_gsd': return 'google-structured-data-markup';
+			case 'com_rstbox': return 'engagebox';
+			case 'com_convertforms': return 'convert-forms';
+			case 'plg_system_tweetme': return 'tweetme';
+			case 'plg_system_acf': return 'advanced-custom-fields';
+			case 'plg_system_restrictcontent':
+			case 'com_restrictcontent': return 'restrict-conten';
+		}
+	}
+
+	public static function getProductURL($extension) 
+	{
+		return self::$product_base_url . '/' . self::getProductAlias($extension);
+	}
+
+	public static function getPath($element)
+	{
+		$parts = explode('_', $element);
+
+		switch ($parts[0])
+		{
+			case 'com':
+				return JPATH_ADMINISTRATOR . '/components/' . $element;
+			case 'plg':
+				return JPATH_SITE . '/plugins/' . $parts[1] . '/' . $parts[2];
+		}
+	}
+
+	public static function getVersion($extension, $include_type = false)
+	{
+		$xml = self::getXML($extension);
+
+		if (!$xml || !isset($xml->version))
+		{
+			return;
+		}
+
+		$version = (string) $xml->version;
+
+		// If enabled, it returns EngageBox Pro
+		if ($include_type)
+		{
+			$isPro = self::isPro($extension);
+			$version_type = $isPro ? 'Pro' : 'Free';
+			$version .= ' ' . $version_type;
+		}
+
+		return $version;
+	}
+
+	public static function elementToAlias($element)
+	{
+		$parts = explode('_', $element);
+		return end($parts);
+	}
+
+	public static function getXML($element)
+	{
+		if (!$path = self::getPath($element))
+		{
+			return;
+		}
+
+		$extension_alias = self::elementToAlias($element);
+		$xml = $path . '/' . $extension_alias . '.xml';
+
+		return JFactory::getXML($xml);
+	}
+
+	/**
+	 * Returns a URL where we can check for extension updates.
+	 *
+	 * @param  strong $extension
+	 *
+	 * @return mixed  Null of fail, String on success
+	 */
+	public static function getUpdateServer($extension)
+	{
+		$xml = self::getXML($extension);
+
+		if (!$xml || !isset($xml->updateservers))
+		{
+			return;
+		}
+
+		$updateserver = trim($xml->updateservers->server);
+
+		// Remove unwanted string added by Free / Pro versions
+		$pp = strpos($updateserver, '@');
+		if ($pp !== false)
+		{
+			$updateserver = substr($updateserver, 0, $pp);
+		}
+
+		return $updateserver;
+	}
+
+	/**
+	 * Get the latest extension version from the remote update server
+	 *
+	 * @param  string $extension
+	 *
+	 * @return mixed	Null on failure, String on success
+	 */
+	public static function getLatestVersion($extension)
+	{
+		// Get the extension's update server URL
+		if (!$updateserver = self::getUpdateServer($extension))
+		{
+			return;
+		}
+
+		// Call the Update Server and make sure the response is valid
+		$response = \JHttpFactory::getHttp()->get($updateserver);
+
+		if ($response->code != 200 || strpos($response->body, '<updates>') === false)
+		{
+			return;
+		}
+
+		$body = new \SimpleXMLElement($response->body);
+		$version = (string) $body->update[0]->version;
+
+		return $version;
+	}
+
+	/**
+	 * Check if we have the Pro version of the extension
+	 *
+	 * @param  string $element
+	 *
+	 * @return bool
+	 */
+	public static function isPro($element)
+	{
+		if (!$path = self::getPath($element))
+		{
+			return false;
+		}
+
+		$versionFile = $path . '/version.php';
+
+		// If version file does not exist we assume a PRO version
+		if (!\JFile::exists($versionFile))
+		{
+			return true;
+		}
+
+		// Silently load the version file
+		@include_once $versionFile;
+
+		// If the NR_PRO variable is not set we're probably under development mode. Assume a Pro version.
+		if (!isset($NR_PRO))
+		{
+			return true;
+		}
+
+		return (bool) $NR_PRO;
 	}
 }

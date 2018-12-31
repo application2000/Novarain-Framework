@@ -57,7 +57,10 @@ class Executer
         // Function doesn't exist. Let's create it.
 		if (!function_exists($function_name))
 		{
-            $this->createFunction();
+            if (!$this->createFunction())
+            {
+                return;
+            }
         }
 
         // Call function
@@ -88,7 +91,7 @@ class Executer
 			@unlink($temp_file);
         }
 
-        return $function_name;
+        return function_exists($function_name);
     }
 
     /**

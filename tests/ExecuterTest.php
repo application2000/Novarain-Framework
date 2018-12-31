@@ -64,8 +64,8 @@ class ExecuterTest extends TestCase
     {
         $this->executer->setPhpCode('return ("John Doe")');
 
-        $function_name = $this->invokeMethod($this->executer, 'createFunction');
+        $function_exists = $this->invokeMethod($this->executer, 'createFunction');
 
-        $this->assertTrue(function_exists($function_name));
+        $this->assertTrue($function_exists);
     }
 }

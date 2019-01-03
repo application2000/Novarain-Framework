@@ -18,6 +18,20 @@ use Joomla\Registry\Registry;
 
 class Functions
 {
+    /**
+     * Insert an associative array into a specific position in an array
+     *
+     * @param $original array 	The original array to add to
+     * @param $new array 		The new array of values to insert into the original
+     * @param $offset int 		The position in the array ( 0 index ) where the new array should go
+     *
+     * @return array 		The new combined array
+     */
+    public static function array_splice_assoc($original,$new,$offset)
+    {
+        return array_slice($original, 0, $offset, true) + $new + array_slice($original, $offset, NULL, true);  
+    }
+
     public static function renderField($fieldname)
     {
         $fieldname = strtolower($fieldname);

@@ -250,9 +250,9 @@ class SmartTags
     			if (is_array($value) || is_object($value))
     			{
     				continue;
-    			}
-
-    			$data[$key] = strtr($value, $this->tags);
+				}
+				
+    			$data[$key] = $this->clean(strtr($value, $this->tags));
     		}
 
 			// Revert object back to its original state
@@ -261,7 +261,26 @@ class SmartTags
 		}
 		
     	// String case
-    	return strtr($data, $this->tags);
+    	return $this->clean(strtr($data, $this->tags));
+	}
+
+	/**
+	 * Remove unreplaced tags from string
+	 *
+	 * @param  string $data
+	 *
+	 * @return void
+	 */
+	private function clean($data)
+	{
+		if (!is_string($data))
+		{
+			return $data;
+		}
+
+		$data = str_replace('{referrer}', '', $data);
+
+		return preg_replace('#{(querystring|user).(.*?)}#s', '', $data);
 	}
 	
     /**

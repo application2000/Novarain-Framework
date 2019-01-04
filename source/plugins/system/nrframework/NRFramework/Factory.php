@@ -36,9 +36,9 @@ class Factory
         return \JFactory::getDocument();
     }
 
-    public function getUser()
+    public function getUser($user = null)
     {
-        return \JFactory::getUser();
+        return \JFactory::getUser($user);
     }
 
     public function getCache()
@@ -49,6 +49,11 @@ class Factory
     public function getDate($date = 'now', $tz = null)
     {
         return \JFactory::getDate($date, $tz);
+    }
+
+    public function getURI()
+    {
+        return \JURI::getInstance();
     }
 
     public function getURL()

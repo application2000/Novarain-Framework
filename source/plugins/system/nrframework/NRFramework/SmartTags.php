@@ -19,25 +19,25 @@ use \NRFramework\WebClient;
 class SmartTags
 {
 	/**
-	 *  Joomla Document Object
+	 * Factory Class
 	 *
-	 *  @var  object
+	 * @var object
 	 */
-	private $doc;
+	private $factory;
 
 	/**
 	 *  Joomla User Object
 	 *
 	 *  @var  object
 	 */
-	private $user;
+	private $user = null;
 
 	/**
 	 *  Tags Array
 	 *
 	 *  @var  array
 	 */
-	private $tags = array();
+	private $tags = [];
 
 	/**
 	 *  Tag placeholder
@@ -49,37 +49,36 @@ class SmartTags
 	/**
 	 *  Class constructor
 	 */
-	public function __construct($options = array())
+	public function __construct($options = array(), $factory = null)
 	{
-		$user = isset($options['user']) ? $options['user'] : null;
+		// Set User
+		if (isset($options['user']))
+		{
+			$this->user = $options['user'];
+		}
 
-		$this->user = \JFactory::getUser($user);
-		$this->setUserFirstLastName();
+		// Set Factory
+        if (!$factory)
+        {
+            $factory = new \NRFramework\Factory();
+        }
 
-		$this->doc  = \JFactory::getDocument();
-		$this->app = \JFactory::getApplication();
+		$this->factory = $factory;
 
-		$this->tags = array(
+		$url = $this->factory->getURI();
+
+		$this->tags = [
 			// Server
-			'url'			=> \JURI::getInstance()->toString(),
-			'url.encoded'	=> urlencode(\JURI::getInstance()->toString()),
-			'url.path'		=> \JURI::current(),
-			'referrer'	    => isset($_SERVER['HTTP_REFERER']) ? $_SERVER['HTTP_REFERER'] : null,
-			'ip'			=> isset($_SERVER['REMOTE_ADDR']) ? $_SERVER['REMOTE_ADDR'] : null,
+			'url'			=> $url->toString(),
+			'url.encoded'	=> urlencode($url->toString()),
+			'url.path'		=> $url::current(),
+			'referrer'	    => $this->factory->getApplication()->input->server->get('HTTP_REFERER', 'RAW', ''),
+			'ip'			=> $this->factory->getApplication()->input->server->get('REMOTE_ADDR'),
 
 			// Site 
 			'site.name'     => \JFactory::getConfig()->get('sitename'),
 			'site.email'    => \JFactory::getConfig()->get('mailfrom'),
-			'site.url'      => \JURI::root(),
-
-			// User
-			'user.id'        => $this->user->id,
-			'user.name'      => $this->user->name,
-			'user.firstname' => $this->user->firstname,
-			'user.lastname'  => $this->user->lastname,
-			'user.login'     => $this->user->username,
-			'user.email'     => $this->user->email,
-			'user.groups'    => implode(',', $this->user->groups),
+			'site.url'      => $url::root(),
 
 			// Client
 			'client.device'    => WebClient::getDeviceType(),
@@ -89,11 +88,42 @@ class SmartTags
 			
 			// Other
 			'randomid'		=> bin2hex(\JCrypt::genRandomBytes(8))
-		);
+		];
 
 		$this->addPageTags();
 		$this->addDateTags();
 		$this->addQueryStringTags();
+		$this->addUserTags();
+	}
+
+	/**
+	 * Add User based tags
+	 *
+	 * @return void
+	 */
+	private function addUserTags()
+	{
+		$user = $this->factory->getUser($this->user);
+
+		// Proper capitalize name
+		$name = ucwords(strtolower($user->name));
+		
+		// Set First and Last name
+    	$nameParts = explode(' ', $name, 2);
+    	$firstname = trim($nameParts[0]);
+    	$lastname  = isset($nameParts[1]) ? trim($nameParts[1]) : $user->firstname;
+
+		$tags = [
+			'id'        => $user->id,
+			'name'      => $name,
+			'firstname' => $firstname,
+			'lastname'  => $lastname,
+			'login'     => $user->username,
+			'email'     => $user->email,
+			'groups'    => implode(',', $user->groups),
+		];
+
+		$this->add($tags, 'user.');
 	}
 
 	/**
@@ -127,8 +157,8 @@ class SmartTags
 	 */
 	private function addDateTags()
 	{
-		$tz   = new \DateTimeZone($this->app->getCfg('offset', 'GMT'));
-		$date = \JFactory::getDate()->setTimezone($tz);
+		$tz   = new \DateTimeZone($this->factory->getApplication()->getCfg('offset', 'GMT'));
+		$date = $this->factory->getDate()->setTimezone($tz);
 
 		$tags = [
 			'time' => $date->format('H:i', true),
@@ -145,12 +175,14 @@ class SmartTags
 	 */
 	private function addPageTags()
 	{
+		$doc = $this->factory->getDocument();
+
 		$tags = [
-			'title'     => $this->doc->getTitle(),
-			'desc'      => $this->doc->getMetaData('description'),
-			'keywords'  => $this->doc->getMetaData('keywords'),
-			'lang'      => $this->doc->getLanguage(),
-			'generator' => $this->doc->getGenerator()
+			'title'     => $doc->getTitle(),
+			'desc'      => $doc->getMetaData('description'),
+			'keywords'  => $doc->getMetaData('keywords'),
+			'lang'      => $doc->getLanguage(),
+			'generator' => $doc->getGenerator()
 		];
 
 		$this->add($tags, 'page.');
@@ -309,21 +341,6 @@ class SmartTags
 
 			unset($this->tags[$key]);
     	}
-    }
-
-    /**
-     *  Split User's name into First and Last name
-     *
-     *  @return  void
-     */
-    private function setUserFirstLastName()
-    {
-    	$this->user->name      = ucwords(strtolower($this->user->name));
-
-    	$nameParts = explode(' ', $this->user->name, 2);
-
-    	$this->user->firstname = trim($nameParts[0]);
-    	$this->user->lastname  = isset($nameParts[1]) ? trim($nameParts[1]) : $this->user->firstname;
     }
 }
 

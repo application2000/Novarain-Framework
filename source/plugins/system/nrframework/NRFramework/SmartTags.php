@@ -265,7 +265,7 @@ class SmartTags
 	}
 
 	/**
-	 * Remove unreplaced tags from string
+	 * General housekeeping and removal of unreplaced tags from string
 	 *
 	 * @param  string $data
 	 *
@@ -278,9 +278,15 @@ class SmartTags
 			return $data;
 		}
 
+		// Remove unreplaced smart tags
 		$data = str_replace('{referrer}', '', $data);
+		$data = preg_replace('#{(querystring|user).(.*?)}#s', '', $data);
 
-		return preg_replace('#{(querystring|user).(.*?)}#s', '', $data);
+		// Un-quote string quoted by the prepare method.
+		// We need so badly Unit Test for Smart Tags in order to remove skip adding and removing slashes.
+		$data = stripcslashes($data);
+
+		return $data;
 	}
 	
     /**

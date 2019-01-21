@@ -1,0 +1,1 @@
+A Joomla! System Plugin used by all Tassos.gr Joomla Extensions. 

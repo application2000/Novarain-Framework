@@ -374,7 +374,7 @@ class SmartTags
 	}
 
 	/**
-	 * Remove unreplaced tags from string
+	 * General housekeeping and removal of unreplaced tags from string
 	 *
 	 * @param  string $data
 	 *

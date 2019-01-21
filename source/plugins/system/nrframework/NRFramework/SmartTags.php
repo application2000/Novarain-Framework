@@ -178,19 +178,13 @@ class SmartTags
 	{
 		$query = $this->factory->getURI()->getQuery(true);
 
+		// Add an empty query parameter in order to force the cleaning of unreplaced tags.
 		if (empty($query))
 		{
-			return;
+			$query = ['' => ''];
 		}
 
-		$tags = [];
-
-		foreach ($query as $key => $value)
-		{
-			$tags[strtolower($key)] = $value;
-		}
-
-		$this->add($tags, 'querystring.');
+		$this->add($query, 'querystring.');
 	}
 
 	/**

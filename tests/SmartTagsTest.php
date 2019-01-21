@@ -121,6 +121,6 @@ class SmartTagsTest extends TestCase
 
         $result = $this->smart_tags->replace($subject);
 
-        $this->assertEquals($result, $expected);
+        $this->assertEquals($expected, $result);
     }
 }

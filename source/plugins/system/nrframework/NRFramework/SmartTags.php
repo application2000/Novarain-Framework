@@ -116,18 +116,30 @@ class SmartTags
 		}
 	}
 
-	private function addSiteTags()
+	/**
+	 * Add site-based Tags
+	 *
+	 * @return void
+	 */
+	protected function addSiteTags()
 	{
+		$url = $this->factory->getURI();
+
 		$tags = [
 			'name'  => $this->app->get('sitename'),
 			'email' => $this->app->get('mailfrom'),
-			'url'   => $this->factory->getURI()::root(),
+			'url'   => $url::root(),
 		];
 
 		$this->add($tags, 'site.');
 	}
 
-	private function addTechnologyTags()
+	/**
+	 * Add technology-based tags
+	 *
+	 * @return void
+	 */
+	protected function addTechnologyTags()
 	{
 		$tags = [
 			'device'    => WebClient::getDeviceType(),
@@ -140,13 +152,16 @@ class SmartTags
 	}
 
 	/**
-	 * Add User based tags
+	 * Add user-based tags
 	 *
 	 * @return void
 	 */
-	private function addUserTags()
+	protected function addUserTags()
 	{
-		$user = $this->factory->getUser($this->options->get('user', null));
+		if (!$user = $this->factory->getUser($this->options->get('user', null)))
+		{
+			return;
+		}
 
 		// Proper capitalize name
 		$name = ucwords(strtolower($user->name));
@@ -174,7 +189,7 @@ class SmartTags
 	 *
 	 * @return void
 	 */
-	private function addQueryStringTags()
+	protected function addQueryStringTags()
 	{
 		$query = $this->factory->getURI()->getQuery(true);
 
@@ -192,7 +207,7 @@ class SmartTags
 	 *
 	 * @return void
 	 */
-	private function addDateTags()
+	protected function addDateTags()
 	{
 		$tz   = new \DateTimeZone($this->factory->getApplication()->getCfg('offset', 'GMT'));
 		$date = $this->factory->getDate()->setTimezone($tz);
@@ -210,7 +225,7 @@ class SmartTags
 	 *
 	 * @return void
 	 */
-	private function addPageTags()
+	protected function addPageTags()
 	{
 		$doc = $this->factory->getDocument();
 
@@ -225,7 +240,12 @@ class SmartTags
 		$this->add($tags, 'page.');
 	}
 
-	private function addOtherTags()
+	/**
+	 * Add the rest of the tags
+	 *
+	 * @return void
+	 */
+	protected function addOtherTags()
 	{
 		$url = $this->factory->getURI();
 
@@ -300,6 +320,7 @@ class SmartTags
 		// Add Prefix to keys
 		if ($prefix)
 		{
+			// Add prefix to the collection which is used by the clean method to strip unreplaced tags.
 			if (!in_array($prefix, $this->prefixes))
 			{
 				$this->prefixes[] = $prefix;
@@ -368,27 +389,27 @@ class SmartTags
 	}
 
 	/**
-	 * General housekeeping and removal of unreplaced tags from string
+	 * Remove all unreplaced tags from string
 	 *
-	 * @param  string $data
+	 * @param  string $subject
 	 *
-	 * @return void
+	 * @return string The cleaned string
 	 */
-	private function clean($data)
+	private function clean($subject)
 	{
-		if (!is_string($data))
+		if (!is_string($subject))
 		{
-			return $data;
+			return $subject;
 		}
 
 		if (empty($this->prefixes))
 		{
-			return $data;
+			return $subject;
 		}
 
 		$prefixes = implode('|', $this->prefixes);
 
-		return preg_replace('#{(' . $prefixes . ')(.*?)}#s', '', $data);
+		return preg_replace('#{(' . $prefixes . ')(.*?)}#s', '', $subject);
 	}
 	
     /**

@@ -6,21 +6,18 @@ class SmartTagsTest extends TestCase
 {
     private $smart_tags;
 
-    private $tags_collection = [
-        'firstname' => 'John',
-        'lastname'  => 'Doe',
-        'age'       => '26',
-        'country'   => 'United States',
-        'city'      => 'New York'
-    ];
-
     public function setUp()
     {
         parent::setUp();
 
         $smart_tags_mock = $this->getMockBuilder('\\NRFramework\\SmartTags')
             ->setConstructorArgs([[], $this->factoryStub])
-            ->setMethods(['addDefaultTags'])
+            ->setMethods([
+                'addSiteTags',
+                'addPageTags',
+                'addDateTags',
+                'addOtherTags'
+            ])
             ->getMock();
         
         $this->smart_tags = $smart_tags_mock;
@@ -28,11 +25,16 @@ class SmartTagsTest extends TestCase
 
     public function testAdd()
     {
-        $this->smart_tags->add($this->tags_collection, 'test.');
+        $temp_tags = [
+            'var1' => 'value_1',
+            'var2' => 'value_2',
+        ];
+
+        $this->smart_tags->add($temp_tags, 'test.');
 
         $added_tags = $this->smart_tags->get();
 
-        $result = is_array($added_tags) && count($added_tags) == 5 && array_key_exists('{test.firstname}', $added_tags);
+        $result = is_array($added_tags) && array_key_exists('{test.var1}', $added_tags);
 
         $this->assertTrue($result);
     }
@@ -42,12 +44,10 @@ class SmartTagsTest extends TestCase
         $tes = [
             'contacts' => [
                 'family' => [
-                    'firstname' => '{firstname}',
-                    'lastname'  => '{lastname}',
-                    'age'  => '{age}',
-                    'test'  => '{test}',
-                    'test1' => [
-                        'geia' => '{firstname}'
+                    'firstname' => '{user.firstname}',
+                    'lastname'  => '{user.lastname}',
+                    'more' => [
+                        'firstname' => '{user.name}'
                     ]
                 ]
             ]
@@ -58,10 +58,8 @@ class SmartTagsTest extends TestCase
                 'family' => [
                     'firstname' => 'John',
                     'lastname'  => 'Doe',
-                    'age'  => '26',
-                    'test'  => '{test}',
-                    'test1' => [
-                        'geia' => 'John'
+                    'more' => [
+                        'firstname' => 'John Doe'
                     ]
                 ]
             ]
@@ -69,8 +67,8 @@ class SmartTagsTest extends TestCase
 
         // Array of Objects
         $obj1 = (object) [
-            'firstname' => '{firstName}',
-            'lastname'  => '{laStname}',
+            'firstname' => '{user.firstName}',
+            'lastname'  => '{user.laStname}',
         ];
         $obj2 = (object) [
             'firstname' => 'John',
@@ -89,22 +87,21 @@ class SmartTagsTest extends TestCase
             ['x', 'x'],
 
             // Case insensitive string replacements
-            ['{firstname}', 'John'], 
-            ['{fiRsTnAme} ', 'John '],
-            ['{FIRSTNAME}', 'John'],
-            ['Hello {firstname} {firstname}', 'Hello John John'],
-            ['{AGE}', '26'],
+            ['{user.firstname}', 'John'], 
+            ['{user.fiRsTnAme} ', 'John '],
+            ['{user.FIRSTNAME}', 'John'],
+            ['Hello {user.firstname} {user.firstname}', 'Hello John John'],
 
             // Make sure unreplaced smart tags are stripped out
             ['Geia sou {user.test}', 'Geia sou '],
             ['Hello {querystring.name}', 'Hello '],
 
             // Arrays
-            [['{firstname}', '{lastname}'], ['John', 'Doe']],
+            [['{user.firstname}', '{user.lastname}'], ['John', 'Doe']],
             [$tes, $tes1],
 
             // Objects
-            [(object) ['{firstname}', '{lastname}'], (object) ['John', 'Doe']],
+            [(object) ['{user.firstname}', '{user.lastname}'], (object) ['John', 'Doe']],
             [[$obj1, $obj1, $obj1], [$obj2, $obj2, $obj2]],
             [[[$obj1, $obj1, $obj1]], [[$obj2, $obj2, $obj2]]],
         ];
@@ -115,10 +112,6 @@ class SmartTagsTest extends TestCase
      */
     public function testReplace($subject, $expected)
     {
-        $this->smart_tags->add($this->tags_collection);
-        $this->smart_tags->add(['id' => '1'], 'querystring.');
-        $this->smart_tags->add(['id' => '1'], 'user.');
-
         $result = $this->smart_tags->replace($subject);
 
         $this->assertEquals($expected, $result);

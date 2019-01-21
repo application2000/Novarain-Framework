@@ -12,6 +12,7 @@ namespace NRFramework;
 defined('_JEXEC') or die('Restricted access');
 
 use \NRFramework\WebClient;
+use Joomla\Registry\Registry;
 
 /**
  *   SmartTags replaces placeholder variables in a string
@@ -23,39 +24,49 @@ class SmartTags
 	 *
 	 * @var object
 	 */
-	private $factory;
+	protected $factory;
 
 	/**
-	 *  Joomla User Object
+	 * Joomla Application object
 	 *
-	 *  @var  object
+	 * @var object
 	 */
-	private $user = null;
+	protected $app;
 
 	/**
 	 *  Tags Array
 	 *
 	 *  @var  array
 	 */
-	private $tags = [];
+	protected $tags = [];
+
+	/**
+	 * Class options
+	 *
+	 * @var array
+	 */
+	protected $options;
 
 	/**
 	 *  Tag placeholder
 	 *
 	 *  @var  string
 	 */
-	private $placeholder = '{}';
+	protected $placeholder = '{}';
+
+	/**
+	 * List of all tag prefixes
+	 *
+	 * @var array
+	 */
+	private $prefixes = [];
 
 	/**
 	 *  Class constructor
 	 */
 	public function __construct($options = array(), $factory = null)
 	{
-		// Set User
-		if (isset($options['user']))
-		{
-			$this->user = $options['user'];
-		}
+		$this->options = new Registry($options);
 
 		// Set Factory
         if (!$factory)
@@ -64,36 +75,68 @@ class SmartTags
         }
 
 		$this->factory = $factory;
+		$this->app = $factory->getApplication();
+	}
 
-		$url = $this->factory->getURI();
+	public function addDefaultTags()
+	{
+		if ($this->options->get('site_tags', true))
+		{
+			$this->addSiteTags();
+		}
 
-		$this->tags = [
-			// Server
-			'url'			=> $url->toString(),
-			'url.encoded'	=> urlencode($url->toString()),
-			'url.path'		=> $url::current(),
-			'referrer'	    => $this->factory->getApplication()->input->server->get('HTTP_REFERER', 'RAW', ''),
-			'ip'			=> $this->factory->getApplication()->input->server->get('REMOTE_ADDR'),
+		if ($this->options->get('page_tags', true))
+		{
+			$this->addPageTags();
+		}
 
-			// Site 
-			'site.name'     => \JFactory::getConfig()->get('sitename'),
-			'site.email'    => \JFactory::getConfig()->get('mailfrom'),
-			'site.url'      => $url::root(),
+		if ($this->options->get('date_tags', true))
+		{
+			$this->addDateTags();
+		}
 
-			// Client
-			'client.device'    => WebClient::getDeviceType(),
-			'client.os'        => WebClient::getOS(),
-			'client.browser'   => WebClient::getBrowser()['name'],
-			'client.useragent' => WebClient::getClient()->userAgent,
-			
-			// Other
-			'randomid'		=> bin2hex(\JCrypt::genRandomBytes(8))
+		if ($this->options->get('querystring_tags', true))
+		{
+			$this->addQueryStringTags();
+		}
+
+		if ($this->options->get('user_tags', true))
+		{
+			$this->addUserTags();
+		}
+
+		if ($this->options->get('technology_tags', true))
+		{
+			$this->addTechnologyTags();
+		}
+
+		if ($this->options->get('other_tags', true))
+		{
+			$this->addOtherTags();
+		}
+	}
+
+	private function addSiteTags()
+	{
+		$tags = [
+			'name'  => $this->app->get('sitename'),
+			'email' => $this->app->get('mailfrom'),
+			'url'   => $this->factory->getURI()::root(),
 		];
 
-		$this->addPageTags();
-		$this->addDateTags();
-		$this->addQueryStringTags();
-		$this->addUserTags();
+		$this->add($tags, 'site.');
+	}
+
+	private function addTechnologyTags()
+	{
+		$tags = [
+			'device'    => WebClient::getDeviceType(),
+			'os'		=> WebClient::getOS(),
+			'browser'   => WebClient::getBrowser()['name'],
+			'useragent' => WebClient::getClient()->userAgent
+		];
+
+		$this->add($tags, 'client.');
 	}
 
 	/**
@@ -103,7 +146,7 @@ class SmartTags
 	 */
 	private function addUserTags()
 	{
-		$user = $this->factory->getUser($this->user);
+		$user = $this->factory->getUser($this->options->get('user', null));
 
 		// Proper capitalize name
 		$name = ucwords(strtolower($user->name));
@@ -111,7 +154,7 @@ class SmartTags
 		// Set First and Last name
     	$nameParts = explode(' ', $name, 2);
     	$firstname = trim($nameParts[0]);
-    	$lastname  = isset($nameParts[1]) ? trim($nameParts[1]) : $user->firstname;
+    	$lastname  = isset($nameParts[1]) ? trim($nameParts[1]) : $nameParts[0];
 
 		$tags = [
 			'id'        => $user->id,
@@ -133,7 +176,7 @@ class SmartTags
 	 */
 	private function addQueryStringTags()
 	{
-		$query = \JUri::getInstance()->getQuery(true);
+		$query = $this->factory->getURI()->getQuery(true);
 
 		if (empty($query))
 		{
@@ -186,6 +229,22 @@ class SmartTags
 		];
 
 		$this->add($tags, 'page.');
+	}
+
+	private function addOtherTags()
+	{
+		$url = $this->factory->getURI();
+
+		$tags = [
+			'url'			=> $url->toString(),
+			'url.encoded'	=> urlencode($url->toString()),
+			'url.path'		=> $url::current(),
+			'referrer'	    => $this->app->input->server->get('HTTP_REFERER', '', 'RAW'),
+			'ip'			=> $this->app->input->server->get('REMOTE_ADDR'),
+			'randomid'      => bin2hex(\JCrypt::genRandomBytes(8))
+		];
+
+		$this->add($tags);
 	}
 
 	/**
@@ -247,6 +306,11 @@ class SmartTags
 		// Add Prefix to keys
 		if ($prefix)
 		{
+			if (!in_array($prefix, $this->prefixes))
+			{
+				$this->prefixes[] = $prefix;
+			}
+
 			foreach ($tags as $key => $value)
 			{
 		        $newKey = $prefix . $key;
@@ -256,7 +320,7 @@ class SmartTags
 		}
 
 		$this->tags = array_merge($this->tags, $tags);
-		
+
 		return $this;
 	}
 
@@ -267,33 +331,46 @@ class SmartTags
      *
      *  @return  mixed
      */
-    public function replace($obj)
+    public function replace($subject)
     {
-    	$this->prepare();
+		$this->prepare();
 
-    	// Convert object to array
-    	$data = is_object($obj) ? (array) $obj : $obj;
+		$hash = md5(serialize($subject));
 
-    	// Array case
-    	if (is_array($data))
-    	{
-    		foreach ($data as $key => $value)
-    		{
-    			if (is_array($value) || is_object($value))
-    			{
-    				continue;
-				}
-				
-    			$data[$key] = $this->clean(strtr($value, $this->tags));
-    		}
-
-			// Revert object back to its original state
-			$data = is_object($obj) ? (object) $data : $data;
-	   		return $data;
+		if (Cache::has($hash))
+		{
+			return Cache::read($hash);
 		}
-		
-    	// String case
-    	return $this->clean(strtr($data, $this->tags));
+
+		$subject = $this->replace_recursive($subject);
+
+        return Cache::set($hash, $subject);
+	}
+	
+    /**
+     *  Replace tags in object recursively
+     *
+     *  @param   mixed  $obj  The data object to search for smarttags
+     *
+     *  @return  mixed
+     */
+	private function replace_recursive($subject)
+	{
+		if (is_string($subject))
+		{
+			$result = str_ireplace(array_keys($this->tags), array_values($this->tags), $subject);
+			return $this->clean($result);
+		}
+
+		if (is_array($subject) || is_object($subject))
+		{
+			foreach ($subject as $key => &$subject_item)
+			{
+				$subject_item = $this->replace_recursive($subject_item);
+			}
+		}
+
+		return $subject;	
 	}
 
 	/**
@@ -310,9 +387,14 @@ class SmartTags
 			return $data;
 		}
 
-		$data = str_replace('{referrer}', '', $data);
+		if (empty($this->prefixes))
+		{
+			return $data;
+		}
 
-		return preg_replace('#{(querystring|user).(.*?)}#s', '', $data);
+		$prefixes = implode('|', $this->prefixes);
+
+		return preg_replace('#{(' . $prefixes . ')(.*?)}#s', '', $data);
 	}
 	
     /**
@@ -322,6 +404,8 @@ class SmartTags
      */
     private function prepare()
     {
+		$this->addDefaultTags();
+
     	$placeholder = $this->getPlaceholder();
 
     	foreach ($this->tags as $key => $variable)
